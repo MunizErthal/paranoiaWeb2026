@@ -4,8 +4,118 @@
 
 .home-page {
   min-height: 55vw;
-  padding: 5vw 7vw 8vw;
+  padding: 1vw 7vw 1vw;
   color: #f7f2ff;
+}
+
+.investigation-hero {
+  position: relative;
+  display: grid;
+  width: 100vw;
+  min-height: clamp(31rem, 62vw, 42rem);
+  place-items: center;
+  box-sizing: border-box;
+  margin-left: calc(50% - 50vw);
+  isolation: isolate;
+  overflow: hidden;
+  padding: 3rem 1.25rem;
+  text-align: center;
+  background: linear-gradient(0deg,rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 1) 30%, rgba(255, 255, 255, 0) 100%);
+}
+
+.investigation-hero__glitch,
+.investigation-hero__digital {
+  position: absolute;
+  pointer-events: none;
+}
+
+.investigation-hero__glitch {
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.38;
+}
+
+.investigation-hero__digital {
+  z-index: -1;
+  top: -10%;
+  left: 50%;
+  width: 40vw;
+  opacity: 0.22;
+  transform: translateX(-50%);
+}
+
+.investigation-hero__content {
+}
+
+.investigation-hero h1 {
+  margin: 0 0 1.25rem;
+  color: #ffffff;
+  font-size: 3vw;
+  line-height: 1.08;
+  text-transform: uppercase;
+}
+
+.investigation-hero h1 strong {
+  color: #a75cff;
+}
+
+.investigation-hero p {
+  max-width: 22rem;
+  margin: 0 auto 2rem;
+  color: rgba(247, 242, 255, 0.78);
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  line-height: 1.5;
+}
+
+.investigation-hero__actions {
+  display: grid;
+  gap: 1rem;
+  width: min(100%, 14rem);
+  margin: 0 auto;
+}
+
+.investigation-hero__actions a {
+  display: block;
+  border-radius: 3px;
+  padding: 0.85rem 1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.investigation-hero__primary {
+  border: 1px solid #8d3ce8;
+  color: #ffffff;
+  background: #7130c4;
+  box-shadow: 0 0.5rem 1.5rem rgba(113, 48, 196, 0.4);
+}
+
+.investigation-hero__secondary {
+  border: 1px solid #8d3ce8;
+  color: #b66bff;
+  background: rgba(13, 3, 27, 0.45);
+}
+
+.investigation-hero__actions a:hover,
+.investigation-hero__actions a:focus-visible {
+  border-color: #d19bff;
+  transform: translateY(-2px);
+}
+
+.investigation-hero__primary:hover,
+.investigation-hero__primary:focus-visible {
+  background: #8d3ce8;
+}
+
+.investigation-hero__secondary:hover,
+.investigation-hero__secondary:focus-visible {
+  color: #ffffff;
+  background: rgba(113, 48, 196, 0.25);
 }
 
 .story-promo {
@@ -20,6 +130,7 @@
   background: linear-gradient(110deg, #26103f 0%, #4a1671 52%, #26103f 100%);
   width: 38vw;
   margin: auto;
+  margin-top: 1vw;
 }
 
 .story-promo__content {
@@ -121,10 +232,14 @@
 .benefits {
   gap: 3rem 5rem;
   max-width: 35vw;
-  margin: 3.5rem auto 0;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  padding: 2.5rem 4rem;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin: auto;
+  margin-top: 1vw;
 }
 
 .benefit {
@@ -238,6 +353,16 @@ h2 {
     padding: 8vw 5vw 18vw;
   }
 
+  .investigation-hero {
+    min-height: 32rem;
+    margin: 0 -5vw;
+  }
+
+  .investigation-hero__digital {
+    top: 7%;
+    width: min(21rem, 90vw);
+  }
+
   .story-promo {
     min-height: 17rem;
     padding: 2rem 1.5rem;
@@ -247,12 +372,6 @@ h2 {
     right: -2rem;
     width: 10rem;
     opacity: 0.5;
-  }
-
-  .benefits {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    margin-top: 2.5rem;
   }
 
   .games-preview {

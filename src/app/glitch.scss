@@ -188,3 +188,48 @@
     color: white;
   }
 }
+
+
+.glitchButton2 {
+  transition: 0.5s;
+}
+
+.glitchButton2:hover {
+  animation: textGlitch2 1.5s;
+  color: #ffffff;
+}
+
+@keyframes textGlitch2 {
+  0% {
+    text-shadow: none;
+    color: #ffffff;
+  }
+  20% {
+    text-shadow: 
+      -2px 0 #ff0000,
+      2px -2px #0000ff;
+    color: #ffffff;
+  }
+  40% {
+    text-shadow: none;
+    color: #ffffff;
+  }
+  60% {
+    text-shadow: 
+      2px 0 #ff0000,
+      -2px 2px rgba(0, 255, 255, 0.8);
+    color: #9b6ac9;
+  }
+  62% {
+    text-shadow: none;
+    color: transparent;
+  }
+  64% {
+    text-shadow: none;
+    color: #ffffff;
+  }
+  100% {
+    text-shadow: none;
+    color: white;
+  }
+}
