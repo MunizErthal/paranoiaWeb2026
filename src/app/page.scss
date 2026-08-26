@@ -1,0 +1,129 @@
+:host {
+  display: block;
+}
+
+.content-page {
+  min-height: 55vw;
+  color: #f7f2ff;
+}
+
+.content-page__header {
+  max-width: 48rem;
+  margin-bottom: 4rem;
+}
+
+.content-page__eyebrow {
+  margin: 0 0 1rem;
+  color: #e7b8ff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.content-page h1 {
+  max-width: 50rem;
+  margin: 0 0 1.5rem;
+  font-size: clamp(3rem, 8vw, 7rem);
+  line-height: 0.92;
+}
+
+.content-page h2 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  line-height: 1;
+}
+
+.content-page p {
+  color: rgba(247, 242, 255, 0.76);
+  line-height: 1.6;
+}
+
+.content-page__lead {
+  max-width: 38rem;
+  margin: 0;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+}
+
+.content-page__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.content-page__card {
+  min-height: 12rem;
+  padding: 2rem;
+  background: rgba(18, 8, 30, 0.42);
+}
+
+.content-page__card p {
+  margin-bottom: 0;
+}
+
+.content-page__form {
+  display: grid;
+  max-width: 42rem;
+  gap: 1.25rem;
+}
+
+.content-page__form label {
+  display: grid;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.content-page__form input,
+.content-page__form textarea {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 0;
+  padding: 0.9rem 1rem;
+  color: #ffffff;
+  background: rgba(18, 8, 30, 0.55);
+  font: inherit;
+}
+
+.content-page__form textarea {
+  min-height: 9rem;
+  resize: vertical;
+}
+
+.content-page__form input:focus,
+.content-page__form textarea:focus {
+  outline: 2px solid #e7b8ff;
+  outline-offset: 2px;
+}
+
+.content-page__action {
+  width: fit-content;
+  border: 1px solid #e7b8ff;
+  padding: 0.9rem 1.4rem;
+  color: #24122f;
+  background: #e7b8ff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .content-page {
+    min-height: 100vw;
+    padding: 16vw 7vw 18vw;
+  }
+
+  .content-page__header {
+    margin-bottom: 3rem;
+  }
+
+  .content-page__grid {
+    grid-template-columns: 1fr;
+  }
+
+}

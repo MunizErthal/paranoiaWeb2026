@@ -1,0 +1,273 @@
+:host {
+  display: block;
+}
+
+.game-detail-page {
+  box-sizing: border-box;
+  width: min(100%, 72rem);
+  margin: 0 auto;
+  padding: 3rem 7vw 8rem;
+  color: #f7f2ff;
+}
+
+.game-detail {
+  width: min(100%, 48rem);
+  margin: 0 auto;
+}
+
+.game-detail-info {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+}
+
+.game-detail-icon  {
+    width: 1.5vw;
+    height: auto;
+    margin-right: 0.5vw;
+}
+
+.game-detail__hero {
+  position: relative;
+}
+
+.game-detail__cover {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: clamp(19rem, 38vw, 28rem);
+  border-radius: 6px;
+  background-color: #050308;
+  background-image: linear-gradient(0deg, rgba(3, 2, 8, 0.96) 0%, rgba(3, 2, 8, 0.72) 32%, rgba(3, 2, 8, 0) 68%), url('/images/jogos/cidadesubmersa/cover6.png');
+  background-position: center center;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.game-detail__cover h1 {
+  margin: 0 0 1rem;
+  color: #ffffff;
+  font-size: clamp(2rem, 6vw, 3.8rem);
+  line-height: 0.95;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
+  text-transform: uppercase;
+}
+
+.game-detail__intro {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 5rem 1.5rem 1.5rem;
+}
+
+.game-detail__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.game-detail__tags span {
+  border: 1px solid rgba(231, 184, 255, 0.25);
+  border-radius: 4px;
+  padding: 0.35rem 0.55rem;
+  color: rgba(247, 242, 255, 0.82);
+  background: rgba(44, 19, 65, 0.45);
+  font-size: 0.7rem;
+}
+
+.game-detail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.7rem;
+  margin: 0 0 1.5rem;
+}
+
+.game-detail__meta div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.game-detail__meta dt {
+  order: 2;
+  color: rgba(247, 242, 255, 0.6);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+}
+
+.game-detail__meta dd {
+  margin: 0;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.game-detail__summary,
+.game-detail__about p {
+  color: rgba(247, 242, 255, 0.78);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.game-detail__summary {
+  margin: 0;
+}
+
+.game-detail__about {
+  margin-top: 2.8rem;
+}
+
+.game-detail h2 {
+  margin: 0 0 0.7rem;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.game-detail__about p {
+  margin: 0;
+}
+
+.game-detail__gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.4rem;
+  margin-top: 2rem;
+}
+
+.game-detail__gallery img {
+  width: 100%;
+  height: 5.2rem;
+  border-radius: 3px;
+  object-fit: cover;
+}
+
+.game-detail__dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.45rem;
+  margin: 0.8rem 0 1.5rem;
+}
+
+.game-detail__dots span {
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.game-detail__dots .is-active {
+  background: #9d43ff;
+}
+
+.purchase-panel {
+  border: 1px solid rgba(157, 67, 255, 0.45);
+  border-radius: 5px;
+  padding: 1rem;
+  background: rgba(13, 6, 24, 0.7);
+}
+
+.purchase-panel__price,
+.purchase-panel__installments {
+  margin: 0;
+}
+
+.purchase-panel__price {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.purchase-panel__installments {
+  margin-top: 0.25rem;
+  color: rgba(247, 242, 255, 0.58);
+  font-size: 0.7rem;
+}
+
+.purchase-panel__button {
+  width: 100%;
+  margin: 1rem 0 0.8rem;
+  border: 0;
+  border-radius: 4px;
+  padding: 0.85rem 1rem;
+  color: #ffffff;
+  background: linear-gradient(115deg, #6d1bc3 0%, #9d36f0 48%, #c15cff 100%);
+  cursor: pointer;
+  font: inherit;
+  text-transform: uppercase;
+  box-shadow: 0 0.4rem 1.2rem rgba(125, 35, 214, 0.3);
+
+  display: flex;
+  align-items: center;
+
+  span {
+    flex: 1;
+    margin: auto;
+    text-align: center;
+    font-size: 0.7vw;
+  }
+
+  img {
+    text-align: center;
+    margin: auto;
+    width: 1.5rem;
+    height: auto;
+    cursor: pointer;
+  }
+}
+
+.purchase-panel__button:hover,
+.purchase-panel__button:focus-visible {
+  background: linear-gradient(115deg, #8527d8 0%, #b44cff 48%, #d47aff 100%);
+  box-shadow: 0 0.5rem 1.5rem rgba(157, 67, 255, 0.45);
+}
+
+.purchase-panel details {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(247, 242, 255, 0.84);
+  font-size: 0.78rem;
+}
+
+.purchase-panel summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.purchase-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.purchase-panel summary span {
+  color: #ffffff;
+  font-size: 1.1rem;
+}
+
+.purchase-panel details p {
+  margin: -0.2rem 0 1rem;
+  color: rgba(247, 242, 255, 0.62);
+  line-height: 1.5;
+}
+
+@media (min-width: 701px) {
+  .game-detail-page {
+    padding-right: 5vw;
+    padding-left: 5vw;
+  }
+
+  .game-detail {
+    width: min(100%, 64rem);
+  }
+
+  .game-detail__about,
+  .game-detail__gallery,
+  .game-detail__dots,
+  .purchase-panel {
+    max-width: 48rem;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}

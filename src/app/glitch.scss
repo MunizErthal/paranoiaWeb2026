@@ -1,0 +1,190 @@
+/* wrapper para hover robusto */
+.glitch-wrap {
+  margin: auto;
+  display: block;
+}
+
+/* container das tiras */
+.bard {
+  width: 30vw;
+  font-size: 4px;
+  margin: auto;
+  height: auto;
+}
+
+/* estilo base das strips (animation pausada por padrão) */
+.strip {
+  position: relative;
+  overflow: hidden;
+  height: var(--h, 3em); /* fallback */
+  background-image: url('/images/paranoia/logo.png');
+
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: 0 var(--y, 0em);
+  image-rendering: pixelated;
+  animation-play-state: paused !important; /* MUITO importante: pausado por padrão */
+  will-change: transform, filter;
+}
+
+/* Força a animação ao adicionar .animate (usa !important para sobrescrever o paused) */
+.glitch-wrap.animate .strip {
+  animation-play-state: running !important;
+}
+
+/* Primeira vez no hover */
+.glitch-wrap:hover .strip:first-child {
+  animation-play-state: running;
+}
+
+/* Próxima animação no mesmo hover ou hover seguinte */
+.glitch-wrap:hover .strip:not(:first-child) {
+  animation-play-state: running !important;
+}
+
+/* Ao sair do hover, as tiras voltam para o estado inicial 
+   -> agora exclui .animate para permitir animação no carregamento */
+.glitch-wrap:not(:hover):not(.animate) .strip {
+  transition: transform 0.25s ease, filter 0.25s ease;
+  transform: none !important;
+  filter: none !important;
+  animation-play-state: paused !important;
+}
+
+.strip[data-glitch="5"]  {animation: glitch-5 1.5s infinite alternate linear;  }
+.strip[data-glitch="6"]  {animation: glitch-6 1.5s   infinite alternate linear;}
+.strip[data-glitch="7"]  {animation: glitch-7 1.75s infinite alternate linear; }
+.strip[data-glitch="8"]  {animation: glitch-8 2s   infinite alternate linear;  }
+.strip[data-glitch="9"]  {animation: glitch-9 2.75s infinite alternate linear; }
+.strip[data-glitch="10"] {animation: glitch-10 2.5s  infinite alternate linear;}
+
+/* ===== Keyframes (mantive a lógica original, usando variáveis) ===== */
+@keyframes glitch-5 {
+  0%, 13.33%, 23.33%, 66.67%, 76.67%, 100% {
+    transform: none;
+    filter: hue-rotate(0deg) drop-shadow(0 0 0 transparent);
+  }
+  13.43%, 23.23% {
+    transform: translateX(var(--x1));
+    filter: hue-rotate(var(--h1)) drop-shadow(0px -4px 0 rgba(0,0,255,0.1));
+  }
+  66.77%, 76.57% {
+    transform: translateX(var(--x2));
+    filter: hue-rotate(var(--h2)) drop-shadow(-1px 0px 0 rgba(255,0,0,0.1));
+  }
+}
+
+@keyframes glitch-6 {
+  0%,13.33%,21.67%,66.67%,75%,100% {
+    transform:none; filter: hue-rotate(0deg) drop-shadow(0 0 0 transparent);
+  }
+  13.43%,21.57% {
+    transform: translateX(var(--x1));
+    filter: hue-rotate(var(--h1)) drop-shadow(-2px 3px 0 rgba(255,0,0,0.1));
+  }
+  66.77%,74.90% {
+    transform: translateX(var(--x2));
+    filter: hue-rotate(var(--h2)) drop-shadow(-3px -2px 0 rgba(0,0,255,0.1));
+  }
+}
+
+@keyframes glitch-7 {
+  0%,13.33%,20.48%,66.67%,73.81%,100% {
+    transform:none; filter: hue-rotate(0deg) drop-shadow(0 0 0 transparent);
+  }
+  13.43%,20.38% {
+    transform: translateX(var(--x1));
+    filter: hue-rotate(var(--h1)) drop-shadow(0 -3px 0 rgba(0,0,255,0.1));
+  }
+  66.77%,73.71% {
+    transform: translateX(var(--x2));
+    filter: hue-rotate(var(--h2)) drop-shadow(4px 1px 0 rgba(255,0,0,0.1));
+  }
+}
+
+@keyframes glitch-8 {
+  0%,13.33%,19.58%,66.67%,72.92%,100% {
+    transform:none; filter: hue-rotate(0deg) drop-shadow(0 0 0 transparent);
+  }
+  13.43%,19.48% {
+    transform: translateX(var(--x1));
+    filter: hue-rotate(var(--h1)) drop-shadow(-1px -1px 0 rgba(0,0,255,0.1));
+  }
+  66.77%,72.82% {
+    transform: translateX(var(--x2));
+    filter: hue-rotate(var(--h2)) drop-shadow(3px -1px 0 rgba(0,0,255,0.1));
+  }
+}
+
+@keyframes glitch-9 {
+  0%,13.33%,18.89%,66.67%,72.22%,100% {
+    transform:none; filter: hue-rotate(0deg) drop-shadow(0 0 0 transparent);
+  }
+  13.43%,18.79% {
+    transform: translateX(var(--x1));
+    filter: hue-rotate(var(--h1)) drop-shadow(1px -3px 0 rgba(255,0,0,0.1));
+  }
+  66.77%,72.12% {
+    transform: translateX(var(--x2));
+    filter: hue-rotate(var(--h2)) drop-shadow(1px 1px 0 rgba(255,0,0,0.1));
+  }
+}
+
+@keyframes glitch-10 {
+  0%,13.33%,18.33%,66.67%,71.67%,100% {
+    transform:none; filter: hue-rotate(0deg) drop-shadow(0 0 0 transparent);
+  }
+  13.43%,18.23% {
+    transform: translateX(var(--x1));
+    filter: hue-rotate(var(--h1)) drop-shadow(3px -1px 0 rgba(255,0,0,0.1));
+  }
+  66.77%,71.57% {
+    transform: translateX(var(--x2));
+    filter: hue-rotate(var(--h2)) drop-shadow(-3px 2px 0 rgba(255,0,0,0.1));
+  }
+}
+
+/* ===== Botão com efeito glitch ===== */
+.glitchButton {
+  transition: 0.5s;
+}
+
+.glitchButton:hover {
+  animation: textGlitch 1.5s;
+  color: #9b6ac9;
+}
+
+@keyframes textGlitch {
+  0% {
+    text-shadow: none;
+    color: #9b6ac9;
+  }
+  20% {
+    text-shadow: 
+      -2px 0 #ff0000,
+      2px -2px #0000ff;
+    color: #9b6ac9;
+  }
+  40% {
+    text-shadow: none;
+    color: #9b6ac9;
+  }
+  60% {
+    text-shadow: 
+      2px 0 #ff0000,
+      -2px 2px rgba(0, 255, 255, 0.8);
+    color: #9b6ac9;
+  }
+  62% {
+    text-shadow: none;
+    color: transparent;
+  }
+  64% {
+    text-shadow: none;
+    color: #9b6ac9;
+  }
+  100% {
+    text-shadow: none;
+    color: white;
+  }
+}

@@ -1,1 +1,59 @@
+// regular style toast
+@use 'ngx-toastr/toastr';
+
 /* You can add global styles to this file, and also import other style files */
+body {
+  //background: url('/images/sistema/paranoiaImages/background.avif');
+  z-index: 100;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+
+  background: #321953;
+  background: radial-gradient(circle, rgba(50, 25, 83, 1) 0%, rgba(24, 12, 36, 1) 100%);
+
+  // Cursor
+  //cursor: url('/images/sistema/paranoiaImages/cursor.avif'), auto !important;
+  cursor: url('/images/sistema/paranoiaImages/cursor.avif') 0 0, auto !important;
+}
+
+/* PARANOIA */
+#introAnim {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+p, h1, h2, h3, h4, h5, h6, a, span, div, li, button, input, textarea, a {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-weight: 100;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 2rem;
+  color: rgba(247, 242, 255, 0.7);
+  font-size: 0.8vw;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.back-link:hover,
+.back-link:focus-visible {
+  color: #ffffff;
+}

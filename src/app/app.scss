@@ -1,0 +1,274 @@
+.logo-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100vw;
+    height: 18vw;
+    flex-direction: column;
+    margin: auto;
+    transition: all 1s ease-in-out;
+    border-bottom: solid;
+    border-width: 0.01vw !important;
+    border-color: rgb(255,255,255, 0.2);
+
+    background: #321953;
+    background: radial-gradient(circle, rgba(50, 25, 83, 1) 0%, rgba(24, 12, 36, 1) 100%);
+}
+
+.background-img {
+    position: absolute;
+    top: 0;
+    left: 20vw;
+    width: 60%;
+    height: 20vw;
+    object-fit: cover;
+    display: block;
+    margin: 0;
+    z-index: 0;
+}
+
+.logo-container > .glitch-wrap {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    margin: 6vw;
+}
+
+.main-navigation {
+    position: absolute;
+    bottom: 0.25vw;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2.1vw;
+}
+
+.main-navigation a {
+    position: relative;
+    padding: 0.35vw 0;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 1vw;
+    letter-spacing: 0;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 180ms ease;
+}
+
+.main-navigation a::after {
+    position: absolute;
+    right: 0;
+    bottom: -0.35vw;
+    left: 0;
+    height: 1px;
+    background: #ffffff;
+    content: "";
+    opacity: 0;
+    transform: scaleX(0.35);
+    transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.main-navigation a:hover,
+.main-navigation a:focus-visible,
+.main-navigation a.active {
+    color: #ffffff;
+}
+
+.main-navigation a:hover::after,
+.main-navigation a:focus-visible::after,
+.main-navigation a.active::after {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+@media (max-width: 600px) {
+    .logo-container {
+        height: 38vw;
+    }
+
+    .background-img {
+        left: 5vw;
+        width: 90%;
+        height: 30vw;
+    }
+
+    .logo-container > .glitch-wrap {
+        margin-top: 0;
+    }
+
+    .main-navigation {
+        bottom: 4vw;
+        gap: 4vw;
+    }
+
+    .main-navigation a {
+        font-size: 0.56rem;
+    }
+}
+
+.logo-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.newsletter {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 6vw 0 0;
+    padding: 4vw 2rem 3.5vw;
+    background-image: linear-gradient(120deg, rgba(24, 10, 42, 0.92), rgba(42, 17, 68, 0.72)), url('/images/paranoia/backgroundEffect.png');
+    background-position: center;
+    background-size: cover;
+    color: #ffffff;
+    text-align: center;
+}
+
+.newsletter-content {
+    max-width: 34rem;
+    margin: 0 auto;
+}
+
+.newsletter h2 {
+    margin: 0 0 1rem;
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    text-transform: uppercase;
+}
+
+.newsletter p {
+    margin: 0;
+    color: rgba(247, 242, 255, 0.72);
+    font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+    line-height: 1.5;
+}
+
+.newsletter-form {
+    display: flex;
+    width: min(100%, 30rem);
+    margin: 2rem auto 0;
+}
+
+.newsletter-form input {
+    box-sizing: border-box;
+    min-width: 0;
+    flex: 1;
+    border: 1px solid rgba(231, 184, 255, 0.3);
+    border-right: 0;
+    border-radius: 4px 0 0 4px;
+    padding: 0 1rem;
+    color: #ffffff;
+    background: rgba(10, 4, 20, 0.5);
+    font: inherit;
+}
+
+.newsletter-form input::placeholder {
+    color: rgba(247, 242, 255, 0.72);
+}
+
+.newsletter-form input:focus {
+    outline: 2px solid #c15cff;
+    outline-offset: 2px;
+}
+
+.newsletter-form button {
+    display: grid;
+    width: 3.5rem;
+    height: 3.2rem;
+    flex: 0 0 3.5rem;
+    place-items: center;
+    border: 0;
+    border-radius: 0 4px 4px 0;
+    color: #ffffff;
+    background: linear-gradient(135deg, #7b27d3, #ad45f4);
+    cursor: pointer;
+    font-size: 1.7rem;
+    line-height: 1;
+}
+
+.newsletter-form button:hover,
+.newsletter-form button:focus-visible {
+    background: linear-gradient(135deg, #9638ea, #c05cff);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.logo-img {
+    width: 30vw;
+    height: auto;
+    margin: auto;
+}
+
+.footer {
+    margin-top: 2vw;
+    width: 100vw;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.footer-logo {
+    .bard {
+        width: 21vw;
+    }
+}
+
+.footer-quote {
+    text-align: center;
+    color: white;
+    font-size: 1vw;
+    width: 20vw;
+}
+
+.footer-social {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1vw;
+
+    img {
+        width: 1.5vw;
+        height: auto;
+        cursor: pointer !important;
+        position: relative;
+        z-index: 1;
+    }
+}
+
+.footer-copy {
+  text-align: center;
+  color: white;
+  font-size: 0.7vw;
+  position: relative;
+  bottom: 0;
+  margin-bottom: 0;
+  margin-top: 1vw;
+}
+
+@media (max-width: 600px) {
+    .newsletter {
+        width: 100%;
+        margin-top: 12vw;
+        padding: 3rem 1rem 2.5rem;
+    }
+
+    .newsletter-break {
+        display: none;
+    }
+
+    .newsletter-form {
+        margin-top: 1.5rem;
+    }
+}
