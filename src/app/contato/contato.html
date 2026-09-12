@@ -1,25 +1,23 @@
-<main class="content-page">
-  <header class="content-page__header">
-    <p class="content-page__eyebrow">Fale com a gente</p>
+<main class="contact-page">
+  <header class="contact-page__header">
+    <p class="page-eyebrow">Fale com a gente</p>
     <h1>Tem uma pista, ideia ou pergunta?</h1>
-    <p class="content-page__lead">
-      Envie uma mensagem para a Paranoia. Nós lemos tudo, inclusive as teorias mais improváveis.
-    </p>
+    <p class="page-lead">Envie uma mensagem para a Paranoia. Nós lemos tudo, inclusive as teorias mais improváveis.</p>
   </header>
 
-  <form class="content-page__form">
-    <label>
-      Nome
-      <input type="text" name="name" autocomplete="name" />
-    </label>
-    <label>
-      E-mail
-      <input type="email" name="email" autocomplete="email" />
-    </label>
-    <label>
-      Mensagem
-      <textarea name="message"></textarea>
-    </label>
-    <button class="content-page__action" type="submit">Enviar mensagem</button>
-  </form>
+  <div class="contact-page__layout">
+    <aside class="contact-page__aside">
+      <p class="page-eyebrow">Canais seguros</p>
+      <h2>Vamos investigar isso juntos.</h2>
+      <p>Para parcerias, imprensa ou suporte sobre um pedido, escolha o canal que combina com a sua mensagem.</p>
+      <a href="mailto:contato@paranoiajogos.com.br">contato@paranoiajogos.com.br</a>
+      <a href="https://www.instagram.com/paranoiajogos/" target="_blank" rel="noopener noreferrer">Instagram <span aria-hidden="true">&#8599;</span></a>
+    </aside>
+    <form class="contact-page__form">
+      <label>Nome<input type="text" name="name" autocomplete="name" placeholder="Como podemos chamar você?" /></label>
+      <label>E-mail<input type="email" name="email" autocomplete="email" placeholder="voce@email.com" /></label>
+      <label>Mensagem<textarea name="message" placeholder="Conte o que está investigando..."></textarea></label>
+      <button class="contact-page__action glitchButton2" type="submit">Enviar mensagem <span aria-hidden="true">&#8594;</span></button>
+    </form>
+  </div>
 </main>

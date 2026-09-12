@@ -1,0 +1,233 @@
+:host {
+  display: block;
+}
+
+.store-page {
+  box-sizing: border-box;
+  width: min(100%, 72rem);
+  min-height: 55vw;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 7vw, 5rem) 8rem;
+  color: #f7f2ff;
+}
+
+.page-eyebrow {
+  margin: 0 0 1rem;
+  color: #e7b8ff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.store-page__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.55fr);
+  align-items: end;
+  gap: 3rem;
+  padding-bottom: 4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.store-page h1 {
+  max-width: 44rem;
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(2.7rem, 7vw, 6.5rem);
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.page-lead {
+  margin: 0;
+  color: rgba(247, 242, 255, 0.76);
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  line-height: 1.6;
+}
+
+.store-page__catalog {
+  padding: 4rem 0;
+}
+
+.store-page h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(1.7rem, 3.5vw, 2.8rem);
+  line-height: 1;
+}
+
+.store-product {
+  display: grid;
+  grid-template-columns: minmax(13rem, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(1.5rem, 5vw, 4rem);
+  padding: 1rem;
+  border: 1px solid #2b1c49;
+  background: rgba(10, 5, 19, 0.55);
+  box-shadow: inset 0 0 2rem rgba(112, 50, 157, 0.08);
+}
+
+.store-product__cover {
+  width: 100%;
+  height: 100%;
+  min-height: 21rem;
+  object-fit: cover;
+  object-position: center;
+}
+
+.store-product__info {
+  align-self: center;
+  padding: 2rem 2rem 2rem 0;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tag-list span {
+  border: 1px solid rgba(231, 184, 255, 0.25);
+  border-radius: 4px;
+  padding: 0.35rem 0.55rem;
+  color: rgba(247, 242, 255, 0.82);
+  background: rgba(44, 19, 65, 0.45);
+  font-size: 0.7rem;
+}
+
+.store-product h3 {
+  margin: 0 0 1rem;
+  color: #ffffff;
+  font-size: clamp(1.7rem, 4vw, 3.2rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.store-product p,
+.store-product dt {
+  color: rgba(247, 242, 255, 0.7);
+  line-height: 1.55;
+}
+
+.store-product p {
+  max-width: 30rem;
+  margin: 0;
+}
+
+.store-product dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.store-product dl div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.store-product dt {
+  order: 2;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+}
+
+.store-product dd {
+  margin: 0;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.store-product__buy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 1.25rem;
+}
+
+.store-product__buy strong {
+  color: #ffffff;
+  font-size: 1.25rem;
+}
+
+.store-product__buy a {
+  border: 1px solid #a94cff;
+  padding: 0.75rem 1rem;
+  color: #ffffff;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.store-product__buy a:hover,
+.store-product__buy a:focus-visible {
+  background: #7130c4;
+}
+
+.store-page__categories {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.store-page__categories article {
+  min-height: 11rem;
+  padding: 1.5rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.store-page__categories span {
+  color: #b66bff;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.store-page__categories h2 {
+  margin-top: 2.5rem;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+.store-page__categories p {
+  margin-bottom: 0;
+  color: rgba(247, 242, 255, 0.7);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+  .store-page {
+    min-height: 100vw;
+    padding: 2.5rem 5vw 5rem;
+  }
+
+  .store-page__header,
+  .store-product {
+    grid-template-columns: 1fr;
+  }
+
+  .store-page__header {
+    gap: 1.5rem;
+    padding-bottom: 3rem;
+  }
+
+  .store-page h1 {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+
+  .store-product__cover {
+    min-height: 17rem;
+    max-height: 24rem;
+  }
+
+  .store-product__info {
+    padding: 0.75rem;
+  }
+
+  .store-page__categories {
+    grid-template-columns: 1fr;
+  }
+}

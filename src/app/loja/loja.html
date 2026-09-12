@@ -1,24 +1,32 @@
-<main class="content-page">
-  <header class="content-page__header">
-    <p class="content-page__eyebrow">Loja Paranoia</p>
-    <h1>Leve a próxima história para casa.</h1>
-    <p class="content-page__lead">
-      Encontre jogos, expansões e materiais para transformar sua próxima noite em uma investigação memorável.
-    </p>
+<main class="store-page">
+  <header class="store-page__header">
+    <div>
+      <p class="page-eyebrow">Loja Paranoia</p>
+      <h1>Leve a próxima história para casa.</h1>
+    </div>
+    <p class="page-lead">Jogos, expansões e materiais para transformar sua próxima noite em uma investigação memorável.</p>
   </header>
 
-  <section class="content-page__grid" aria-label="Produtos da loja">
-    <article class="content-page__card">
-      <h2>Jogos completos</h2>
-      <p>Caixas com tudo o que você precisa para começar uma nova história.</p>
+  <section class="store-page__catalog" aria-labelledby="catalog-title">
+    <div class="section-heading">
+      <p class="page-eyebrow">Em destaque</p>
+      <h2 id="catalog-title">Comece por aqui.</h2>
+    </div>
+    <article class="store-product">
+      <img class="store-product__cover" src="/images/jogos/cidadesubmersa/cover.png" alt="Capa de A Cidade Submersa" />
+      <div class="store-product__info">
+        <div class="tag-list"><span>Investigativo</span><span>Narrativo</span></div>
+        <h3>A Cidade Submersa</h3>
+        <p>Uma cidade esquecida pelas marés guarda segredos que não deveriam voltar à superfície.</p>
+        <dl><div><dt>Jogadores</dt><dd>2-6</dd></div><div><dt>Idade</dt><dd>14+</dd></div><div><dt>Duração</dt><dd>60-90 min</dd></div></dl>
+        <div class="store-product__buy"><strong>R$ 189,90</strong><a routerLink="/jogos/cidade-submersa">Ver jogo <span aria-hidden="true">&#8594;</span></a></div>
+      </div>
     </article>
-    <article class="content-page__card">
-      <h2>Expansões</h2>
-      <p>Novos casos, personagens e reviravoltas para aumentar a tensão da mesa.</p>
-    </article>
-    <article class="content-page__card">
-      <h2>Materiais</h2>
-      <p>Itens especiais para deixar cada pista, carta e descoberta ainda mais marcante.</p>
-    </article>
+  </section>
+
+  <section class="store-page__categories" aria-label="Categorias da loja">
+    <article><span>01</span><h2>Jogos completos</h2><p>Caixas com tudo para começar uma nova história.</p></article>
+    <article><span>02</span><h2>Expansões</h2><p>Novos casos, personagens e reviravoltas.</p></article>
+    <article><span>03</span><h2>Materiais</h2><p>Itens especiais para deixar cada pista marcante.</p></article>
   </section>
 </main>

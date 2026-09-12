@@ -1,0 +1,155 @@
+:host {
+  display: block;
+}
+
+.about-page,
+.store-page,
+.contact-page {
+  box-sizing: border-box;
+  width: min(100%, 72rem);
+  min-height: 55vw;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 7vw, 5rem) 8rem;
+  color: #f7f2ff;
+}
+
+.page-eyebrow {
+  margin: 0 0 1rem;
+  color: #e7b8ff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.page-lead,
+.about-page p {
+  color: rgba(247, 242, 255, 0.76);
+  line-height: 1.6;
+}
+
+.about-page__hero {
+  position: relative;
+  display: grid;
+  min-height: clamp(23rem, 42vw, 34rem);
+  align-items: center;
+  grid-template-columns: minmax(0, 1.1fr) minmax(12rem, 0.9fr);
+  gap: 2rem;
+  overflow: hidden;
+  border-top: 1px solid rgba(231, 184, 255, 0.25);
+  border-bottom: 1px solid rgba(231, 184, 255, 0.25);
+}
+
+.about-page__hero h1 {
+  max-width: 45rem;
+  margin: 0 0 1.5rem;
+  color: #ffffff;
+  font-size: clamp(2.5rem, 7vw, 6.5rem);
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.about-page__hero .page-lead {
+  max-width: 34rem;
+  margin: 0;
+  font-size: clamp(1rem, 1.7vw, 1.25rem);
+}
+
+.about-page__signal {
+  position: relative;
+  display: grid;
+  min-height: 20rem;
+  place-items: center;
+  background: linear-gradient(135deg, rgba(42, 17, 68, 0.45), rgba(13, 6, 24, 0.4)), url('/images/paranoia/backgroundEffect.png') center / cover;
+}
+
+.about-page__signal img {
+  width: min(80%, 18rem);
+  opacity: 0.62;
+  filter: drop-shadow(0 0 2rem rgba(157, 67, 255, 0.6));
+}
+
+.about-page__manifesto {
+  max-width: 52rem;
+  padding: clamp(4rem, 9vw, 8rem) 0;
+}
+
+.about-page h2 {
+  margin: 0 0 1rem;
+  color: #ffffff;
+  font-size: clamp(1.7rem, 4vw, 3.2rem);
+  line-height: 1;
+}
+
+.about-page__manifesto p:last-child {
+  max-width: 38rem;
+  margin: 1.5rem 0 0;
+}
+
+.section-heading {
+  margin-bottom: 2rem;
+}
+
+.about-page__value-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.about-page__value-grid article {
+  min-height: 13rem;
+  padding: 1.5rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(18, 8, 30, 0.42);
+}
+
+.about-page__value-grid span,
+.about-page__value-grid h3 {
+  color: #b66bff;
+}
+
+.about-page__value-grid span {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.about-page__value-grid h3 {
+  margin: 3rem 0 0.75rem;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+}
+
+.about-page__value-grid p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 700px) {
+  .about-page,
+  .store-page,
+  .contact-page {
+    min-height: 100vw;
+    padding: 2.5rem 5vw 5rem;
+  }
+
+  .about-page__hero {
+    display: block;
+    min-height: 0;
+    padding: 3rem 0 0;
+  }
+
+  .about-page__hero h1 {
+    font-size: clamp(2.4rem, 12vw, 4rem);
+  }
+
+  .about-page__signal {
+    min-height: 13rem;
+    margin-top: 2.5rem;
+  }
+
+  .about-page__value-grid {
+    grid-template-columns: 1fr;
+  }
+}
