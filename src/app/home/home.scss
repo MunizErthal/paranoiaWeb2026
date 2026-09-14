@@ -3,19 +3,20 @@
 }
 
 .home-page {
-  min-height: 55vw;
-  padding: 1vw 7vw 1vw;
+  min-height: clamp(28rem, 20rem + 30vw, 45rem);
+  padding-block: clamp(2rem, 1rem + 4vw, 3rem) clamp(4rem, 2rem + 6vw, 8rem);
+  padding-inline: var(--gutter);
   color: #f7f2ff;
 }
 
 .investigation-hero {
   position: relative;
   display: grid;
-  width: 100vw;
-  min-height: clamp(31rem, 62vw, 42rem);
+  width: auto;
+  min-height: clamp(31rem, 26rem + 20vw, 42rem);
   place-items: center;
   box-sizing: border-box;
-  margin-left: calc(50% - 50vw);
+  margin-inline: calc(-1 * var(--gutter));
   isolation: isolate;
   overflow: hidden;
   padding: 3rem 1.25rem;
@@ -40,20 +41,17 @@
 
 .investigation-hero__digital {
   z-index: -1;
-  top: -10%;
+  top: 7%;
   left: 50%;
-  width: 40vw;
+  width: min(21rem, 90vw);
   opacity: 0.22;
   transform: translateX(-50%);
-}
-
-.investigation-hero__content {
 }
 
 .investigation-hero h1 {
   margin: 0 0 1.25rem;
   color: #ffffff;
-  font-size: 3vw;
+  font-size: var(--fs-h1);
   line-height: 1.08;
   text-transform: uppercase;
 }
@@ -66,7 +64,7 @@
   max-width: 22rem;
   margin: 0 auto 2rem;
   color: rgba(247, 242, 255, 0.78);
-  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  font-size: clamp(0.9rem, 0.75rem + 0.75vw, 1.1rem);
   line-height: 1.5;
 }
 
@@ -78,10 +76,13 @@
 }
 
 .investigation-hero__actions a {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap);
   border-radius: 3px;
-  padding: 0.85rem 1rem;
-  font-size: 0.72rem;
+  padding: 0.5rem 1rem;
+  font-size: var(--fs-xs);
   font-weight: 700;
   text-decoration: none;
   text-transform: uppercase;
@@ -125,12 +126,15 @@
   align-items: center;
   justify-content: space-between;
   overflow: hidden;
-  padding: 2.5rem 4rem;
+  /* Mesmo respiro do desenho original (2.5rem/4rem) em telas normais;
+     só encolhe quando não há espaço, para não estourar a lateral no celular. */
+  padding: clamp(1.5rem, 0.4rem + 3vw, 2.5rem) clamp(1.5rem, -1rem + 8vw, 4rem);
   border-radius: 12px;
   background: linear-gradient(110deg, #26103f 0%, #4a1671 52%, #26103f 100%);
-  width: 38vw;
-  margin: auto;
-  margin-top: 1vw;
+  /* Antes era "width: 38vw" fixo — mesma largura visual em telas normais,
+     mas fluida (min(94%, …)) para não quebrar em telas pequenas. */
+  width: min(94%, 35rem);
+  margin: clamp(0.5rem, -0.5rem + 4vw, 1rem) auto 0;
 }
 
 .story-promo__content {
@@ -143,21 +147,22 @@
   position: absolute;
   top: 59%;
   right: -1.5rem;
-  width: clamp(8rem, 16vw, 14rem);
+  width: 10rem;
   height: auto;
-  opacity: 0.82;
+  opacity: 0.5;
   pointer-events: none;
   transform: translateY(-50%);
-  width: 23vw;
 }
 
 .story-promo h1 {
   margin: 0 0 1.5rem;
+  max-width: 100%;
   color: #ffffff;
-  font-size: 2vw;
+  /* Antes era "2vw" fixo (~29px em telas normais, ilegível no celular).
+     Este clamp chega ao mesmo tamanho em telas normais e não encolhe demais. */
+  font-size: clamp(1.375rem, 1rem + 1.5vw, 1.8rem);
   line-height: 1.1;
   text-transform: uppercase;
-  width: 35vw;
 }
 
 .story-promo h1 strong {
@@ -172,13 +177,15 @@
   max-width: 29rem;
   margin: 0 0 2rem;
   color: rgba(247, 242, 255, 0.8);
-  font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+  font-size: clamp(0.95rem, 0.8rem + 0.75vw, 1.2rem);
   line-height: 1.5;
 }
 
 .story-promo__action {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
   border: 0;
   border-radius: 4px;
   padding: 0.9rem 1.4rem;
@@ -230,48 +237,46 @@
 }
 
 .benefits {
-  gap: 3rem 5rem;
-  max-width: 35vw;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  padding: 2.5rem 4rem;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-  margin: auto;
-  margin-top: 1vw;
+  margin-top: var(--s-8);
 }
 
-.benefit {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  margin: auto;
-  min-width: 15vw;
-}
-
-.benefit__icon {
+/* Moldura única: o gap de 1px sobre o fundo --line desenha as linhas
+   divisórias entre as células, cada uma com fundo --surface-1. */
+.trust__list {
   display: grid;
-  width: 3rem;
-  height: 3rem;
-  flex: 0 0 3rem;
-  place-items: center;
-  border-radius: 8px;
-}
-
-.benefit__icon img {
-  width: 3vw;
-  height: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 0.4rem 1.2rem rgba(125, 35, 214, 0.8)) drop-shadow(0 0 0.3rem rgba(125, 35, 214, 0.8))
-}
-
-.benefit h2 {
+  grid-template-columns: 1fr;
+  gap: 1px;
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--line);
+  /* sem o reset de padding o <ul> abre um vão de 40px antes da 1ª célula */
   margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+}
+
+.trust__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-8) var(--s-6);
+  background: var(--surface-1);
   color: #ffffff;
-  font-size: clamp(0.85rem, 1.4vw, 1.1rem);
+  font-size: clamp(0.85rem, 0.7rem + 0.75vw, 1.1rem);
+  font-weight: 700;
   line-height: 1.45;
+  text-align: center;
   text-transform: uppercase;
+}
+
+.trust__item img {
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: none;
+  object-fit: contain;
+  filter: drop-shadow(0 0.4rem 1.2rem rgba(125, 35, 214, 0.8)) drop-shadow(0 0 0.3rem rgba(125, 35, 214, 0.8));
 }
 
 .hero {
@@ -281,7 +286,7 @@
 .eyebrow {
   margin: 0 0 1rem;
   color: #e7b8ff;
-  font-size: 0.8rem;
+  font-size: var(--fs-xs);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -295,7 +300,7 @@ p {
 
 h1 {
   margin-bottom: 1.5rem;
-  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-size: var(--fs-display);
   line-height: 0.9;
   letter-spacing: 0;
 }
@@ -304,13 +309,15 @@ h1 {
   max-width: 34rem;
   margin-bottom: 2.5rem;
   color: rgba(247, 242, 255, 0.78);
-  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-size: var(--fs-lead);
   line-height: 1.5;
 }
 
 .primary-action {
-  display: inline-block;
-  padding: 0.9rem 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 0.5rem 1.4rem;
   border: 1px solid #e7b8ff;
   color: #24122f;
   background: #e7b8ff;
@@ -326,10 +333,9 @@ h1 {
 }
 
 .games-preview {
-  display: flex;
-  justify-content: space-between;
+  display: block;
   gap: 2rem;
-  margin-top: 12vw;
+  margin-top: 4rem;
   padding-top: 2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
@@ -337,49 +343,37 @@ h1 {
 h2 {
   max-width: 32rem;
   margin-bottom: 0;
-  font-size: clamp(1.8rem, 4vw, 3.5rem);
+  font-size: var(--fs-h2);
   line-height: 1;
 }
 
 .section-copy {
   max-width: 18rem;
+  margin-top: 1.5rem;
   color: rgba(247, 242, 255, 0.65);
   line-height: 1.5;
 }
 
-@media (max-width: 700px) {
-  .home-page {
-    min-height: 100vw;
-    padding: 8vw 5vw 18vw;
-  }
-
-  .investigation-hero {
-    min-height: 32rem;
-    margin: 0 -5vw;
-  }
-
-  .investigation-hero__digital {
-    top: 7%;
-    width: min(21rem, 90vw);
-  }
-
-  .story-promo {
-    min-height: 17rem;
-    padding: 2rem 1.5rem;
-  }
-
-  .story-promo__digital {
-    right: -2rem;
-    width: 10rem;
-    opacity: 0.5;
-  }
-
+@media (min-width: 48rem) {
   .games-preview {
-    display: block;
-    margin-top: 24vw;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6rem;
   }
 
   .section-copy {
-    margin-top: 1.5rem;
+    margin-top: 0;
+  }
+}
+
+@media (min-width: 30rem) {
+  .trust__list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 64rem) {
+  .trust__list {
+    grid-template-columns: repeat(4, 1fr);
   }
 }

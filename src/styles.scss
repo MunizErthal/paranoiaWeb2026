@@ -1,3 +1,7 @@
+@use 'styles/tokens';
+@use 'styles/base';
+@use 'styles/components';
+
 // regular style toast
 @use 'ngx-toastr/toastr';
 
@@ -7,8 +11,7 @@ body {
   z-index: 100;
   margin: 0;
   padding: 0;
-  height: 100vh;
-  width: 100vw;
+  min-height: 100dvh;
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
@@ -42,18 +45,4 @@ p, h1, h2, h3, h4, h5, h6, a, span, div, li, button, input, textarea, a {
   font-optical-sizing: auto;
   font-style: normal;
   font-weight: 100;
-}
-
-.back-link {
-  display: inline-block;
-  margin-bottom: 2rem;
-  color: rgba(247, 242, 255, 0.7);
-  font-size: 0.8vw;
-  text-decoration: none;
-  text-transform: uppercase;
-}
-
-.back-link:hover,
-.back-link:focus-visible {
-  color: #ffffff;
 }

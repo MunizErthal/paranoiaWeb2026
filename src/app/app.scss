@@ -34,14 +34,34 @@
     margin: 6vw;
 }
 
+/* O menu saiu de dentro do .logo-container (para poder ficar sticky e
+   escurecer ao rolar), mas continua com os MESMOS números do original:
+   fonte, espaçamento e posição. A margem negativa sobe a barra de volta
+   para dentro do cabeçalho, "colada" acima da borda, em vez de deixá-la
+   cair abaixo dele. */
 .main-navigation {
-    position: absolute;
-    bottom: 0.25vw;
-    z-index: 2;
+    position: sticky;
+    top: 0;
+    z-index: 50;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     gap: 2.1vw;
+    margin-top: -2.8vw;
+    padding: 0;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition: background-color 200ms, backdrop-filter 200ms, border-color 200ms;
+    height: 3vw;
+}
+
+.main-navigation.is-scrolled {
+    /* Ao rolar, o .logo-container (e a linha dele) já saiu de vista — esta
+       borda entra para marcar o fim da barra fixa. */
+    //background: rgba(16, 8, 25, 0.86);
+    backdrop-filter: blur(14px);
+    border-bottom-color: var(--line);
 }
 
 .main-navigation a {
@@ -58,7 +78,7 @@
 .main-navigation a::after {
     position: absolute;
     right: 0;
-    bottom: -0.35vw;
+    bottom: -0.45vw;
     left: 0;
     height: 1px;
     background: #ffffff;
@@ -97,7 +117,6 @@
     }
 
     .main-navigation {
-        bottom: 4vw;
         gap: 4vw;
     }
 
@@ -116,12 +135,19 @@
 .newsletter {
     box-sizing: border-box;
     width: 100%;
-    padding: 4vw 2rem 3.5vw;
+    margin-top: clamp(2rem, -1rem + 12vw, 5rem);
+    padding: clamp(2rem, 0.5rem + 5vw, 4.5rem) clamp(1rem, 0.4rem + 2vw, 2rem) clamp(2rem, 0.8rem + 4.5vw, 4rem);
     background-image: linear-gradient(120deg, rgba(24, 10, 42, 0.92), rgba(42, 17, 68, 0.72)), url('/images/paranoia/backgroundEffect.png');
     background-position: center;
     background-size: cover;
     color: #ffffff;
     text-align: center;
+    border-bottom: 1px solid var(--line);
+}
+
+/* A quebra de linha do texto só faz sentido quando há largura para ela. */
+.newsletter-break {
+    display: none;
 }
 
 .newsletter-content {
@@ -131,21 +157,31 @@
 
 .newsletter h2 {
     margin: 0 0 1rem;
-    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-size: var(--fs-h2);
     text-transform: uppercase;
 }
 
 .newsletter p {
     margin: 0;
     color: rgba(247, 242, 255, 0.72);
-    font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+    font-size: var(--fs-lead);
     line-height: 1.5;
 }
 
 .newsletter-form {
     display: flex;
     width: min(100%, 30rem);
-    margin: 2rem auto 0;
+    margin: 1.5rem auto 0;
+}
+
+@media (min-width: 48rem) {
+    .newsletter-form {
+        margin-top: 2rem;
+    }
+
+    .newsletter-break {
+        display: inline;
+    }
 }
 
 .newsletter-form input {
@@ -209,36 +245,51 @@
 }
 
 .footer {
-    margin-top: 2vw;
-    width: 100vw;
+    margin-top: 0;
+    width: 100%;
     height: auto;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    background: var(--c-void);
+    padding-block: var(--s-8);
+    padding-inline: var(--gutter);
 }
 
 .footer-logo {
-    .bard {
-        width: 21vw;
-    }
+    margin-bottom: var(--s-4);
+}
+
+.footer-logo__img {
+    width: clamp(11rem, 8rem + 10vw, 15rem);
+    height: auto;
 }
 
 .footer-quote {
     text-align: center;
-    color: white;
-    font-size: 1vw;
-    width: 20vw;
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    max-width: 22rem;
 }
 
 .footer-social {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1vw;
+    gap: var(--s-4);
+    margin-top: var(--s-4);
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: var(--tap);
+      min-height: var(--tap);
+    }
 
     img {
-        width: 1.5vw;
+        width: 1.5rem;
         height: auto;
         cursor: pointer !important;
         position: relative;
@@ -248,26 +299,10 @@
 
 .footer-copy {
   text-align: center;
-  color: white;
-  font-size: 0.7vw;
+  color: var(--text-subtle);
+  font-size: var(--fs-xs);
   position: relative;
   bottom: 0;
   margin-bottom: 0;
-  margin-top: 1vw;
-}
-
-@media (max-width: 600px) {
-    .newsletter {
-        width: 100%;
-        margin-top: 12vw;
-        padding: 3rem 1rem 2.5rem;
-    }
-
-    .newsletter-break {
-        display: none;
-    }
-
-    .newsletter-form {
-        margin-top: 1.5rem;
-    }
+  margin-top: var(--s-4);
 }

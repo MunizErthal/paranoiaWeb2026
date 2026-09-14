@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, DestroyRef, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DestroyRef, HostListener, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
@@ -17,6 +17,7 @@ type NavigationItem = {
 })
 export class App implements AfterViewInit {
   animateOnLoad = false;
+  isScrolled = false;
   protected readonly title = signal('Paranoia Jogos');
   protected readonly selectedPage = signal('inicio');
   protected readonly navigationItems: NavigationItem[] = [
@@ -48,6 +49,16 @@ export class App implements AfterViewInit {
     )?.id ?? 'inicio';
 
     this.selectedPage.set(selectedPage);
+  }
+
+  // Escurece o menu fixo (sticky) assim que a página rola um pouco.
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
+    const isScrolled = window.scrollY > 8;
+    if (isScrolled !== this.isScrolled) {
+      this.isScrolled = isScrolled;
+      this.cdr.detectChanges();
+    }
   }
 
   ngAfterViewInit(): void {

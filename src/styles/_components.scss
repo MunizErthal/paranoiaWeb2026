@@ -1,0 +1,116 @@
+/* =========================================================================
+   Primitivas compartilhadas — apenas as usadas nesta etapa do merge:
+   .u-evidence (cantos de evidência), .link-action / .link-back e tags.
+   Não traz .page, .page-block, .prose, .btn* etc — reescreveriam layout
+   da master.
+   ========================================================================= */
+
+/* Marca de recorte de prova — dois cantos, como uma foto de evidência */
+.u-evidence {
+  position: relative;
+}
+
+.u-evidence::before,
+.u-evidence::after {
+  position: absolute;
+  width: var(--tick, 14px);
+  height: var(--tick, 14px);
+  border: var(--border) solid var(--accent);
+  content: "";
+  pointer-events: none;
+}
+
+.u-evidence::before {
+  top: -1px;
+  left: -1px;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.u-evidence::after {
+  right: -1px;
+  bottom: -1px;
+  border-top: 0;
+  border-left: 0;
+}
+
+/* Link de ação discreto — a seta se desloca, o texto não */
+.link-action {
+  display: inline-flex;
+  min-height: var(--tap);
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--accent-text);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.link-action svg {
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.link-action:hover svg,
+.link-action:focus-visible svg {
+  transform: translateX(3px);
+}
+
+.link-back {
+  display: inline-flex;
+  min-height: var(--tap);
+  align-items: center;
+  gap: var(--s-3);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.link-back:hover,
+.link-back:focus-visible {
+  color: var(--text);
+}
+
+.link-back svg {
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.link-back:hover svg {
+  transform: translateX(-3px);
+}
+
+/* --- Tags ----------------------------------------------------------- */
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  border: var(--border) solid var(--line-strong);
+  border-radius: var(--r-xs);
+  padding: 0.3rem 0.55rem;
+  color: var(--text-muted);
+  background: var(--accent-soft);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* --- Movimento ---------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .link-action:hover svg,
+  .link-back:hover svg {
+    transform: none;
+  }
+}

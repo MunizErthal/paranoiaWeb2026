@@ -1,273 +1,387 @@
+/* Detalhe do jogo — hero da master + colunas/acordeão/galeria da claude.
+   Tags e ficha técnica existem 2x no DOM (sobreposta + abaixo do hero);
+   a sobreposta é aria-hidden, a de baixo é a versão acessível. */
+
+$fade: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
+
 :host {
   display: block;
 }
 
 .game-detail-page {
   box-sizing: border-box;
-  width: min(100%, 72rem);
+  width: min(100%, 76rem);
   margin: 0 auto;
-  padding: 3rem 7vw 8rem;
-  color: #f7f2ff;
+  padding: var(--s-12) var(--gutter) var(--s-24);
+  color: var(--text);
 }
 
 .game-detail {
-  width: min(100%, 48rem);
+  width: min(100%, 64rem);
   margin: 0 auto;
 }
 
-.game-detail-info {
-    display: flex !important;
-    flex-direction: row;
-    align-items: center;
-}
-
-.game-detail-icon  {
-    width: 1.5vw;
-    height: auto;
-    margin-right: 0.5vw;
-}
-
 .game-detail__hero {
-  position: relative;
+  margin-top: var(--s-8);
 }
 
 .game-detail__cover {
   position: relative;
   display: block;
+  overflow: hidden;
   width: 100%;
   height: clamp(19rem, 38vw, 28rem);
-  border-radius: 6px;
-  background-color: #050308;
-  background-image: linear-gradient(0deg, rgba(3, 2, 8, 0.96) 0%, rgba(3, 2, 8, 0.72) 32%, rgba(3, 2, 8, 0) 68%), url('/images/jogos/cidadesubmersa/cover6.png');
-  background-position: center center;
+  border-radius: var(--r-md);
+  background-color: var(--c-void);
+  background-image: linear-gradient(0deg, rgba(3, 2, 8, .96) 0%, rgba(3, 2, 8, .72) 32%, rgba(3, 2, 8, 0) 68%),
+    url('/images/jogos/cidadesubmersa/cover6.png');
+  background-position: center;
   background-size: cover;
-  overflow: hidden;
-}
-
-.game-detail__cover h1 {
-  margin: 0 0 1rem;
-  color: #ffffff;
-  font-size: clamp(2rem, 6vw, 3.8rem);
-  line-height: 0.95;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
-  text-transform: uppercase;
 }
 
 .game-detail__intro {
   position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  padding: 5rem 1.5rem 1.5rem;
+  inset: auto 0 0 0;
+  padding: var(--s-16) var(--s-6) var(--s-6);
+}
+
+.game-detail__cover h1 {
+  margin: 0 0 var(--s-4);
+  color: #fff;
+  font-size: clamp(2rem, 6vw, 3.8rem);
+  line-height: var(--lh-tight);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, .9);
+  text-transform: uppercase;
+}
+
+.game-detail__summary {
+  max-width: 38rem;
+  margin: 0;
+  color: rgba(247, 242, 255, .82);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
 }
 
 .game-detail__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 0.8rem;
+  gap: var(--s-2);
+  margin: 0 0 var(--s-3);
+  padding: 0;
+  list-style: none;
 }
 
-.game-detail__tags span {
+/* As tags desta página usam a cara original da master (borda/fundo mais
+   discretos, sem caixa alta) em vez do .tag genérico compartilhado. */
+.game-detail__tags .tag {
   border: 1px solid rgba(231, 184, 255, 0.25);
   border-radius: 4px;
   padding: 0.35rem 0.55rem;
   color: rgba(247, 242, 255, 0.82);
   background: rgba(44, 19, 65, 0.45);
   font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 .game-detail__meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.7rem;
-  margin: 0 0 1.5rem;
+  gap: var(--s-6);
+  margin: 0;
+  padding: 0;
+
+  /* Wrapper do ícone + par label/valor, lado a lado. */
+  > div {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+
+    /* Par dt/dd: precisa ser grid (não block) para o "order" abaixo
+       empilhar o valor ACIMA do label — sem isso os dois viram blocos
+       normais e o label aparece antes do valor. */
+    > div {
+      display: grid;
+      gap: 0.25rem;
+    }
+  }
+
+  div.corners {
+    margin: auto;
+  }
+
+  div.middle {
+    margin-left: -2vw;
+    margin-right: -2vw;
+  }
+
+  img {
+    width: 1.4rem;
+    height: auto;
+  }
+
+  dt {
+    order: 2;
+    color: var(--text-subtle);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--text);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
+  }
 }
 
-.game-detail__meta div {
+/* Cópia sobreposta: some ao rolar e sai da árvore de foco/toque.
+   O wrapper .game-detail__meta-collapse recolhe a ALTURA que tags+ficha
+   ocupavam (técnica grid-template-rows 1fr → 0fr, já que height:auto não
+   é animável), para o título subir e ficar colado na descrição. O fade de
+   opacidade/posição roda junto, na mesma duração. */
+.game-detail__meta-collapse {
   display: grid;
-  gap: 0.25rem;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows var(--dur-slow) var(--ease-out);
+
+  /* Contém as margens dos filhos (tags/ficha) para que a altura medida
+     pelo grid inclua o espaçamento entre eles — sem isso o "colapso"
+     deixaria uma sobra de margem entre o h1 e a descrição. */
+  > div {
+    overflow: hidden;
+  }
 }
 
-.game-detail__meta dt {
-  order: 2;
-  color: rgba(247, 242, 255, 0.6);
-  font-size: 0.65rem;
-  text-transform: uppercase;
+.game-detail__intro .game-detail__tags,
+.game-detail__intro .game-detail__meta {
+  transition: $fade;
 }
 
-.game-detail__meta dd {
-  margin: 0;
-  color: #ffffff;
-  font-size: 0.95rem;
-  font-weight: 700;
+.game-detail.is-scrolled .game-detail__meta-collapse {
+  grid-template-rows: 0fr;
 }
 
-.game-detail__summary,
-.game-detail__about p {
-  color: rgba(247, 242, 255, 0.78);
-  font-size: 0.95rem;
-  line-height: 1.55;
+.game-detail.is-scrolled .game-detail__intro .game-detail__tags,
+.game-detail.is-scrolled .game-detail__intro .game-detail__meta {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: $fade, visibility 0s linear var(--dur-slow);
+  pointer-events: none;
 }
 
-.game-detail__summary {
-  margin: 0;
+/* Cópia de baixo: some no topo, reaparece ao rolar. */
+.game-detail__tags--below,
+.game-detail__meta--below {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: $fade;
 }
 
-.game-detail__about {
-  margin-top: 2.8rem;
+.game-detail.is-scrolled .game-detail__tags--below,
+.game-detail.is-scrolled .game-detail__meta--below {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.game-detail h2 {
-  margin: 0 0 0.7rem;
-  color: #ffffff;
-  font-size: 1rem;
+.game-detail__meta--below {
+  border-block: var(--border) solid var(--line);
+  padding-block: var(--s-4);
 }
 
-.game-detail__about p {
-  margin: 0;
+.game-detail__body {
+  margin-top: var(--s-8);
 }
 
 .game-detail__gallery {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.4rem;
-  margin-top: 2rem;
+  gap: var(--s-2);
+  margin: var(--s-10) 0 0;
+  padding: 0;
+  list-style: none;
 }
 
 .game-detail__gallery img {
   width: 100%;
-  height: 5.2rem;
-  border-radius: 3px;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--c-void);
   object-fit: cover;
 }
 
-.game-detail__dots {
-  display: flex;
-  justify-content: center;
-  gap: 0.45rem;
-  margin: 0.8rem 0 1.5rem;
+.game-detail__about {
+  margin-top: var(--s-10);
 }
 
-.game-detail__dots span {
-  width: 0.35rem;
-  height: 0.35rem;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.45);
+.game-detail__about h2 {
+  margin: 0 0 var(--s-3);
+  font-size: var(--fs-h3);
+  text-transform: uppercase;
 }
 
-.game-detail__dots .is-active {
-  background: #9d43ff;
+.game-detail__about p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
 }
 
 .purchase-panel {
-  border: 1px solid rgba(157, 67, 255, 0.45);
-  border-radius: 5px;
-  padding: 1rem;
-  background: rgba(13, 6, 24, 0.7);
-}
-
-.purchase-panel__price,
-.purchase-panel__installments {
-  margin: 0;
+  margin-top: var(--s-8);
+  border-radius: var(--r-md);
+  padding: var(--s-6);
+  background: var(--surface-1);
+  box-shadow: var(--shadow-2);
 }
 
 .purchase-panel__price {
-  color: #ffffff;
-  font-size: 1.1rem;
-  font-weight: 700;
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
+  font-weight: var(--fw-black);
 }
 
 .purchase-panel__installments {
-  margin-top: 0.25rem;
-  color: rgba(247, 242, 255, 0.58);
-  font-size: 0.7rem;
+  margin: var(--s-1) 0 0;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
 }
 
+/* CTA principal: na master era 0.7vw (~9px em 1280px); agora é o maior
+   alvo de toque da página. */
 .purchase-panel__button {
+  display: flex;
+  min-height: var(--s-12);
   width: 100%;
-  margin: 1rem 0 0.8rem;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  margin-top: var(--s-6);
   border: 0;
-  border-radius: 4px;
-  padding: 0.85rem 1rem;
-  color: #ffffff;
+  border-radius: var(--r-sm);
   background: linear-gradient(115deg, #6d1bc3 0%, #9d36f0 48%, #c15cff 100%);
+  color: #fff;
   cursor: pointer;
   font: inherit;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
   text-transform: uppercase;
-  box-shadow: 0 0.4rem 1.2rem rgba(125, 35, 214, 0.3);
-
-  display: flex;
-  align-items: center;
-
-  span {
-    flex: 1;
-    margin: auto;
-    text-align: center;
-    font-size: 0.7vw;
-  }
-
-  img {
-    text-align: center;
-    margin: auto;
-    width: 1.5rem;
-    height: auto;
-    cursor: pointer;
-  }
+  box-shadow: 0 .4rem 1.2rem rgba(125, 35, 214, .3);
+  transition: background var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out);
 }
 
 .purchase-panel__button:hover,
 .purchase-panel__button:focus-visible {
   background: linear-gradient(115deg, #8527d8 0%, #b44cff 48%, #d47aff 100%);
-  box-shadow: 0 0.5rem 1.5rem rgba(157, 67, 255, 0.45);
+  box-shadow: 0 .5rem 1.5rem rgba(157, 67, 255, .45);
 }
 
-.purchase-panel details {
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(247, 242, 255, 0.84);
-  font-size: 0.78rem;
+.purchase-panel__reassurance {
+  margin-top: var(--s-4);
+  color: var(--text-subtle);
+  font-size: var(--fs-sm);
+  text-align: center;
 }
 
-.purchase-panel summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 0;
-  cursor: pointer;
-  list-style: none;
-}
+.purchase-panel__accordion {
+  margin-top: var(--s-6);
 
-.purchase-panel summary::-webkit-details-marker {
-  display: none;
-}
-
-.purchase-panel summary span {
-  color: #ffffff;
-  font-size: 1.1rem;
-}
-
-.purchase-panel details p {
-  margin: -0.2rem 0 1rem;
-  color: rgba(247, 242, 255, 0.62);
-  line-height: 1.5;
-}
-
-@media (min-width: 701px) {
-  .game-detail-page {
-    padding-right: 5vw;
-    padding-left: 5vw;
+  details {
+    border-top: var(--border) solid var(--line);
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
   }
 
-  .game-detail {
-    width: min(100%, 64rem);
+  summary {
+    display: flex;
+    min-height: var(--tap);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    padding: var(--s-4) 0;
+    color: var(--text);
+    font-weight: var(--fw-semibold);
+    list-style: none;
+    cursor: pointer;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &:hover {
+      color: var(--accent-text);
+    }
+
+    /* Seta desenhada que gira ao abrir — o "+" fixo antigo não mudava. */
+    &::after {
+      width: .6rem;
+      height: .6rem;
+      flex: none;
+      border-right: 2px solid var(--accent-text);
+      border-bottom: 2px solid var(--accent-text);
+      content: '';
+      transform: rotate(45deg) translate(-.15rem, -.15rem);
+      transition: transform var(--dur) var(--ease-out);
+    }
   }
 
-  .game-detail__about,
+  details[open] summary::after {
+    transform: rotate(-135deg) translate(-.15rem, -.15rem);
+  }
+
+  details p {
+    margin: -.2rem 0 var(--s-5);
+    line-height: var(--lh-body);
+  }
+}
+
+@media (min-width: 64rem) {
+  .game-detail__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(22rem, .85fr);
+    align-items: start;
+    gap: var(--s-6) var(--s-12);
+    margin-top: var(--s-10);
+  }
+
+  .game-detail__tags--below,
+  .game-detail__meta--below,
   .game-detail__gallery,
-  .game-detail__dots,
+  .game-detail__about,
   .purchase-panel {
-    max-width: 48rem;
-    margin-right: auto;
-    margin-left: auto;
+    grid-column: 1;
+    margin-top: 0;
+  }
+
+  .game-detail__meta--below { grid-row: 1; }
+  .game-detail__tags--below { grid-row: 2; }
+  .game-detail__gallery { grid-row: 3; }
+  .game-detail__about { grid-row: 4; }
+
+  .purchase-panel {
+    position: sticky;
+    top: calc(3rem + var(--s-6));
+    grid-column: 2;
+    grid-row: 1 / span 4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-detail__intro .game-detail__tags,
+  .game-detail__intro .game-detail__meta,
+  .game-detail__tags--below,
+  .game-detail__meta--below,
+  .purchase-panel__button {
+    transition-duration: .01ms !important;
+    transition-delay: 0s !important;
+  }
+
+  .purchase-panel {
+    position: static;
   }
 }

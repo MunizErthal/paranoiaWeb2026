@@ -1,0 +1,119 @@
+/* =========================================================================
+   PARANOIA JOGOS — Design tokens
+   Única fonte de verdade para cor, tipografia, espaço, forma e movimento.
+   Nada de valores mágicos fora deste arquivo.
+   ========================================================================= */
+
+:root {
+  /* ---------------------------------------------------------------------
+     COR
+     Base violeta herdada da marca (#321953 → #180C24, o radial original).
+     Superfícies são opacas — camadas de alpha empilhadas tornam o contraste
+     imprevisível sobre o gradiente de fundo.
+     --------------------------------------------------------------------- */
+  --c-void: #0c0714;
+  --c-ink: #180c24;   /* fim do radial original */
+  --c-royal: #321953; /* início do radial original */
+
+  --surface-page: radial-gradient(circle at 50% 0%, #321953 0%, #180c24 70%);
+  --surface-1: #1b0f2b; /* painéis, cards */
+  --surface-2: #241537; /* elevado, hover */
+  --surface-sunken: #130a1e; /* campos de formulário */
+
+  --line: rgba(231, 214, 255, 0.14);
+  --line-strong: rgba(231, 214, 255, 0.3);
+
+  --text: #f3edfb;
+  --text-muted: #c6b7df; /* ≥ 8:1 em todas as superfícies */
+  --text-subtle: #a695c4; /* metadados, placeholders — ≥ 5.5:1 */
+
+  /* Ação — família violeta já estabelecida no projeto */
+  --accent: #9d43ff;
+  --accent-text: #c79bff;  /* violeta legível como texto (≥ 6.8:1) */
+  --accent-solid: #7b2fd0; /* preenchimento de botão, texto branco = 6.65:1 */
+  --accent-solid-hover: #9445e8;
+  --accent-soft: rgba(157, 67, 255, 0.14);
+
+  /* Aberração cromática da logo — usar com parcimônia: é a assinatura */
+  --chroma-cyan: #45e3e8;
+  --chroma-magenta: #ff3fb4;
+
+  --focus-ring: var(--chroma-cyan);
+
+  /* ---------------------------------------------------------------------
+     TIPOGRAFIA
+     Plus Jakarta Sans em toda a interface. Escala fluida em rem —
+     nunca vw puro, que quebra o zoom do navegador (WCAG 1.4.4).
+     --------------------------------------------------------------------- */
+  --font-sans: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system,
+    sans-serif;
+
+  --fs-display: clamp(2.25rem, 1.35rem + 4.5vw, 5rem);
+  --fs-h1: clamp(1.875rem, 1.3rem + 2.9vw, 3.5rem);
+  --fs-h2: clamp(1.375rem, 1.15rem + 1.15vw, 2.125rem);
+  --fs-h3: clamp(1.0625rem, 1rem + 0.35vw, 1.3125rem);
+  --fs-lead: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  --fs-body: 1rem;
+  --fs-sm: 0.875rem;
+  --fs-xs: 0.75rem; /* piso absoluto: 12px */
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-black: 800;
+
+  --lh-tight: 1.05;
+  --lh-snug: 1.25;
+  --lh-body: 1.65;
+
+  --track-display: -0.02em;
+  --track-label: 0.14em;
+
+  --measure: 68ch; /* 65–75ch para leitura confortável */
+
+  /* ---------------------------------------------------------------------
+     ESPAÇO — base 4px
+     --------------------------------------------------------------------- */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.25rem;
+  --s-6: 1.5rem;
+  --s-8: 2rem;
+  --s-10: 2.5rem;
+  --s-12: 3rem;
+  --s-16: 4rem;
+  --s-20: 5rem;
+  --s-24: 6rem;
+
+  --section-y: clamp(3.5rem, 2rem + 6vw, 7rem);
+  --gutter: clamp(1.25rem, 0.5rem + 3.5vw, 3.5rem);
+  --page-max: 76rem;
+  --prose-max: 44rem;
+
+  /* ---------------------------------------------------------------------
+     FORMA — cantos retos e precisos, linguagem de dossiê forense
+     --------------------------------------------------------------------- */
+  --r-xs: 2px;
+  --r-sm: 4px;
+  --r-md: 8px;
+  --border: 1px;
+
+  /* Sombras sempre com deslocamento + desfoque */
+  --shadow-1: 0 2px 8px rgba(8, 3, 16, 0.5);
+  --shadow-2: 0 10px 32px rgba(8, 3, 16, 0.65);
+  --shadow-accent: 0 6px 22px rgba(123, 47, 208, 0.4);
+
+  /* ---------------------------------------------------------------------
+     MOVIMENTO
+     --------------------------------------------------------------------- */
+  --dur-fast: 140ms;
+  --dur: 200ms;
+  --dur-slow: 420ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Alvo mínimo de toque */
+  --tap: 2.75rem;
+}
