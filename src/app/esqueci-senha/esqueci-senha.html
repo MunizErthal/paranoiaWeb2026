@@ -1,0 +1,46 @@
+<main class="auth-page">
+  <div class="auth-card u-evidence">
+    @if (!linkEnviado()) {
+      <p class="auth-card__eyebrow">Recuperação de acesso</p>
+      <h1 class="auth-card__title">Esqueci minha senha</h1>
+      <p class="auth-card__lead">Informe seu e-mail e enviaremos um link para você criar uma nova senha.</p>
+
+      <form class="auth-card__form" (ngSubmit)="enviarLink()" novalidate>
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder="voce@email.com"
+            [value]="email()"
+            (input)="email.set($any($event.target).value)"
+            [attr.aria-invalid]="erroEmail() ? 'true' : null"
+            [attr.aria-describedby]="erroEmail() ? 'email-erro' : null" />
+          @if (erroEmail(); as erro) {
+            <p class="field__error" id="email-erro" aria-live="polite">{{ erro }}</p>
+          }
+        </div>
+
+        <button class="btn-primary" type="submit" [disabled]="carregando()" [attr.aria-busy]="carregando()">
+          {{ carregando() ? 'Enviando…' : 'Enviar link de redefinição' }}
+        </button>
+      </form>
+
+      <div class="auth-card__links">
+        <a routerLink="/login">Voltar para o login</a>
+        <span></span>
+      </div>
+    } @else {
+      <div class="auth-card__success">
+        <span class="auth-card__success-icon" aria-hidden="true">✓</span>
+        <h1 class="auth-card__title">Link enviado</h1>
+        <p class="auth-card__lead">
+          Enviamos um link de redefinição para {{ email() }}. Verifique sua caixa de entrada.
+        </p>
+        <a class="btn-primary" routerLink="/login">Voltar para o login</a>
+      </div>
+    }
+  </div>
+</main>

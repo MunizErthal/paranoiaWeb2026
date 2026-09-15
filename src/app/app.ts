@@ -1,7 +1,9 @@
-import { AfterViewInit, ChangeDetectorRef, Component, DestroyRef, HostListener, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DestroyRef, HostListener, Signal, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
+import { AuthStateStore } from '../shared/stores/auth-state.store';
+import { AuthService } from '../shared/services/firebase/auth.service';
 
 type NavigationItem = {
   id: string;
@@ -28,11 +30,16 @@ export class App implements AfterViewInit {
     { id: 'contato', label: 'Contato', route: '/contato' }
   ];
 
+  protected readonly estaAutenticado: Signal<boolean>;
+
   constructor(
     private cdr: ChangeDetectorRef,
     private router: Router,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private authState: AuthStateStore,
+    private authService: AuthService
   ) {
+    this.estaAutenticado = this.authState.estaAutenticado;
     this.updateSelectedPage(this.router.url);
     this.router.events
       .pipe(
@@ -40,6 +47,11 @@ export class App implements AfterViewInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((event) => this.updateSelectedPage(event.urlAfterRedirects));
+  }
+
+  async sair(): Promise<void> {
+    await this.authService.logout();
+    this.router.navigateByUrl('/');
   }
 
   private updateSelectedPage(url: string): void {

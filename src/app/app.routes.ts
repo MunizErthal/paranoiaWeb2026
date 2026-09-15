@@ -13,5 +13,8 @@ export const routes: Routes = [
 	{ path: 'sobre', component: Sobre },
 	{ path: 'loja', component: Loja },
 	{ path: 'contato', component: Contato },
+	{ path: 'login', loadComponent: () => import('./login/login').then(m => m.Login) },
+	{ path: 'cadastro', loadComponent: () => import('./cadastro/cadastro').then(m => m.Cadastro) },
+	{ path: 'esqueci-senha', loadComponent: () => import('./esqueci-senha/esqueci-senha').then(m => m.EsqueciSenha) },
 	{ path: '**', redirectTo: '' }
 ];

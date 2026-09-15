@@ -33,6 +33,11 @@
             {{ item.label }}
         </a>
     }
+    @if (estaAutenticado()) {
+        <button class="main-navigation__action glitchButton" type="button" (click)="sair()">Sair</button>
+    } @else {
+        <a class="glitchButton" routerLink="/login">Entrar</a>
+    }
 </nav>
 
 <router-outlet />

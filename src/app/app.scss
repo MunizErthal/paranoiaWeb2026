@@ -101,6 +101,25 @@
     transform: scaleX(1);
 }
 
+/* Ação de sessão (Sair) é um <button>, não um <a> — replica o visual dos
+   itens de navegação sem herdar o seletor ".main-navigation a". */
+.main-navigation__action {
+    padding: 0.35vw 0;
+    border: 0;
+    background: none;
+    color: rgba(255, 255, 255, 0.86);
+    font: inherit;
+    font-size: 1vw;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 180ms ease;
+}
+
+.main-navigation__action:hover,
+.main-navigation__action:focus-visible {
+    color: #ffffff;
+}
+
 @media (max-width: 600px) {
     .logo-container {
         height: 38vw;
@@ -120,7 +139,8 @@
         gap: 4vw;
     }
 
-    .main-navigation a {
+    .main-navigation a,
+    .main-navigation__action {
         font-size: 0.56rem;
     }
 }

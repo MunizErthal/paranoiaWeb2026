@@ -1,0 +1,254 @@
+/* =========================================================================
+   PARANOIA JOGOS — Primitivas de formulário
+   Usado por telas transacionais novas (login, cadastro, checkout, perfil).
+   Não é referenciado por nenhuma tela existente — puramente aditivo.
+   ========================================================================= */
+
+.auth-page {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(28rem, 20rem + 30vw, 40rem);
+  padding: var(--section-y) var(--gutter);
+}
+
+.auth-card {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 26rem;
+  overflow: hidden;
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-sm);
+  padding: var(--s-8) var(--s-6);
+  background: var(--surface-1);
+  box-shadow: var(--shadow-2);
+}
+
+/* Assinatura cromática — um fio só, discreto, no topo do card */
+.auth-card::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--chroma-cyan), var(--chroma-magenta));
+  content: "";
+}
+
+.auth-card__eyebrow {
+  margin: 0 0 var(--s-3);
+  color: var(--accent-text);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+.auth-card__title {
+  margin: 0 0 var(--s-2);
+  color: var(--text);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-tight);
+}
+
+.auth-card__lead {
+  margin: 0 0 var(--s-6);
+  color: var(--text-muted);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.auth-card__form {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.field {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.field label {
+  color: var(--text);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.field input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--tap);
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-xs);
+  padding: 0 var(--s-4);
+  color: var(--text);
+  background: var(--surface-sunken);
+  font: inherit;
+  transition: border-color var(--dur) var(--ease-out);
+}
+
+.field input::placeholder {
+  color: var(--text-subtle);
+}
+
+.field input:focus-visible {
+  border-color: var(--line-strong);
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.field input[aria-invalid="true"] {
+  border-color: var(--chroma-magenta);
+}
+
+.field__error {
+  margin: 0;
+  color: var(--chroma-magenta);
+  font-size: var(--fs-sm);
+}
+
+.field--checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+}
+
+.field--checkbox input {
+  width: 1.2rem;
+  height: 1.2rem;
+  min-height: 0;
+  margin-top: 0.15rem;
+  accent-color: var(--accent);
+}
+
+.field--checkbox label {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-regular);
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.btn-primary,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  width: 100%;
+  min-height: var(--tap);
+  border-radius: var(--r-xs);
+  padding: 0 var(--s-4);
+  cursor: pointer;
+  font: inherit;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: background-color var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out);
+}
+
+.btn-primary {
+  border: var(--border) solid transparent;
+  color: var(--text);
+  background: var(--accent-solid);
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background: var(--accent-solid-hover);
+}
+
+.btn-primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.btn-secondary {
+  border: var(--border) solid var(--line-strong);
+  color: var(--text);
+  background: transparent;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus-visible {
+  background: var(--surface-2);
+}
+
+.auth-card__divider {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin: var(--s-6) 0;
+  color: var(--text-subtle);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+.auth-card__divider::before,
+.auth-card__divider::after {
+  flex: 1;
+  height: var(--border);
+  background: var(--line);
+  content: "";
+}
+
+.auth-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-top: var(--s-6);
+  font-size: var(--fs-sm);
+}
+
+.auth-card__links a {
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+}
+
+.auth-card__links a:hover,
+.auth-card__links a:focus-visible {
+  color: var(--text);
+  text-decoration-color: currentColor;
+}
+
+.auth-card__success {
+  display: grid;
+  gap: var(--s-4);
+  text-align: center;
+}
+
+.auth-card__success-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto;
+  border: var(--border) solid var(--chroma-cyan);
+  border-radius: var(--r-md);
+  color: var(--chroma-cyan);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary,
+  .btn-secondary,
+  .field input,
+  .auth-card__links a {
+    transition: none;
+  }
+}

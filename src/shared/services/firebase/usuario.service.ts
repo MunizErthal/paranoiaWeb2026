@@ -76,10 +76,6 @@ export class UsuarioService {
     });
   }
 
-  atualizarDadosCadastro(uid: string, nome: string, idade: number): Promise<void> {
-    return updateDoc(doc(this.firestore, this.COLECAO, uid), { nome, idade });
-  }
-
   /**
    * Atualiza a data do último login do usuário
    * @param uid - ID do usuário

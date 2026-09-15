@@ -1,0 +1,112 @@
+<main class="auth-page">
+  <div class="auth-card u-evidence">
+    @if (!cadastroConcluido()) {
+      <p class="auth-card__eyebrow">Novo dossiê</p>
+      <h1 class="auth-card__title">Criar conta</h1>
+      <p class="auth-card__lead">Cadastre-se para acompanhar suas compras e continuar a investigação.</p>
+
+      <form class="auth-card__form" (ngSubmit)="cadastrar()" novalidate>
+        <div class="field">
+          <label for="nome">Nome</label>
+          <input
+            id="nome"
+            name="nome"
+            type="text"
+            autocomplete="name"
+            placeholder="Como podemos te chamar?"
+            [value]="nome()"
+            (input)="nome.set($any($event.target).value)"
+            [attr.aria-invalid]="erroNome() ? 'true' : null"
+            [attr.aria-describedby]="erroNome() ? 'nome-erro' : null" />
+          @if (erroNome(); as erro) {
+            <p class="field__error" id="nome-erro" aria-live="polite">{{ erro }}</p>
+          }
+        </div>
+
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder="voce@email.com"
+            [value]="email()"
+            (input)="email.set($any($event.target).value)"
+            [attr.aria-invalid]="erroEmail() ? 'true' : null"
+            [attr.aria-describedby]="erroEmail() ? 'email-erro' : null" />
+          @if (erroEmail(); as erro) {
+            <p class="field__error" id="email-erro" aria-live="polite">{{ erro }}</p>
+          }
+        </div>
+
+        <div class="field">
+          <label for="senha">Senha</label>
+          <input
+            id="senha"
+            name="senha"
+            type="password"
+            autocomplete="new-password"
+            placeholder="Mínimo de 6 caracteres"
+            [value]="senha()"
+            (input)="senha.set($any($event.target).value)"
+            [attr.aria-invalid]="erroSenha() ? 'true' : null"
+            [attr.aria-describedby]="erroSenha() ? 'senha-erro' : null" />
+          @if (erroSenha(); as erro) {
+            <p class="field__error" id="senha-erro" aria-live="polite">{{ erro }}</p>
+          }
+        </div>
+
+        <div class="field">
+          <label for="confirmar-senha">Confirmar senha</label>
+          <input
+            id="confirmar-senha"
+            name="confirmarSenha"
+            type="password"
+            autocomplete="new-password"
+            placeholder="Repita a senha"
+            [value]="confirmarSenha()"
+            (input)="confirmarSenha.set($any($event.target).value)"
+            [attr.aria-invalid]="erroConfirmarSenha() ? 'true' : null"
+            [attr.aria-describedby]="erroConfirmarSenha() ? 'confirmar-senha-erro' : null" />
+          @if (erroConfirmarSenha(); as erro) {
+            <p class="field__error" id="confirmar-senha-erro" aria-live="polite">{{ erro }}</p>
+          }
+        </div>
+
+        <div class="field field--checkbox">
+          <input
+            id="aceite-termos"
+            name="aceiteTermos"
+            type="checkbox"
+            [checked]="aceiteTermos()"
+            (change)="aceiteTermos.set($any($event.target).checked)"
+            [attr.aria-invalid]="erroTermos() ? 'true' : null"
+            [attr.aria-describedby]="erroTermos() ? 'termos-erro' : null" />
+          <label for="aceite-termos">Li e aceito os Termos de Uso e a Política de Privacidade.</label>
+        </div>
+        @if (erroTermos(); as erro) {
+          <p class="field__error" id="termos-erro" aria-live="polite">{{ erro }}</p>
+        }
+
+        <button class="btn-primary" type="submit" [disabled]="carregando()" [attr.aria-busy]="carregando()">
+          {{ carregando() ? 'Criando conta…' : 'Criar conta' }}
+        </button>
+      </form>
+
+      <div class="auth-card__links">
+        <span></span>
+        <a routerLink="/login">Já tenho conta</a>
+      </div>
+    } @else {
+      <div class="auth-card__success">
+        <span class="auth-card__success-icon" aria-hidden="true">✓</span>
+        <h1 class="auth-card__title">Verifique seu e-mail</h1>
+        <p class="auth-card__lead">
+          Enviamos um link de verificação para {{ email() }}. Confirme seu e-mail para poder entrar.
+        </p>
+        <a class="btn-primary" routerLink="/login">Voltar para o login</a>
+      </div>
+    }
+  </div>
+</main>

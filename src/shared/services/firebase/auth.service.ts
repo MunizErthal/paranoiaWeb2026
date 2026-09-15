@@ -22,21 +22,17 @@ export class AuthService {
     private authState: AuthStateStore
   ) {}
 
-  async register(email: string, password: string, nome = '', idade?: number): Promise<string> {
+  async register(email: string, password: string, nome = ''): Promise<string> {
     try {
       const userCred = await createUserWithEmailAndPassword(this.auth, email, password);
       await sendEmailVerification(userCred.user);
 
-      const usuarioId = await this.usuarioService.criarUsuario(
+      await this.usuarioService.criarUsuario(
         userCred.user.uid,
         email,
         nome || userCred.user.displayName || '',
         userCred.user.photoURL || ''
       );
-
-      if (idade !== undefined) {
-        await this.usuarioService.atualizarDadosCadastro(userCred.user.uid, nome, idade);
-      }
 
       return 'Verificação enviada! Confira seu e-mail.';
     } catch (err: any) {

@@ -120,6 +120,15 @@ export class FirebaseBaseService {
   }
 
   /**
+   * Cria ou atualiza parcialmente um documento (upsert). Útil para documentos
+   * "de configuração" que podem não existir ainda (ex: perfil, carrinho ativo).
+   */
+  salvarComMerge<T>(colecao: string, id: string, dados: Partial<T>): Observable<void> {
+    const docRef = doc(this.firestore, colecao, id);
+    return from(setDoc(docRef, dados as Record<string, any>, { merge: true }));
+  }
+
+  /**
    * Cria um novo documento com ID gerado automaticamente
    */
   criarSemId<T>(colecao: string, dados: T): Observable<string> {
