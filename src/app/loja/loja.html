@@ -12,16 +12,27 @@
       <p class="page-eyebrow">Em destaque</p>
       <h2 id="catalog-title">Comece por aqui.</h2>
     </div>
-    <article class="store-product">
-      <img class="store-product__cover" src="/images/jogos/cidadesubmersa/cover.png" alt="Capa de A Cidade Submersa" />
-      <div class="store-product__info">
-        <div class="tag-list"><span>Investigativo</span><span>Narrativo</span></div>
-        <h3>A Cidade Submersa</h3>
-        <p>Uma cidade esquecida pelas marés guarda segredos que não deveriam voltar à superfície.</p>
-        <dl><div><dt>Jogadores</dt><dd>2-6</dd></div><div><dt>Idade</dt><dd>14+</dd></div><div><dt>Duração</dt><dd>60-90 min</dd></div></dl>
-        <div class="store-product__buy"><strong>R$ 189,90</strong><a routerLink="/jogos/cidade-submersa">Ver jogo <span aria-hidden="true">&#8594;</span></a></div>
-      </div>
-    </article>
+    @for (produto of produtos(); track produto.id) {
+      <article class="store-product">
+        <img class="store-product__cover" [src]="produto.imagemCapa" [alt]="'Capa de ' + produto.nome" />
+        <div class="store-product__info">
+          <div class="tag-list">
+            @for (tag of produto.tags; track tag) {
+              <span>{{ tag }}</span>
+            }
+          </div>
+          <h3>{{ produto.nome }}</h3>
+          <p>{{ produto.descricao }}</p>
+          <dl><div><dt>Jogadores</dt><dd>{{ produto.jogadores }}</dd></div><div><dt>Idade</dt><dd>{{ produto.idade }}</dd></div><div><dt>Duração</dt><dd>{{ produto.duracao }}</dd></div></dl>
+          <div class="store-product__buy">
+            <strong>{{ produto.preco | currency:'BRL' }}</strong>
+            <a [routerLink]="['/jogos', produto.id]">Ver jogo <span aria-hidden="true">&#8594;</span></a>
+          </div>
+        </div>
+      </article>
+    } @empty {
+      <p class="page-lead">Novidades a caminho. Volte em breve para conferir o catálogo.</p>
+    }
   </section>
 
   <section class="store-page__categories" aria-label="Categorias da loja">
