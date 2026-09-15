@@ -1,0 +1,47 @@
+rules_version = '2';
+
+// Regras de segurança do Firestore para o projeto paranoiajogos.
+// Ver docs/planejamento/02-firestore-auth.md para a justificativa de cada regra.
+//
+// Aplicar manualmente no console do Firebase (Firestore Database > Regras)
+// até o firebase-tools/CI estar configurado neste ambiente.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function ehDono(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    match /usuarios/{uid} {
+      allow read: if ehDono(uid);
+      allow create: if ehDono(uid);
+      // 'permissoes' e 'jogosAdquiridos' nunca são editáveis pelo client —
+      // só por Cloud Function (Admin SDK, que ignora estas regras).
+      allow update: if ehDono(uid)
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['permissoes', 'jogosAdquiridos']);
+
+      match /perfil/{doc} {
+        allow read, write: if ehDono(uid);
+      }
+
+      match /enderecos/{enderecoId} {
+        allow read, write: if ehDono(uid);
+      }
+
+      match /carrinho/{doc} {
+        allow read, write: if ehDono(uid);
+      }
+    }
+
+    match /produtos/{produtoId} {
+      allow read: if true;   // catálogo é público
+      allow write: if false; // só Cloud Function (Admin SDK)
+    }
+
+    match /compras/{compraId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.usuarioId;
+      allow write: if false; // client nunca escreve pedido — evita fraude de "marcar como pago"
+    }
+  }
+}

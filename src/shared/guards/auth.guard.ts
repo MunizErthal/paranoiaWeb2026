@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Auth } from '@angular/fire/auth';
-import { AuthStateService } from '../services/firebase/auth-state.service';
+import { AuthStateStore } from '../stores/auth-state.store';
 
 /**
  * Guard para proteger rotas que requerem autenticação
@@ -9,23 +8,19 @@ import { AuthStateService } from '../services/firebase/auth-state.service';
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
   constructor(
-    private authState: AuthStateService,
-    private router: Router,
-    private auth: Auth
+    private authState: AuthStateStore,
+    private router: Router
   ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
-    const autenticado = this.authState.estaAutenticado() || !!this.auth.currentUser;
-
-    if (autenticado) {
+    if (this.authState.estaAutenticado()) {
       return true;
     }
 
-    // Redireciona para login se não estiver autenticado
-    this.router.navigate(['/login']);
+    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
     return false;
   }
 }
