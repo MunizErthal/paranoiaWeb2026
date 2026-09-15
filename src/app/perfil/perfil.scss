@@ -40,16 +40,27 @@
 .perfil-sidebar {
   display: grid;
   gap: var(--s-6);
+  /* Sem isto o minimo automatico do item de grid (min-width: auto) deixa o
+     conteudo estourar a coluna de 19rem e o e-mail vaza para fora do
+     cartao, por cima da calha. */
+  min-width: 0;
   padding: var(--s-6);
   border: var(--border) solid var(--line);
   border-radius: var(--r-sm);
   background: var(--surface-1);
 }
 
+.perfil-sidebar__conta {
+  display: grid;
+  gap: var(--s-2);
+  min-width: 0;
+}
+
 .perfil-sidebar__identidade {
   display: flex;
   align-items: center;
   gap: var(--s-4);
+  min-width: 0;
 }
 
 .perfil-sidebar__avatar {
@@ -70,10 +81,6 @@
   object-fit: cover;
 }
 
-.perfil-sidebar__textos {
-  min-width: 0;
-}
-
 .perfil-sidebar__nome {
   margin: 0;
   overflow: hidden;
@@ -84,7 +91,7 @@
 }
 
 .perfil-sidebar__email {
-  margin: 0.15rem 0 0;
+  margin: var(--s-1) 0 0;
   overflow: hidden;
   color: var(--text-subtle);
   font-size: var(--fs-sm);
@@ -93,7 +100,7 @@
 }
 
 .perfil-sidebar__membro {
-  margin: var(--s-2) 0 0;
+  margin: var(--s-1) 0 0;
   color: var(--accent-text);
   font-size: var(--fs-xs);
   font-weight: var(--fw-semibold);
@@ -104,6 +111,7 @@
 .perfil-tabs {
   display: grid;
   gap: var(--s-1);
+  min-width: 0;
   padding-top: var(--s-2);
   border-top: var(--border) solid var(--line);
 }
@@ -172,9 +180,16 @@
   min-width: 0;
 }
 
+/* O <router-outlet> permanece no DOM como um item de grid vazio; sem isto a
+   `gap` acima empurra o conteudo var(--s-6) para baixo e o cartao deixa de
+   alinhar com o topo da barra lateral. */
+.perfil-page__conteudo > router-outlet {
+  display: none;
+}
+
 @media (min-width: 56rem) {
   .perfil-layout {
-    grid-template-columns: 17rem minmax(0, 1fr);
+    grid-template-columns: 18rem minmax(0, 1fr);
   }
 
   .perfil-sidebar {

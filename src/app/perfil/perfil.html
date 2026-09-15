@@ -6,19 +6,24 @@
 
   <div class="perfil-layout">
     <aside class="perfil-sidebar u-evidence">
-      <div class="perfil-sidebar__identidade">
-        @if (usuario()?.foto; as foto) {
-          <img class="perfil-sidebar__avatar perfil-sidebar__avatar--foto" [src]="foto" alt="" />
-        } @else {
-          <span class="perfil-sidebar__avatar">{{ iniciais() }}</span>
-        }
-        <div class="perfil-sidebar__textos">
-          <p class="perfil-sidebar__nome">{{ usuario()?.nome || 'Sua conta' }}</p>
-          <p class="perfil-sidebar__email">{{ usuario()?.email }}</p>
-          @if (usuario()?.criadoEm; as criadoEm) {
-            <p class="perfil-sidebar__membro">Cliente desde {{ criadoEm | date:'MMMM yyyy' }}</p>
+      <div class="perfil-sidebar__conta">
+        <div class="perfil-sidebar__identidade">
+          @if (usuario()?.foto; as foto) {
+            <img class="perfil-sidebar__avatar perfil-sidebar__avatar--foto" [src]="foto" alt="" />
+          } @else {
+            <span class="perfil-sidebar__avatar">{{ iniciais() }}</span>
           }
+          <p class="perfil-sidebar__nome" [title]="usuario()?.nome || 'Sua conta'">{{ usuario()?.nome || 'Sua conta' }}</p>
         </div>
+
+        <!-- E-mail e "cliente desde" ficam em linha propria: ao lado do avatar
+             nao havia largura para o e-mail inteiro e ele vazava para fora do
+             cartao. Na largura cheia do cartao ele cabe. -->
+        <p class="perfil-sidebar__email" [title]="usuario()?.email">{{ usuario()?.email }}</p>
+
+        @if (usuario()?.criadoEm; as criadoEm) {
+          <p class="perfil-sidebar__membro">Cliente desde {{ criadoEm | date:'MMMM yyyy' }}</p>
+        }
       </div>
 
       <nav class="perfil-tabs" aria-label="Seções do perfil">
