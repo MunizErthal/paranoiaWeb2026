@@ -11,7 +11,7 @@ export class EnderecoService {
   constructor(private baseService: FirebaseBaseService) {}
 
   listar(uid: string): Observable<EnderecoDTO[]> {
-    return this.baseService.buscarComMultiplosConstrangimentos<EnderecoDTO>(this.colecao(uid), []);
+    return this.baseService.buscarComMultiplosConstrangimentosOuvindo<EnderecoDTO>(this.colecao(uid), []);
   }
 
   criar(uid: string, endereco: Omit<EnderecoDTO, 'id'>): Observable<string> {

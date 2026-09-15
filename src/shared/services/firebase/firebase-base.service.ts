@@ -80,6 +80,23 @@ export class FirebaseBaseService {
   }
 
   /**
+   * Escuta em tempo real os documentos que casam com múltiplas condições
+   * (array de QueryConstraints). Versão "ao vivo" de
+   * buscarComMultiplosConstrangimentos, para listas que precisam refletir
+   * criações/edições imediatamente, sem esperar um refetch manual.
+   */
+  buscarComMultiplosConstrangimentosOuvindo<T>(
+    colecao: string,
+    constraintsArray: QueryConstraint[]
+  ): Observable<T[]> {
+    const q = query(collection(this.firestore, colecao), ...constraintsArray);
+
+    return collectionData(q, { idField: 'id' }).pipe(
+      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+    ) as Observable<T[]>;
+  }
+
+  /**
    * Busca todos os documentos de uma coleção, ordenados por criadoEm
    */
   buscarTodos<T>(colecao: string): Observable<T[]> {
