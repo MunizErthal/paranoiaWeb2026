@@ -93,7 +93,7 @@ export class UsuarioService {
    * @param dados - Dados a atualizar
    * @returns Promise<void>
    */
-  atualizarUsuario(uid: string, dados: Partial<UsuarioDTO>, novaPartida: string): Promise<void> {
+  atualizarUsuario(uid: string, dados: Partial<UsuarioDTO>, novaPartida?: string): Promise<void> {
     const dadosAtualizacao: any = { ...dados };
     
     // Converter datas para string se existirem

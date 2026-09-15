@@ -3,7 +3,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 import { AuthStateStore } from '../shared/stores/auth-state.store';
-import { AuthService } from '../shared/services/firebase/auth.service';
 import { CarrinhoStore } from '../shared/stores/carrinho.store';
 
 type NavigationItem = {
@@ -38,7 +37,6 @@ export class App implements AfterViewInit {
     private router: Router,
     private destroyRef: DestroyRef,
     private authState: AuthStateStore,
-    private authService: AuthService,
     protected readonly carrinhoStore: CarrinhoStore
   ) {
     this.estaAutenticado = this.authState.estaAutenticado;
@@ -49,11 +47,6 @@ export class App implements AfterViewInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((event) => this.updateSelectedPage(event.urlAfterRedirects));
-  }
-
-  async sair(): Promise<void> {
-    await this.authService.logout();
-    this.router.navigateByUrl('/');
   }
 
   private updateSelectedPage(url: string): void {

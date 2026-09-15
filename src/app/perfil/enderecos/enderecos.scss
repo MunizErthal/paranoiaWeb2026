@@ -1,0 +1,39 @@
+:host {
+  display: block;
+}
+
+.endereco-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: var(--s-4);
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-xs);
+  background: var(--surface-sunken);
+}
+
+.endereco-item strong {
+  color: var(--text);
+  margin-right: var(--s-2);
+}
+
+.endereco-item p {
+  margin: var(--s-1) 0 0;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.endereco-item__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.endereco-item__acoes .btn-secondary {
+  width: auto;
+  min-height: 2.25rem;
+  padding: 0 var(--s-3);
+  font-size: var(--fs-sm);
+}

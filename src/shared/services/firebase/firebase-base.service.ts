@@ -110,6 +110,23 @@ export class FirebaseBaseService {
   }
 
   /**
+   * Escuta em tempo real os documentos que casam com um campo, ordenados
+   * por criadoEm decrescente (mais recente primeiro). Usado por listas
+   * que pertencem a um único dono (ex: pedidos de um usuário).
+   */
+  buscarPorCampoOuvindo<T>(colecao: string, campo: string, valor: any): Observable<T[]> {
+    const q = query(
+      collection(this.firestore, colecao),
+      where(campo, '==', valor),
+      orderBy('criadoEm', 'desc')
+    );
+
+    return collectionData(q, { idField: 'id' }).pipe(
+      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+    ) as Observable<T[]>;
+  }
+
+  /**
    * Cria um novo documento com ID definido
    */
   criar<T>(colecao: string, id: string, dados: T): Observable<string> {

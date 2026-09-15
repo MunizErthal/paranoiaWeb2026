@@ -1,0 +1,17 @@
+<main class="perfil-page">
+  <header class="perfil-page__header">
+    <p class="page-eyebrow">Sua conta</p>
+    <h1>Perfil</h1>
+  </header>
+
+  <nav class="perfil-tabs" aria-label="Seções do perfil">
+    <a routerLink="/perfil" routerLinkActive="is-ativa" [routerLinkActiveOptions]="{ exact: true }">Dados pessoais</a>
+    <a routerLink="/perfil/enderecos" routerLinkActive="is-ativa">Endereços</a>
+    <a routerLink="/perfil/pedidos" routerLinkActive="is-ativa">Pedidos</a>
+    <button type="button" class="perfil-tabs__sair" (click)="sair()">Sair</button>
+  </nav>
+
+  <div class="perfil-page__conteudo">
+    <router-outlet />
+  </div>
+</main>

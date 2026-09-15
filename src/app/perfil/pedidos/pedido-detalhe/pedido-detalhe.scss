@@ -1,0 +1,29 @@
+:host {
+  display: grid;
+  gap: var(--s-6);
+}
+
+.pedido-detalhe__cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+
+.pedido-linha-do-tempo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pedido-linha-do-tempo li {
+  opacity: 0.4;
+}
+
+.pedido-linha-do-tempo li.is-concluida {
+  opacity: 1;
+}

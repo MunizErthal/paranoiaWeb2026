@@ -1,0 +1,9 @@
+@if (pedidos().length === 0) {
+  <p class="page-lead">Você ainda não fez nenhum pedido.</p>
+} @else {
+  <ul class="endereco-lista">
+    @for (pedido of pedidos(); track pedido.id) {
+      <li><app-pedido-card [pedido]="pedido" /></li>
+    }
+  </ul>
+}

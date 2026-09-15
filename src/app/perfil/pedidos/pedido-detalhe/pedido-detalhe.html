@@ -1,0 +1,56 @@
+@if (pedido(); as pedido) {
+  <a class="link-back" routerLink="/perfil/pedidos">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M14 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
+    </svg>
+    Voltar aos pedidos
+  </a>
+
+  <section class="checkout-card u-evidence" aria-label="Status do pedido">
+    <div class="pedido-detalhe__cabecalho">
+      <h1 class="secao-titulo">Pedido de {{ pedido.criadoEm | date:'dd/MM/yyyy' }}</h1>
+      <app-status-badge [status]="pedido.status" />
+    </div>
+
+    @if (indiceDaEtapa(pedido.status) >= 0) {
+      <ol class="pedido-linha-do-tempo">
+        @for (etapa of etapas; track etapa; let i = $index) {
+          <li [class.is-concluida]="i <= indiceDaEtapa(pedido.status)">
+            <app-status-badge [status]="etapa" />
+          </li>
+        }
+      </ol>
+    } @else {
+      <p class="page-lead">Este pedido foi {{ pedido.status === 'cancelado' ? 'cancelado' : 'recusado' }}.</p>
+    }
+  </section>
+
+  <section class="checkout-card u-evidence" aria-label="Itens do pedido">
+    <h2 class="secao-titulo">Itens</h2>
+    <dl class="info-lista">
+      @for (item of pedido.itens; track item.produtoId) {
+        <div><dt>{{ item.nome }} × {{ item.quantidade }}</dt><dd>{{ item.precoUnit * item.quantidade | currency:'BRL' }}</dd></div>
+      }
+      <div><dt>Frete ({{ pedido.envio.servico }})</dt><dd>{{ pedido.valorFrete | currency:'BRL' }}</dd></div>
+      <div><dt>Total</dt><dd>{{ pedido.valorTotal | currency:'BRL' }}</dd></div>
+    </dl>
+  </section>
+
+  <section class="checkout-card u-evidence" aria-label="Entrega e pagamento">
+    <h2 class="secao-titulo">Entrega</h2>
+    <p>
+      {{ pedido.enderecoEntrega.logradouro }}, {{ pedido.enderecoEntrega.numero }} —
+      {{ pedido.enderecoEntrega.bairro }}, {{ pedido.enderecoEntrega.cidade }}/{{ pedido.enderecoEntrega.estado }}
+    </p>
+    @if (pedido.envio.codigoRastreio) {
+      <p>Rastreio ({{ pedido.envio.servico }}): <code>{{ pedido.envio.codigoRastreio }}</code></p>
+    } @else {
+      <p class="field__hint">O código de rastreio aparece aqui assim que a etiqueta for gerada.</p>
+    }
+
+    <h2 class="secao-titulo">Pagamento</h2>
+    <p>Forma: {{ pedido.pagamento.metodo === 'pix' ? 'Pix' : pedido.pagamento.metodo === 'cartao' ? 'Cartão' : 'Boleto' }}</p>
+  </section>
+} @else {
+  <p class="page-lead">Pedido não encontrado.</p>
+}

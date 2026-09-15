@@ -1,0 +1,81 @@
+:host {
+  display: block;
+}
+
+.perfil-page {
+  box-sizing: border-box;
+  width: min(100%, var(--page-max));
+  margin: 0 auto;
+  padding: var(--s-12) var(--gutter) var(--s-24);
+  color: var(--text);
+}
+
+.perfil-page__header {
+  margin-bottom: var(--s-6);
+}
+
+.perfil-page__header .page-eyebrow {
+  margin: 0 0 var(--s-2);
+  color: var(--accent-text);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+.perfil-page__header h1 {
+  margin: 0;
+  font-size: var(--fs-h1);
+  line-height: var(--lh-tight);
+}
+
+.perfil-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-6);
+  margin-bottom: var(--s-8);
+  padding-bottom: var(--s-4);
+  border-bottom: var(--border) solid var(--line);
+}
+
+.perfil-tabs a {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color var(--dur) var(--ease-out);
+}
+
+.perfil-tabs a:hover,
+.perfil-tabs a:focus-visible {
+  color: var(--text);
+}
+
+.perfil-tabs a.is-ativa {
+  color: var(--accent-text);
+}
+
+.perfil-tabs__sair {
+  margin-left: auto;
+  border: 0;
+  background: none;
+  color: var(--text-subtle);
+  font: inherit;
+  font-size: var(--fs-sm);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.perfil-tabs__sair:hover,
+.perfil-tabs__sair:focus-visible {
+  color: var(--chroma-magenta);
+}
+
+.perfil-page__conteudo {
+  display: grid;
+  gap: var(--s-6);
+}

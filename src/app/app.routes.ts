@@ -19,5 +19,16 @@ export const routes: Routes = [
 	{ path: 'esqueci-senha', loadComponent: () => import('./esqueci-senha/esqueci-senha').then(m => m.EsqueciSenha) },
 	{ path: 'carrinho', loadComponent: () => import('./carrinho/carrinho').then(m => m.Carrinho) },
 	{ path: 'checkout', loadComponent: () => import('./checkout/checkout').then(m => m.Checkout), canActivate: [AuthGuard] },
+	{
+		path: 'perfil',
+		loadComponent: () => import('./perfil/perfil').then(m => m.Perfil),
+		canActivate: [AuthGuard],
+		children: [
+			{ path: '', loadComponent: () => import('./perfil/perfil-dados/perfil-dados').then(m => m.PerfilDados) },
+			{ path: 'enderecos', loadComponent: () => import('./perfil/enderecos/enderecos').then(m => m.Enderecos) },
+			{ path: 'pedidos', loadComponent: () => import('./perfil/pedidos/pedidos').then(m => m.Pedidos) },
+			{ path: 'pedidos/:idPedido', loadComponent: () => import('./perfil/pedidos/pedido-detalhe/pedido-detalhe').then(m => m.PedidoDetalhe) }
+		]
+	},
 	{ path: '**', redirectTo: '' }
 ];

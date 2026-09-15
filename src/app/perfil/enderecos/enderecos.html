@@ -1,0 +1,34 @@
+<section class="checkout-card u-evidence" aria-label="Endereços">
+  @if (!mostrarForm()) {
+    @if (enderecos().length > 0) {
+      <ul class="endereco-lista">
+        @for (endereco of enderecos(); track endereco.id) {
+          <li class="endereco-item">
+            <div>
+              <strong>{{ endereco.apelido || endereco.logradouro }}</strong>
+              @if (endereco.padrao) {
+                <span class="tag">Padrão</span>
+              }
+              <p>{{ endereco.logradouro }}, {{ endereco.numero }} — {{ endereco.bairro }}, {{ endereco.cidade }}/{{ endereco.estado }}</p>
+            </div>
+            <div class="endereco-item__acoes">
+              @if (!endereco.padrao) {
+                <button class="btn-secondary" type="button" (click)="marcarComoPadrao(endereco)">Tornar padrão</button>
+              }
+              <button class="btn-secondary" type="button" (click)="editar(endereco)">Editar</button>
+              <button class="btn-secondary" type="button" (click)="remover(endereco)">Remover</button>
+            </div>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="page-lead">Você ainda não tem endereços cadastrados.</p>
+    }
+    <button class="btn-primary" type="button" (click)="novoEndereco()">Adicionar endereço</button>
+  } @else {
+    <app-endereco-form
+      [enderecoInicial]="enderecoEmEdicao()"
+      (salvar)="salvar($event)"
+      (cancelar)="mostrarForm.set(false)" />
+  }
+</section>

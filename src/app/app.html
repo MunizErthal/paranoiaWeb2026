@@ -40,7 +40,7 @@
         }
     </a>
     @if (estaAutenticado()) {
-        <button class="main-navigation__action glitchButton" type="button" (click)="sair()">Sair</button>
+        <a class="glitchButton" routerLink="/perfil">Perfil</a>
     } @else {
         <a class="glitchButton" routerLink="/login">Entrar</a>
     }

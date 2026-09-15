@@ -1,0 +1,25 @@
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--r-xs);
+  padding: 0.25rem 0.6rem;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.status-badge--neutro {
+  color: var(--text-muted);
+  background: var(--surface-2);
+}
+
+.status-badge--positivo {
+  color: var(--text);
+  background: var(--accent-solid);
+}
+
+.status-badge--negativo {
+  color: var(--text);
+  background: color-mix(in srgb, var(--chroma-magenta) 55%, var(--surface-2));
+}

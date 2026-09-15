@@ -1,0 +1,66 @@
+<section class="checkout-card u-evidence" aria-label="Dados pessoais">
+  @if (!editando()) {
+    <dl class="info-lista">
+      <div><dt>Nome</dt><dd>{{ usuario()?.nome || '—' }}</dd></div>
+      <div><dt>E-mail</dt><dd>{{ usuario()?.email }}</dd></div>
+      <div><dt>Telefone</dt><dd>{{ perfil()?.telefone || '—' }}</dd></div>
+      <div><dt>CPF</dt><dd>{{ perfil()?.cpf ? (perfil()!.cpf | cpf) : '—' }}</dd></div>
+    </dl>
+    <button class="btn-secondary" type="button" (click)="iniciarEdicao()">Editar dados</button>
+  } @else {
+    <div class="field-stack">
+      <div class="field">
+        <label for="pd-nome">Nome</label>
+        <input id="pd-nome" type="text" [value]="nome()" (input)="nome.set($any($event.target).value)" />
+      </div>
+
+      <div class="field">
+        <label for="pd-telefone">Telefone</label>
+        <input id="pd-telefone" type="tel" [value]="telefone()" (input)="telefone.set($any($event.target).value)" />
+      </div>
+
+      <div class="field">
+        <label for="pd-nascimento">Data de nascimento</label>
+        <input id="pd-nascimento" type="date" [value]="dataNascimento()" (input)="dataNascimento.set($any($event.target).value)" />
+      </div>
+
+      <div class="field">
+        <label for="pd-cpf">CPF</label>
+        <input
+          id="pd-cpf"
+          type="text"
+          inputmode="numeric"
+          [disabled]="cpfBloqueado()"
+          [value]="cpf()"
+          (input)="cpf.set($any($event.target).value)"
+          [attr.aria-invalid]="erroCpf() ? 'true' : null" />
+        @if (cpfBloqueado()) {
+          <p class="field__hint">CPF não pode ser alterado depois da primeira compra confirmada.</p>
+        }
+        @if (erroCpf(); as erro) {
+          <p class="field__error" aria-live="polite">{{ erro }}</p>
+        }
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-secondary" type="button" (click)="editando.set(false)">Cancelar</button>
+        <button class="btn-primary" type="button" [disabled]="salvando()" (click)="salvar()">
+          {{ salvando() ? 'Salvando…' : 'Salvar' }}
+        </button>
+      </div>
+    </div>
+  }
+</section>
+
+@if (usuario()?.jogosAdquiridos?.length) {
+  <section class="checkout-card u-evidence" aria-label="Jogos adquiridos">
+    <h2 class="secao-titulo">Jogos adquiridos</h2>
+    <ul class="lista-links">
+      @for (jogo of usuario()!.jogosAdquiridos; track jogo.compraId) {
+        <li>
+          <a [routerLink]="['/perfil/pedidos', jogo.compraId]">{{ jogo.nome }}</a>
+        </li>
+      }
+    </ul>
+  </section>
+}

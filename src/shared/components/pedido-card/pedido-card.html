@@ -1,0 +1,10 @@
+<a class="pedido-card" [routerLink]="['/perfil/pedidos', pedido().id]">
+  <div class="pedido-card__info">
+    <p class="pedido-card__data">{{ pedido().criadoEm | date:'dd/MM/yyyy' }}</p>
+    <p class="pedido-card__itens">
+      {{ pedido().itens.length }} {{ pedido().itens.length === 1 ? 'item' : 'itens' }}
+    </p>
+  </div>
+  <app-status-badge [status]="pedido().status" />
+  <strong class="pedido-card__total">{{ pedido().valorTotal | currency:'BRL' }}</strong>
+</a>
