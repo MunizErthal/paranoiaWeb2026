@@ -4,6 +4,7 @@ import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router
 import { filter } from 'rxjs';
 import { AuthStateStore } from '../shared/stores/auth-state.store';
 import { AuthService } from '../shared/services/firebase/auth.service';
+import { CarrinhoStore } from '../shared/stores/carrinho.store';
 
 type NavigationItem = {
   id: string;
@@ -37,7 +38,8 @@ export class App implements AfterViewInit {
     private router: Router,
     private destroyRef: DestroyRef,
     private authState: AuthStateStore,
-    private authService: AuthService
+    private authService: AuthService,
+    protected readonly carrinhoStore: CarrinhoStore
   ) {
     this.estaAutenticado = this.authState.estaAutenticado;
     this.updateSelectedPage(this.router.url);

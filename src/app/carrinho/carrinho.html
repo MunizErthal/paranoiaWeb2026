@@ -1,0 +1,53 @@
+<main class="cart-page">
+  <header class="cart-page__header">
+    <p class="page-eyebrow">Carrinho</p>
+    <h1>Seus itens</h1>
+  </header>
+
+  @if (carrinhoStore.itens().length === 0) {
+    <div class="cart-empty u-evidence">
+      <p>Seu carrinho está vazio.</p>
+      <a class="btn-primary" routerLink="/loja">Ver jogos na loja</a>
+    </div>
+  } @else {
+    <div class="cart-layout">
+      <ul class="cart-list">
+        @for (item of carrinhoStore.itens(); track item.produtoId) {
+          <li class="cart-item">
+            <img class="cart-item__imagem" [src]="item.imagemCapa" [alt]="item.nome" />
+            <div class="cart-item__info">
+              <h3>{{ item.nome }}</h3>
+              <p class="cart-item__preco">{{ item.precoUnit | currency:'BRL' }} / unidade</p>
+            </div>
+            <div class="cart-item__quantidade">
+              <label [attr.for]="'quantidade-' + item.produtoId">Qtd.</label>
+              <input
+                [id]="'quantidade-' + item.produtoId"
+                type="number"
+                min="1"
+                [value]="item.quantidade"
+                (change)="atualizarQuantidade(item.produtoId, $any($event.target).value)" />
+            </div>
+            <p class="cart-item__subtotal">{{ item.precoUnit * item.quantidade | currency:'BRL' }}</p>
+            <button
+              class="cart-item__remover"
+              type="button"
+              (click)="carrinhoStore.removerItem(item.produtoId)"
+              [attr.aria-label]="'Remover ' + item.nome + ' do carrinho'">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
+              </svg>
+            </button>
+          </li>
+        }
+      </ul>
+
+      <aside class="cart-summary u-evidence">
+        <p class="cart-summary__eyebrow">Resumo</p>
+        <p class="cart-summary__total"><span>Total</span><strong>{{ carrinhoStore.valorTotal() | currency:'BRL' }}</strong></p>
+        <button class="btn-primary" type="button" (click)="finalizarCompra()">Finalizar compra</button>
+        <a class="link-back" routerLink="/loja">Continuar comprando</a>
+      </aside>
+    </div>
+  }
+</main>

@@ -101,6 +101,27 @@
     transform: scaleX(1);
 }
 
+.main-navigation__cart {
+    position: relative;
+}
+
+.main-navigation__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.1rem;
+    height: 1.1rem;
+    margin-left: 0.4vw;
+    border-radius: 999px;
+    padding: 0 0.3em;
+    color: #ffffff;
+    background: var(--accent-solid);
+    font-size: 0.62rem;
+    font-weight: 700;
+    line-height: 1;
+    vertical-align: middle;
+}
+
 /* Ação de sessão (Sair) é um <button>, não um <a> — replica o visual dos
    itens de navegação sem herdar o seletor ".main-navigation a". */
 .main-navigation__action {

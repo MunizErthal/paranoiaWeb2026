@@ -4,6 +4,9 @@ import { CurrencyPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { ProdutoService } from '../../shared/services/firebase/produto.service';
+import { CarrinhoStore } from '../../shared/stores/carrinho.store';
+import { ProdutoDTO } from '../../shared/models/produto.dto';
+import { ToastService } from '../../shared/services/toast/toast.service';
 
 /** Abaixo desse tanto de rolagem a ficha ainda está sobreposta na capa;
  *  acima disso ela some da capa e reaparece embaixo. Baixo de propósito —
@@ -24,6 +27,8 @@ export class JogoDetalhe {
 
   private readonly route = inject(ActivatedRoute);
   private readonly produtoService = inject(ProdutoService);
+  private readonly carrinhoStore = inject(CarrinhoStore);
+  private readonly toast = inject(ToastService);
 
   readonly produto = toSignal(
     this.route.paramMap.pipe(
@@ -33,6 +38,11 @@ export class JogoDetalhe {
   );
 
   constructor(private readonly cdr: ChangeDetectorRef) {}
+
+  adicionarAoCarrinho(produto: ProdutoDTO): void {
+    this.carrinhoStore.adicionarItem(produto);
+    this.toast.showSuccess(`${produto.nome} adicionado ao carrinho.`);
+  }
 
   @HostListener('window:scroll')
   onWindowScroll(): void {

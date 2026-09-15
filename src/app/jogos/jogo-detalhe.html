@@ -76,7 +76,7 @@
         <p class="purchase-panel__price">{{ produto.preco | currency:'BRL' }}</p>
         <p class="purchase-panel__installments">ou 6x de {{ produto.preco / 6 | currency:'BRL' }} sem juros</p>
 
-        <button class="purchase-panel__button" type="button" [disabled]="produto.estoque <= 0">
+        <button class="purchase-panel__button" type="button" [disabled]="produto.estoque <= 0" (click)="adicionarAoCarrinho(produto)">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path d="M2 3h2.2l2 9.2h9.1l1.7-6.6H5.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" />
             <circle cx="8" cy="16" r="1.4" fill="currentColor" />

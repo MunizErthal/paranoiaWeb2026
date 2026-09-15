@@ -33,6 +33,12 @@
             {{ item.label }}
         </a>
     }
+    <a class="glitchButton main-navigation__cart" routerLink="/carrinho">
+        Carrinho
+        @if (carrinhoStore.quantidadeTotal(); as quantidade) {
+            <span class="main-navigation__badge">{{ quantidade }}</span>
+        }
+    </a>
     @if (estaAutenticado()) {
         <button class="main-navigation__action glitchButton" type="button" (click)="sair()">Sair</button>
     } @else {

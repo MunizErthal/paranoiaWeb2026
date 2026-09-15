@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../shared/services/firebase/auth.service';
 import { ToastService } from '../../shared/services/toast/toast.service';
+import { CarrinhoStore } from '../../shared/stores/carrinho.store';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -24,6 +25,7 @@ export class Login {
     private authService: AuthService,
     private toast: ToastService,
     private router: Router,
+    private carrinhoStore: CarrinhoStore,
     route: ActivatedRoute
   ) {
     this.returnUrl = route.snapshot.queryParamMap.get('returnUrl') || '/';
@@ -36,7 +38,8 @@ export class Login {
 
     this.carregando.set(true);
     try {
-      await this.authService.login(this.email(), this.senha());
+      const usuario = await this.authService.login(this.email(), this.senha());
+      await this.carrinhoStore.mesclarComFirestore(usuario.uid);
       this.router.navigateByUrl(this.returnUrl);
     } catch (err) {
       this.toast.showError(err instanceof Error ? err.message : 'Não foi possível entrar.');
@@ -48,7 +51,8 @@ export class Login {
   async entrarComGoogle(): Promise<void> {
     this.carregando.set(true);
     try {
-      await this.authService.loginWithGoogle();
+      const usuario = await this.authService.loginWithGoogle();
+      await this.carrinhoStore.mesclarComFirestore(usuario.uid);
       this.router.navigateByUrl(this.returnUrl);
     } catch (err) {
       this.toast.showError(err instanceof Error ? err.message : 'Não foi possível entrar com o Google.');

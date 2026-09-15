@@ -16,5 +16,6 @@ export const routes: Routes = [
 	{ path: 'login', loadComponent: () => import('./login/login').then(m => m.Login) },
 	{ path: 'cadastro', loadComponent: () => import('./cadastro/cadastro').then(m => m.Cadastro) },
 	{ path: 'esqueci-senha', loadComponent: () => import('./esqueci-senha/esqueci-senha').then(m => m.EsqueciSenha) },
+	{ path: 'carrinho', loadComponent: () => import('./carrinho/carrinho').then(m => m.Carrinho) },
 	{ path: '**', redirectTo: '' }
 ];
