@@ -41,9 +41,51 @@ body {
   }
 }
 
-p, h1, h2, h3, h4, h5, h6, a, span, div, li, button, input, textarea, a {
-  font-family: "Plus Jakarta Sans", sans-serif;
+/* =========================================================================
+   TIPOGRAFIA BASE
+   A família e o peso são definidos uma única vez no <body> e herdados por
+   todo o resto. (A regra anterior aplicava font-weight: 100 a p, h1..h6, a,
+   span, div, li, button e input — peso que a Plus Jakarta Sans nem possui,
+   o que deixava a interface inteira com o traço fino e sintetizado.)
+   ========================================================================= */
+body {
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-regular);
   font-optical-sizing: auto;
   font-style: normal;
-  font-weight: 100;
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Controles de formulário não herdam tipografia por padrão. */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-snug);
+  text-wrap: balance;
+}
+
+h1,
+h2 {
+  letter-spacing: var(--track-display);
+  line-height: var(--lh-tight);
+}
+
+p {
+  text-wrap: pretty;
 }

@@ -13,7 +13,8 @@ import { CpfPipe } from '../../../shared/pipes/cpf.pipe';
   selector: 'app-perfil-dados',
   standalone: true,
   imports: [RouterLink, CpfPipe],
-  templateUrl: './perfil-dados.html'
+  templateUrl: './perfil-dados.html',
+  styleUrl: './perfil-dados.scss'
 })
 export class PerfilDados {
   private readonly authState = inject(AuthStateStore);

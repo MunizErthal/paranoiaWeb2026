@@ -4,14 +4,56 @@
     <h1>Perfil</h1>
   </header>
 
-  <nav class="perfil-tabs" aria-label="Seções do perfil">
-    <a routerLink="/perfil" routerLinkActive="is-ativa" [routerLinkActiveOptions]="{ exact: true }">Dados pessoais</a>
-    <a routerLink="/perfil/enderecos" routerLinkActive="is-ativa">Endereços</a>
-    <a routerLink="/perfil/pedidos" routerLinkActive="is-ativa">Pedidos</a>
-    <button type="button" class="perfil-tabs__sair" (click)="sair()">Sair</button>
-  </nav>
+  <div class="perfil-layout">
+    <aside class="perfil-sidebar u-evidence">
+      <div class="perfil-sidebar__identidade">
+        @if (usuario()?.foto; as foto) {
+          <img class="perfil-sidebar__avatar perfil-sidebar__avatar--foto" [src]="foto" alt="" />
+        } @else {
+          <span class="perfil-sidebar__avatar">{{ iniciais() }}</span>
+        }
+        <div class="perfil-sidebar__textos">
+          <p class="perfil-sidebar__nome">{{ usuario()?.nome || 'Sua conta' }}</p>
+          <p class="perfil-sidebar__email">{{ usuario()?.email }}</p>
+          @if (usuario()?.criadoEm; as criadoEm) {
+            <p class="perfil-sidebar__membro">Cliente desde {{ criadoEm | date:'MMMM yyyy' }}</p>
+          }
+        </div>
+      </div>
 
-  <div class="perfil-page__conteudo">
-    <router-outlet />
+      <nav class="perfil-tabs" aria-label="Seções do perfil">
+        <a routerLink="/perfil" routerLinkActive="is-ativa" [routerLinkActiveOptions]="{ exact: true }">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM4.5 20.5a7.5 7.5 0 0 1 15 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter" />
+          </svg>
+          Dados pessoais
+        </a>
+        <a routerLink="/perfil/enderecos" routerLinkActive="is-ativa">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 21s7-6.5 7-11.5a7 7 0 1 0-14 0C5 14.5 12 21 12 21Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter" />
+            <circle cx="12" cy="9.5" r="2.3" stroke="currentColor" stroke-width="1.6" />
+          </svg>
+          Endereços
+        </a>
+        <a routerLink="/perfil/pedidos" routerLinkActive="is-ativa">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 8.5 12 4l8 4.5v7L12 20l-8-4.5v-7Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter" />
+            <path d="M4 8.5 12 13l8-4.5M12 13v7" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" />
+          </svg>
+          Pedidos
+        </a>
+      </nav>
+
+      <button type="button" class="perfil-sidebar__sair" (click)="sair()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 8l-4 4 4 4M6 12h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter" />
+        </svg>
+        Sair da conta
+      </button>
+    </aside>
+
+    <div class="perfil-page__conteudo">
+      <router-outlet />
+    </div>
   </div>
 </main>

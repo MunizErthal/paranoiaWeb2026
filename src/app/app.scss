@@ -34,11 +34,14 @@
     margin: 6vw;
 }
 
-/* O menu saiu de dentro do .logo-container (para poder ficar sticky e
-   escurecer ao rolar), mas continua com os MESMOS números do original:
-   fonte, espaçamento e posição. A margem negativa sobe a barra de volta
-   para dentro do cabeçalho, "colada" acima da borda, em vez de deixá-la
-   cair abaixo dele. */
+/* =========================================================================
+   NAVEGAÇÃO PRINCIPAL — bloco idêntico ao da master.
+   Sticky no topo (desce junto com a rolagem), fundo transparente,
+   centralizada. `height: 3vw` + `margin-top: -2.8vw` é o par que assenta a
+   barra exatamente SOBRE a linha do cabeçalho: não mexer nesses dois
+   valores nem acrescentar padding, que é o que abre a folga.
+   Só os links de seção moram aqui: conta e carrinho ficam no .account-hud.
+   ========================================================================= */
 .main-navigation {
     position: sticky;
     top: 0;
@@ -48,7 +51,7 @@
     align-items: center;
     justify-content: center;
     gap: 2.1vw;
-    margin-top: -2.8vw;
+    margin-top: -3vw;
     padding: 0;
     background: transparent;
     border-bottom: 1px solid transparent;
@@ -58,8 +61,8 @@
 
 .main-navigation.is-scrolled {
     /* Ao rolar, o .logo-container (e a linha dele) já saiu de vista — esta
-       borda entra para marcar o fim da barra fixa. */
-    //background: rgba(16, 8, 25, 0.86);
+       borda entra para marcar o fim da barra fixa. O fundo continua
+       transparente; só o desfoque entra. */
     backdrop-filter: blur(14px);
     border-bottom-color: var(--line);
 }
@@ -101,30 +104,172 @@
     transform: scaleX(1);
 }
 
-.main-navigation__cart {
-    position: relative;
+/* =========================================================================
+   HUD DE CONTA — suspenso no canto superior direito
+   Um único bloco segmentado (carrinho | perfil | sessão) que acompanha a
+   rolagem. Vidro escuro com a assinatura cromática da logo no topo.
+   ========================================================================= */
+.account-hud {
+    position: fixed;
+    top: max(clamp(0.75rem, 0.35rem + 1.2vw, 1.5rem), env(safe-area-inset-top, 0px));
+    right: clamp(0.75rem, 0.35rem + 1.2vw, 1.75rem);
+    z-index: 60;
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+    border: var(--border) solid var(--line);
+    border-radius: var(--r-xs);
+    background: rgba(19, 10, 30, 0.62);
+    box-shadow: var(--shadow-1);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
 }
 
-.main-navigation__badge {
+/* Assinatura cromática — a mesma fita que abre a gaveta do carrinho. */
+.account-hud::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--chroma-cyan), var(--chroma-magenta));
+    opacity: 0.55;
+    content: "";
+    pointer-events: none;
+}
+
+.account-hud__item {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 1.1rem;
-    height: 1.1rem;
-    margin-left: 0.4vw;
-    border-radius: 999px;
-    padding: 0 0.3em;
+    gap: var(--s-2);
+    min-height: var(--tap);
+    border: 0;
+    padding: 0 var(--s-4);
+    color: var(--text-muted);
+    background: transparent;
+    font-family: inherit;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color var(--dur) var(--ease-out), background-color var(--dur) var(--ease-out);
+}
+
+.account-hud__item + .account-hud__item {
+    border-left: var(--border) solid var(--line);
+}
+
+.account-hud__item:hover,
+.account-hud__item:focus-visible {
+    color: #ffffff;
+    background: rgba(157, 67, 255, 0.16);
+}
+
+.account-hud__item:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: -2px;
+    border-radius: 0;
+}
+
+.account-hud__item--icon {
+    width: var(--tap);
+    padding: 0;
+}
+
+.account-hud__item--perfil {
+    padding-left: var(--s-2);
+}
+
+/* O ícone só aparece quando o rótulo some (telas estreitas). */
+.account-hud__icone {
+    display: none;
+}
+
+.account-hud__item--cta {
     color: #ffffff;
     background: var(--accent-solid);
-    font-size: 0.62rem;
-    font-weight: 700;
+}
+
+.account-hud__item--cta:hover,
+.account-hud__item--cta:focus-visible {
+    background: var(--accent-solid-hover);
+}
+
+.account-hud__avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    flex: none;
+    border-radius: 50%;
+    color: var(--accent-text);
+    background: var(--accent-soft);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0;
+}
+
+.account-hud__badge {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1rem;
+    height: 1rem;
+    border-radius: 999px;
+    padding: 0 0.28em;
+    color: #ffffff;
+    background: var(--accent-solid);
+    box-shadow: 0 0 0 2px rgba(19, 10, 30, 0.9);
+    font-size: 0.625rem;
+    font-weight: var(--fw-bold);
+    letter-spacing: 0;
     line-height: 1;
-    vertical-align: middle;
+}
+
+/* Em telas estreitas o HUD encolhe para ícones: o cabeçalho é curto e o
+   bloco não pode invadir a logo. "Criar conta" continua a um toque de
+   distância, dentro da própria tela de login. */
+@media (max-width: 40rem) {
+    .account-hud {
+        top: max(var(--s-2), env(safe-area-inset-top, 0px));
+        right: var(--s-2);
+    }
+
+    .account-hud__item--perfil,
+    .account-hud__item--entrar {
+        width: var(--tap);
+        padding: 0;
+    }
+
+    .account-hud__item--opcional {
+        display: none;
+    }
+
+    .account-hud__label {
+        display: none;
+    }
+
+    .account-hud__icone {
+        display: block;
+    }
 }
 
 @media (max-width: 600px) {
     .logo-container {
-        height: 38vw;
+        /* faixa extra no topo para o HUD suspenso não cobrir a logo */
+        height: calc(38vw + 3rem);
+        padding-top: 3rem;
     }
 
     .background-img {

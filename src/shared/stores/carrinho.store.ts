@@ -41,6 +41,7 @@ export class CarrinhoStore {
         nome: produto.nome,
         precoUnit: produto.preco,
         imagemCapa: produto.imagemCapa,
+        imagemEmblema: produto.imagemEmblema,
         quantidade
       };
       return [...itens, novoItem];

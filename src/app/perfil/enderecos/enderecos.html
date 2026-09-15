@@ -1,10 +1,27 @@
-<section class="checkout-card u-evidence" aria-label="Endereços">
+<section class="checkout-card u-evidence dados-card" aria-label="Endereços">
   @if (!mostrarForm()) {
+    <header class="dados-card__header">
+      <div>
+        <h2 class="secao-titulo">Endereços</h2>
+        <p class="dados-card__subtitulo">Onde seus pedidos físicos devem chegar.</p>
+      </div>
+      @if (enderecos().length > 0) {
+        <button class="btn-secondary dados-card__editar" type="button" (click)="novoEndereco()">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" /></svg>
+          Adicionar endereço
+        </button>
+      }
+    </header>
+
     @if (enderecos().length > 0) {
       <ul class="endereco-lista">
         @for (endereco of enderecos(); track endereco.id) {
           <li class="endereco-item">
-            <div>
+            <svg class="endereco-item__icone" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 21s7-6.5 7-11.5a7 7 0 1 0-14 0C5 14.5 12 21 12 21Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter" />
+              <circle cx="12" cy="9.5" r="2.3" stroke="currentColor" stroke-width="1.6" />
+            </svg>
+            <div class="endereco-item__conteudo">
               <strong>{{ endereco.apelido || endereco.logradouro }}</strong>
               @if (endereco.padrao) {
                 <span class="tag">Padrão</span>
@@ -22,9 +39,11 @@
         }
       </ul>
     } @else {
-      <p class="page-lead">Você ainda não tem endereços cadastrados.</p>
+      <div class="dados-vazio">
+        <p>Você ainda não tem endereços cadastrados.</p>
+        <button class="btn-primary" type="button" (click)="novoEndereco()">Adicionar endereço</button>
+      </div>
     }
-    <button class="btn-primary" type="button" (click)="novoEndereco()">Adicionar endereço</button>
   } @else {
     <app-endereco-form
       [enderecoInicial]="enderecoEmEdicao()"

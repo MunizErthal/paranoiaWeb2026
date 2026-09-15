@@ -1,9 +1,21 @@
-@if (pedidos().length === 0) {
-  <p class="page-lead">Você ainda não fez nenhum pedido.</p>
-} @else {
-  <ul class="endereco-lista">
-    @for (pedido of pedidos(); track pedido.id) {
-      <li><app-pedido-card [pedido]="pedido" /></li>
-    }
-  </ul>
-}
+<section class="checkout-card u-evidence dados-card" aria-label="Pedidos">
+  <header class="dados-card__header">
+    <div>
+      <h2 class="secao-titulo">Pedidos</h2>
+      <p class="dados-card__subtitulo">Acompanhe suas compras e o status de entrega.</p>
+    </div>
+  </header>
+
+  @if (pedidos().length === 0) {
+    <div class="dados-vazio">
+      <p>Você ainda não fez nenhum pedido.</p>
+      <a class="btn-primary" routerLink="/loja">Ver jogos na loja</a>
+    </div>
+  } @else {
+    <ul class="endereco-lista">
+      @for (pedido of pedidos(); track pedido.id) {
+        <li><app-pedido-card [pedido]="pedido" /></li>
+      }
+    </ul>
+  }
+</section>

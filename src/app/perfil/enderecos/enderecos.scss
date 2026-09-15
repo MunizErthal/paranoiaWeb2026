@@ -6,12 +6,21 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: var(--s-4);
   padding: var(--s-4);
   border: var(--border) solid var(--line);
   border-radius: var(--r-xs);
   background: var(--surface-sunken);
+}
+
+.endereco-item__icone {
+  flex: none;
+  color: var(--accent-text);
+}
+
+.endereco-item__conteudo {
+  flex: 1;
+  min-width: 12rem;
 }
 
 .endereco-item strong {
@@ -37,3 +46,4 @@
   padding: 0 var(--s-3);
   font-size: var(--fs-sm);
 }
+

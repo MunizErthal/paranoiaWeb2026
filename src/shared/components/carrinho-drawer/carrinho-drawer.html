@@ -1,0 +1,95 @@
+@if (drawer.aberto()) {
+  <div class="cart-drawer-backdrop" (click)="fechar()"></div>
+
+  <aside
+    #painel
+    class="cart-drawer"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Carrinho de compras"
+    tabindex="-1">
+    <header class="cart-drawer__header">
+      <h2 class="cart-drawer__titulo">
+        Seu carrinho
+        @if (carrinhoStore.quantidadeTotal(); as quantidade) {
+          <span class="cart-drawer__count">{{ quantidade }}</span>
+        }
+      </h2>
+      <button type="button" class="cart-drawer__fechar" (click)="fechar()" aria-label="Fechar carrinho">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
+        </svg>
+      </button>
+    </header>
+
+    @if (carrinhoStore.itens().length === 0) {
+      <div class="cart-drawer__vazio">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" stroke-linejoin="miter" />
+          <path d="M9.5 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM17.5 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" fill="currentColor" />
+        </svg>
+        <p>Seu carrinho está vazio.</p>
+        <a class="btn-primary" routerLink="/loja" (click)="fechar()">Ver jogos na loja</a>
+      </div>
+    } @else {
+      <ul class="cart-drawer__lista">
+        @for (item of carrinhoStore.itens(); track item.produtoId) {
+          <li class="cart-drawer__item">
+            <div class="cart-drawer__thumb">
+              @if (imagemFalhou(item.produtoId) || !item.imagemEmblema) {
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M4 5h16v14H4zM4 15l4.5-4.5 4 4L16 11l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="square" stroke-linejoin="miter" />
+                </svg>
+              } @else {
+                <img [src]="item.imagemEmblema" [alt]="item.nome" loading="lazy" decoding="async" (error)="aoFalharImagem(item.produtoId)" />
+              }
+            </div>
+
+            <div class="cart-drawer__corpo">
+              <div class="cart-drawer__topo">
+                <p class="cart-drawer__nome" [title]="item.nome">{{ item.nome }}</p>
+                <p class="cart-drawer__subtotal">{{ item.precoUnit * item.quantidade | currency:'BRL' }}</p>
+              </div>
+
+              <p class="cart-drawer__preco">{{ item.precoUnit | currency:'BRL' }} / un.</p>
+
+              <div class="cart-drawer__controles">
+                <div class="cart-drawer__stepper">
+                  <button
+                    type="button"
+                    (click)="decrementar(item.produtoId, item.quantidade)"
+                    [attr.aria-label]="'Diminuir quantidade de ' + item.nome">
+                    <svg width="10" height="2" viewBox="0 0 10 2" fill="none" aria-hidden="true"><path d="M0 1h10" stroke="currentColor" stroke-width="1.4" /></svg>
+                  </button>
+                  <span aria-live="polite">{{ item.quantidade }}</span>
+                  <button
+                    type="button"
+                    (click)="incrementar(item.produtoId, item.quantidade)"
+                    [attr.aria-label]="'Aumentar quantidade de ' + item.nome">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M5 0v10M0 5h10" stroke="currentColor" stroke-width="1.4" /></svg>
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  class="cart-drawer__remover"
+                  (click)="carrinhoStore.removerItem(item.produtoId)"
+                  [attr.aria-label]="'Remover ' + item.nome + ' do carrinho'">
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M3 4.5h10M6.5 4.5V3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1.5M6 7.5v4M10 7.5v4M4.5 4.5 5.2 14a1 1 0 0 0 1 .9h3.6a1 1 0 0 0 1-.9l.7-9.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="square" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </li>
+        }
+      </ul>
+
+      <footer class="cart-drawer__footer">
+        <p class="cart-drawer__total"><span>Total</span><strong>{{ carrinhoStore.valorTotal() | currency:'BRL' }}</strong></p>
+        <button class="btn-primary" type="button" (click)="finalizarCompra()">Finalizar compra</button>
+        <a class="cart-drawer__link" routerLink="/carrinho" (click)="fechar()">Ver carrinho completo</a>
+      </footer>
+    }
+  </aside>
+}

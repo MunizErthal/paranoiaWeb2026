@@ -9,6 +9,7 @@ export interface ItemCarrinho {
   nome: string;
   precoUnit: number;
   imagemCapa: string;
+  imagemEmblema: string;
   quantidade: number;
 }
 

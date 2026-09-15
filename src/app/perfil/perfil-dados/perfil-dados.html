@@ -1,13 +1,66 @@
-<section class="checkout-card u-evidence" aria-label="Dados pessoais">
+<section class="checkout-card u-evidence dados-card" aria-label="Dados pessoais">
   @if (!editando()) {
-    <dl class="info-lista">
-      <div><dt>Nome</dt><dd>{{ usuario()?.nome || '—' }}</dd></div>
-      <div><dt>E-mail</dt><dd>{{ usuario()?.email }}</dd></div>
-      <div><dt>Telefone</dt><dd>{{ perfil()?.telefone || '—' }}</dd></div>
-      <div><dt>CPF</dt><dd>{{ perfil()?.cpf ? (perfil()!.cpf | cpf) : '—' }}</dd></div>
+    <header class="dados-card__header">
+      <div>
+        <h2 class="secao-titulo">Dados pessoais</h2>
+        <p class="dados-card__subtitulo">Suas informações de contato e documento.</p>
+      </div>
+      <button class="btn-secondary dados-card__editar" type="button" (click)="iniciarEdicao()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 20h4L18.5 9.5a2.5 2.5 0 0 0-4-4L4 16v4Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter" />
+        </svg>
+        Editar dados
+      </button>
+    </header>
+
+    <dl class="dados-lista">
+      <div class="dados-linha">
+        <div class="dados-linha__rotulo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM4.5 20.5a7.5 7.5 0 0 1 15 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter" />
+          </svg>
+          <dt>Nome</dt>
+        </div>
+        <dd>{{ usuario()?.nome || '—' }}</dd>
+      </div>
+      <div class="dados-linha">
+        <div class="dados-linha__rotulo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 5h16v14H4V5Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter" />
+            <path d="m4 6 8 7 8-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" />
+          </svg>
+          <dt>E-mail</dt>
+        </div>
+        <dd>{{ usuario()?.email }}</dd>
+      </div>
+      <div class="dados-linha">
+        <div class="dados-linha__rotulo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M7 3.5h2.2l1 4.3-1.9 1.5a12 12 0 0 0 5.4 5.4l1.5-1.9 4.3 1v2.2c0 1-.9 1.9-2 1.7-7-1-11.5-5.5-12.5-12.5-.2-1.1.7-2 1.7-2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" />
+          </svg>
+          <dt>Telefone</dt>
+        </div>
+        <dd>{{ perfil()?.telefone || '—' }}</dd>
+      </div>
+      <div class="dados-linha">
+        <div class="dados-linha__rotulo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 5.5h16v13H4v-13Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter" />
+            <path d="M8 3v4M16 3v4M4 10h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" />
+          </svg>
+          <dt>CPF</dt>
+        </div>
+        <dd>{{ perfil()?.cpf ? (perfil()!.cpf | cpf) : '—' }}</dd>
+      </div>
     </dl>
-    <button class="btn-secondary" type="button" (click)="iniciarEdicao()">Editar dados</button>
   } @else {
+    <header class="dados-card__header">
+      <div>
+        <h2 class="secao-titulo">Editar dados</h2>
+        <p class="dados-card__subtitulo">Mantenha suas informações atualizadas.</p>
+      </div>
+    </header>
+
     <div class="field-stack">
       <div class="field">
         <label for="pd-nome">Nome</label>

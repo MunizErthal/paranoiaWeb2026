@@ -327,6 +327,48 @@
   background: var(--surface-1);
 }
 
+/* Variante com cabeçalho (título + ação) — usada nas seções do perfil. */
+.dados-card {
+  gap: var(--s-6);
+}
+
+.dados-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+
+.dados-card__subtitulo {
+  margin: var(--s-1) 0 0;
+  color: var(--text-subtle);
+  font-size: var(--fs-sm);
+}
+
+.dados-card__editar {
+  flex: none;
+  width: auto;
+  min-height: 2.5rem;
+  padding: 0 var(--s-4);
+}
+
+.dados-vazio {
+  display: grid;
+  gap: var(--s-4);
+  justify-items: start;
+}
+
+.dados-vazio p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.dados-vazio .btn-primary {
+  width: auto;
+  padding-inline: var(--s-6);
+}
+
 .secao-titulo {
   margin: 0;
   color: var(--text);

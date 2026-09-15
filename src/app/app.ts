@@ -1,9 +1,12 @@
-import { AfterViewInit, ChangeDetectorRef, Component, DestroyRef, HostListener, Signal, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DestroyRef, HostListener, Signal, computed, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 import { AuthStateStore } from '../shared/stores/auth-state.store';
 import { CarrinhoStore } from '../shared/stores/carrinho.store';
+import { CarrinhoDrawerStore } from '../shared/stores/carrinho-drawer.store';
+import { CarrinhoDrawer } from '../shared/components/carrinho-drawer/carrinho-drawer';
+import { AuthService } from '../shared/services/firebase/auth.service';
 
 type NavigationItem = {
   id: string;
@@ -13,7 +16,7 @@ type NavigationItem = {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterLink, RouterOutlet],
+  imports: [RouterLink, RouterOutlet, CarrinhoDrawer],
   templateUrl: './app.html',
   styleUrls: ['./app.scss', './glitch.scss']
 })
@@ -31,15 +34,23 @@ export class App implements AfterViewInit {
   ];
 
   protected readonly estaAutenticado: Signal<boolean>;
+  protected readonly iniciais: Signal<string>;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private router: Router,
     private destroyRef: DestroyRef,
     private authState: AuthStateStore,
-    protected readonly carrinhoStore: CarrinhoStore
+    private authService: AuthService,
+    protected readonly carrinhoStore: CarrinhoStore,
+    protected readonly carrinhoDrawer: CarrinhoDrawerStore
   ) {
     this.estaAutenticado = this.authState.estaAutenticado;
+    this.iniciais = computed(() => {
+      const usuario = this.authState.usuario();
+      const fonte = usuario?.nome?.trim() || usuario?.email || '';
+      return fonte.charAt(0).toUpperCase() || '?';
+    });
     this.updateSelectedPage(this.router.url);
     this.router.events
       .pipe(
@@ -47,6 +58,11 @@ export class App implements AfterViewInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((event) => this.updateSelectedPage(event.urlAfterRedirects));
+  }
+
+  async sair(): Promise<void> {
+    await this.authService.logout();
+    this.router.navigateByUrl('/');
   }
 
   private updateSelectedPage(url: string): void {

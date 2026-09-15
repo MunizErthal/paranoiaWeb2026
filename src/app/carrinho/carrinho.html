@@ -6,7 +6,12 @@
 
   @if (carrinhoStore.itens().length === 0) {
     <div class="cart-empty u-evidence">
-      <p>Seu carrinho está vazio.</p>
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6" stroke="currentColor" stroke-width="1.3" stroke-linecap="square" stroke-linejoin="miter" />
+        <path d="M9.5 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM17.5 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" fill="currentColor" />
+      </svg>
+      <h2>Seu carrinho está vazio</h2>
+      <p>Os casos mais assustadores da loja estão a um clique de distância.</p>
       <a class="btn-primary" routerLink="/loja">Ver jogos na loja</a>
     </div>
   } @else {
@@ -14,28 +19,58 @@
       <ul class="cart-list">
         @for (item of carrinhoStore.itens(); track item.produtoId) {
           <li class="cart-item">
-            <img class="cart-item__imagem" [src]="item.imagemCapa" [alt]="item.nome" />
+            <div class="cart-item__thumb">
+              @if (imagemFalhou(item.produtoId) || !item.imagemEmblema) {
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M4 5h16v14H4zM4 15l4.5-4.5 4 4L16 11l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="square" stroke-linejoin="miter" />
+                </svg>
+              } @else {
+                <img [src]="item.imagemEmblema" [alt]="item.nome" loading="lazy" decoding="async" (error)="aoFalharImagem(item.produtoId)" />
+              }
+            </div>
+
             <div class="cart-item__info">
               <h3>{{ item.nome }}</h3>
               <p class="cart-item__preco">{{ item.precoUnit | currency:'BRL' }} / unidade</p>
             </div>
+
             <div class="cart-item__quantidade">
-              <label [attr.for]="'quantidade-' + item.produtoId">Qtd.</label>
-              <input
-                [id]="'quantidade-' + item.produtoId"
-                type="number"
-                min="1"
-                [value]="item.quantidade"
-                (change)="atualizarQuantidade(item.produtoId, $any($event.target).value)" />
+              <span class="cart-item__quantidade-label" aria-hidden="true">Qtd.</span>
+              <div class="stepper">
+                <button
+                  type="button"
+                  class="stepper__botao"
+                  (click)="decrementar(item.produtoId, item.quantidade)"
+                  [attr.aria-label]="'Diminuir quantidade de ' + item.nome">
+                  <svg width="11" height="2" viewBox="0 0 11 2" fill="none" aria-hidden="true"><path d="M0 1h11" stroke="currentColor" stroke-width="1.5" /></svg>
+                </button>
+                <input
+                  class="stepper__valor"
+                  [attr.aria-label]="'Quantidade de ' + item.nome"
+                  type="number"
+                  min="1"
+                  inputmode="numeric"
+                  [value]="item.quantidade"
+                  (change)="atualizarQuantidade(item.produtoId, $any($event.target).value)" />
+                <button
+                  type="button"
+                  class="stepper__botao"
+                  (click)="incrementar(item.produtoId, item.quantidade)"
+                  [attr.aria-label]="'Aumentar quantidade de ' + item.nome">
+                  <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M5.5 0v11M0 5.5h11" stroke="currentColor" stroke-width="1.5" /></svg>
+                </button>
+              </div>
             </div>
+
             <p class="cart-item__subtotal">{{ item.precoUnit * item.quantidade | currency:'BRL' }}</p>
+
             <button
               class="cart-item__remover"
               type="button"
               (click)="carrinhoStore.removerItem(item.produtoId)"
               [attr.aria-label]="'Remover ' + item.nome + ' do carrinho'">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
+                <path d="M3 4.5h10M6.5 4.5V3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1.5M6 7.5v4M10 7.5v4M4.5 4.5 5.2 14a1 1 0 0 0 1 .9h3.6a1 1 0 0 0 1-.9l.7-9.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="square" />
               </svg>
             </button>
           </li>
@@ -44,9 +79,16 @@
 
       <aside class="cart-summary u-evidence">
         <p class="cart-summary__eyebrow">Resumo</p>
+        <p class="cart-summary__linha">
+          <span>{{ carrinhoStore.quantidadeTotal() }} {{ carrinhoStore.quantidadeTotal() === 1 ? 'item' : 'itens' }}</span>
+          <span>{{ carrinhoStore.valorTotal() | currency:'BRL' }}</span>
+        </p>
         <p class="cart-summary__total"><span>Total</span><strong>{{ carrinhoStore.valorTotal() | currency:'BRL' }}</strong></p>
         <button class="btn-primary" type="button" (click)="finalizarCompra()">Finalizar compra</button>
-        <a class="link-back" routerLink="/loja">Continuar comprando</a>
+        <a class="link-back" routerLink="/loja">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" /></svg>
+          Continuar comprando
+        </a>
       </aside>
     </div>
   }
