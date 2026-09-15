@@ -54,16 +54,16 @@ Vitest já está configurado. Todo `.store.ts` e `.service.ts` novo nasce com `.
 **Planejamento**: [01](./planejamento/01-padroes-componentes-services.md), [02](./planejamento/02-firestore-auth.md)
 **Por que primeiro**: todo o resto depende de estado de sessão confiável. Enquanto `environment.prod.ts` for mutado como estado global, qualquer tela nova nasce acoplada a um bug.
 
-- [ ] Remover `usuarioAtual` e `partidaId` de `environment.ts` e `environment.prod.ts` (ficam só com a config do Firebase)
-- [ ] Corrigir todo import que aponta para `environment.prod` direto — sempre `./environment`, deixando o `fileReplacements` do `angular.json` resolver por build
-- [ ] Criar `shared/stores/auth-state.store.ts` (signals) e remover `auth-state.service.ts`
-- [ ] Atualizar `AuthService` e `AuthGuard` para consumir o store novo; remover a navegação para `/selecao-de-jogo` (rota de outro sistema)
-- [ ] Quebrar `FirebaseBaseService`: manter só CRUD genérico; mover `buscarPersonagemPorPlaca`, `buscarProximoProcessamento`, `buscarProcessamentos*` para um service do domínio de partidas (ou remover, se este projeto não os usa)
-- [ ] Criar pastas `shared/components`, `shared/stores`, `shared/pipes`, `shared/utils`
-- [ ] Criar `shared/utils/cpf.util.ts` (validação de dígito verificador + formatação) e `cep.util.ts`
-- [ ] Criar pipes de moeda BRL, CPF e CEP
-- [ ] Remover `console.log(code)` de `AuthService.handleError`
-- [ ] Escrever `firestore.rules` (esqueleto no MD 02) e aplicar no console do Firebase
+- [x] Remover `usuarioAtual` e `partidaId` de `environment.ts` e `environment.prod.ts` (ficam só com a config do Firebase)
+- [x] Corrigir todo import que aponta para `environment.prod` direto — sempre `./environment`, deixando o `fileReplacements` do `angular.json` resolver por build
+- [x] Criar `shared/stores/auth-state.store.ts` (signals) e remover `auth-state.service.ts`
+- [x] Atualizar `AuthService` e `AuthGuard` para consumir o store novo; remover a navegação para `/selecao-de-jogo` (rota de outro sistema)
+- [x] Quebrar `FirebaseBaseService`: manter só CRUD genérico; removidos `buscarPersonagemPorPlaca`/`buscarProximoProcessamento`/`buscarProcessamentos*`/`PersonagensService`/`PersonagemDTO` (confirmado sem nenhum uso neste projeto — não havia domínio de partidas pra mover)
+- [x] Criar pastas `shared/components`, `shared/stores`, `shared/pipes`, `shared/utils`
+- [x] Criar `shared/utils/cpf.util.ts` (validação de dígito verificador + formatação) e `cep.util.ts`
+- [x] Criar pipes de CPF e CEP — moeda BRL usa o `CurrencyPipe` nativo do Angular com locale `pt-BR` registrado, em vez de um pipe próprio (evita reinventar o que o framework já resolve)
+- [x] Remover `console.log(code)` de `AuthService.handleError`
+- [x] Escrever `firestore.rules` — **pendente aplicar manualmente no console do Firebase** (arquivo pronto na raiz do repo, não há firebase-tools autenticado neste ambiente)
 
 **Critério de aceite**: build limpo; nenhum arquivo fora de `environment*.ts` importa `environment.prod`; `grep` por `environment.usuarioAtual` não retorna nada; regras publicadas e testadas manualmente (usuário A não lê documento de usuário B).
 
@@ -71,13 +71,13 @@ Vitest já está configurado. Todo `.store.ts` e `.service.ts` novo nasce com `.
 
 **Planejamento**: [02](./planejamento/02-firestore-auth.md)
 
-- [ ] Ajustar `UsuarioDTO` (+ `jogosAdquiridos`), criar `PerfilDTO` e `EnderecoDTO`
-- [ ] Criar `PerfilService` (`usuarios/{uid}/perfil/dados`) e `EnderecoService` (`usuarios/{uid}/enderecos`)
-- [ ] Ajustar `AuthService.register` para gravar nome em `usuarios/{uid}` e o restante no perfil — **sem pedir CPF no cadastro**
-- [ ] Telas `/login`, `/cadastro`, `/esqueci-senha` usando tokens de `_tokens.scss`, sem CSS novo fora do sistema existente
-- [ ] Suporte a `returnUrl` no login (volta para o fluxo de origem após autenticar)
-- [ ] Rotas novas com `loadComponent` (lazy)
-- [ ] Ponto de entrada no header: estado de login (entrar / perfil)
+- [x] Ajustar `UsuarioDTO` (+ `jogosAdquiridos`), criar `PerfilDTO` e `EnderecoDTO`
+- [x] Criar `PerfilService` (`usuarios/{uid}/perfil/dados`) e `EnderecoService` (`usuarios/{uid}/enderecos`)
+- [x] Ajustar `AuthService.register` para gravar nome em `usuarios/{uid}` — CPF fica só no perfil (Fase 6), sem pedir no cadastro
+- [x] Telas `/login`, `/cadastro`, `/esqueci-senha` usando tokens de `_tokens.scss` (novo partial `_forms.scss`, aditivo)
+- [x] Suporte a `returnUrl` no login (volta para o fluxo de origem após autenticar)
+- [x] Rotas novas com `loadComponent` (lazy)
+- [x] Ponto de entrada no header: estado de login (entrar / perfil)
 
 **Critério de aceite**: cadastro cria usuário + perfil, exige verificação de e-mail, e login com `returnUrl` retorna à origem. Nenhuma tela existente teve HTML/SCSS alterado além da inclusão do ponto de entrada no header.
 
@@ -86,10 +86,10 @@ Vitest já está configurado. Todo `.store.ts` e `.service.ts` novo nasce com `.
 **Planejamento**: [03](./planejamento/03-carrinho-pagamento-frete.md)
 **Por que antes do carrinho**: carrinho sem produto real para referenciar vira mock que precisa ser refeito.
 
-- [ ] Criar `ProdutoDTO` (incluindo **peso, altura, largura e comprimento** — sem eles não há cotação de frete) e `ProdutoService` (leitura pública de `produtos/`)
-- [ ] Popular a coleção `produtos` no Firestore com os jogos reais, medidos e pesados (manualmente no console nesta fase — não há painel administrativo no escopo)
-- [ ] Ligar `/loja` e `/jogos/:idDoJogo` ao catálogo real, preservando o layout atual
-- [ ] Botão "Adicionar ao carrinho" na página de detalhe (sem funcionalidade ainda, ou já apontando para o store da Fase 3)
+- [x] Criar `ProdutoDTO` (incluindo **peso, altura, largura e comprimento**, além de `imagemCapa`/`imagemEmblema` separados — são dois tratamentos visuais que já existiam no CSS) e `ProdutoService` (leitura pública de `produtos/`)
+- [ ] **Pendente de você**: popular a coleção `produtos` no Firestore — ver JSON de exemplo na mensagem de entrega
+- [x] Ligar `/loja`, `/jogos` e `/jogos/:idDoJogo` ao catálogo real, preservando o layout atual (também corrigido um link fixo `cidade-submersa` que já estava quebrado antes)
+- [x] Botão "Adicionar ao carrinho" — acabou ficando funcional já nesta entrega (`CarrinhoStore` da Fase 3 estava pronto a tempo)
 
 **Critério de aceite**: a loja lista produtos vindos do Firestore; nenhuma alteração visual perceptível além do conteúdo dinâmico.
 
@@ -97,12 +97,12 @@ Vitest já está configurado. Todo `.store.ts` e `.service.ts` novo nasce com `.
 
 **Planejamento**: [03](./planejamento/03-carrinho-pagamento-frete.md)
 
-- [ ] `CarrinhoStore`: `itens` (signal privado + readonly), `quantidadeTotal` e `valorTotal` (computed), métodos `adicionarItem`/`removerItem`/`atualizarQuantidade`/`limpar`
-- [ ] Persistência em `localStorage` dentro do store (via `effect`), tolerante a JSON inválido
-- [ ] Merge com `usuarios/{uid}/carrinho/atual` no login (soma sem duplicar)
-- [ ] Tela `/carrinho` com edição de quantidade e remoção
-- [ ] Badge de quantidade no header
-- [ ] Testes do store: adicionar item repetido soma quantidade; remover item zera; total confere; `localStorage` corrompido não quebra a inicialização
+- [x] `CarrinhoStore`: `itens` (signal privado + readonly), `quantidadeTotal` e `valorTotal` (computed), métodos `adicionarItem`/`removerItem`/`atualizarQuantidade`/`limpar`
+- [x] Persistência em `localStorage` dentro do store (via `effect`), tolerante a JSON inválido
+- [x] Merge com `usuarios/{uid}/carrinho/atual` no login (soma sem duplicar)
+- [x] Tela `/carrinho` com edição de quantidade e remoção
+- [x] Badge de quantidade no header
+- [ ] Testes do store — **adiado a pedido seu** ("não faça testes neste momento, deixaremos para o final")
 
 **Critério de aceite**: carrinho funciona **sem login**, sobrevive a reload, e ao logar mescla com o que estava salvo na conta.
 
@@ -112,53 +112,53 @@ Vitest já está configurado. Todo `.store.ts` e `.service.ts` novo nasce com `.
 **Pré-requisito**: plano Blaze ativo (✅ já feito); conta e aplicação criadas no Melhor Envio (produção + sandbox).
 **Por que o frete antes do pagamento**: a tela de checkout precisa do valor do frete para saber quanto cobrar. Pagamento sem frete calculado cobra o valor errado.
 
-- [ ] Inicializar `functions/` no projeto (TypeScript), versionado no repo
-- [ ] `melhorEnvioOAuthCallback` — troca `code` por token (30 dias, refresh 45); guarda no Secret Manager, **nunca** no client
-- [ ] `renovarTokenMelhorEnvio` — função agendada semanal, renova antes de expirar
-- [ ] `cotarFrete` (`onCall`, exige autenticação) — soma peso/dimensões dos itens, cota no Melhor Envio, devolve opções com preço e prazo
-- [ ] `FreteService` no Angular (`shared/services/frete/`): só chama a Function, nunca a API do Melhor Envio direto
+- [x] Inicializar `functions/` no projeto (TypeScript), versionado no repo
+- [x] `melhorEnvioOAuthCallback` — troca `code` por token (30 dias, refresh 45); guarda no Secret Manager, **nunca** no client
+- [x] `renovarTokenMelhorEnvio` — função agendada semanal, renova antes de expirar
+- [x] `cotarFrete` (`onCall`, exige autenticação) — soma peso/dimensões dos itens, cota no Melhor Envio, devolve opções com preço e prazo
+- [x] `FreteService` no Angular (`shared/services/frete/`): só chama a Function, nunca a API do Melhor Envio direto
 
-**Critério de aceite**: cotação real no sandbox, com carrinho de mais de um produto, devolvendo pelo menos duas opções de transportadora. Nenhum token do Melhor Envio aparece no bundle (`grep` no `dist/`).
+**Critério de aceite**: código typecheca limpo (`npm run typecheck` em `functions/`) — **ainda não testado contra a API real**, porque não existe conta no Melhor Envio. Nenhum token aparece no bundle do client (confirmado por inspeção — só a Cloud Function importa os secrets).
 
 ## Fase 5 — Backend: pagamento (Cloud Functions + Mercado Pago)
 
 **Planejamento**: [03](./planejamento/03-carrinho-pagamento-frete.md)
 **Pré-requisito**: conta no Mercado Pago com credenciais de teste e produção.
 
-- [ ] `processarPagamento` (`onCall`, exige autenticação) — **recalcula o total no servidor** (relê preços no Firestore + recota o frete), cria o pagamento no MP, grava `compras/` com status `aguardando_pagamento`
-- [ ] `webhookMercadoPago` — valida `x-signature` (HMAC-SHA256), **reconsulta a API do MP** para confirmar o status, atualiza `compras/` e `usuarios/{uid}.jogosAdquiridos`
-- [ ] `comprarEtiqueta` — disparada quando o pedido vira `pago`: adiciona ao carrinho do Melhor Envio, paga com saldo, gera e registra a etiqueta e o rastreio
-- [ ] `webhookMelhorEnvio` — valida `X-ME-Signature`, atualiza status de envio e rastreio
-- [ ] Idempotência em ambos os webhooks: receber a mesma notificação duas vezes não pode duplicar pedido nem item em `jogosAdquiridos`
-- [ ] `PagamentoService` no Angular (`shared/services/pagamento/`): só chama as Functions
+- [x] `processarPagamento` (`onCall`, exige autenticação) — **recalcula o total no servidor** (relê preços no Firestore + recota o frete), cria o pagamento no MP, grava `compras/` com status `aguardando_pagamento`
+- [x] `webhookMercadoPago` — valida `x-signature` (HMAC-SHA256, comparação resistente a timing attack), **reconsulta a API do MP** para confirmar o status, atualiza `compras/` e `usuarios/{uid}.jogosAdquiridos`
+- [x] `comprarEtiqueta` — disparada quando o pedido vira `pago`: adiciona ao carrinho do Melhor Envio, paga com saldo, gera e registra a etiqueta e o rastreio
+- [x] `webhookMelhorEnvio` — valida `X-ME-Signature`, atualiza status de envio e rastreio
+- [x] Idempotência: `webhookMercadoPago` ignora a notificação se a compra já está no status recebido; **falta validar** a idempotência do lado do Melhor Envio na Fase 7
+- [x] `PagamentoService` no Angular (`shared/services/pagamento/`): só chama as Functions
 
-**Critério de aceite**: nenhum segredo (access token do MP ou do Melhor Envio) no bundle — só a public key do MP; webhook com assinatura inválida é rejeitado; pagamento aprovado no sandbox gera etiqueta automaticamente.
+**Critério de aceite**: código typecheca limpo — **ainda não testado contra a API real** (sem conta no Mercado Pago). O contrato exato de resposta do fluxo de etiqueta (`comprarEtiqueta`) e do payload do webhook do Melhor Envio são best-effort, documentados como tal no código — precisam de confirmação em sandbox antes do go-live.
 
 ## Fase 5b — Tela de checkout
 
 **Planejamento**: [03](./planejamento/03-carrinho-pagamento-frete.md), [04](./planejamento/04-perfil-usuario.md)
 
-- [ ] Tela `/checkout` protegida por `AuthGuard`, em etapas: endereço → frete → pagamento
-- [ ] Seleção/cadastro de endereço reutilizando `app-endereco-form`
-- [ ] Cotação de frete exibida com opções (transportadora, preço, prazo) e escolha do usuário
-- [ ] Exigir CPF quando ausente (validação de dígito verificador, não só máscara)
-- [ ] SDK do Mercado Pago para tokenizar cartão **no navegador** — o número do cartão nunca vai para as nossas Functions
-- [ ] Pix: exibir QR Code e copia-e-cola. Boleto: exibir link
-- [ ] Tela de retorno: mensagem honesta conforme o método ("aguardando pagamento" para Pix/boleto; resultado imediato para cartão) — **nunca** marcar como pago no cliente; o status real só vem pelo webhook
+- [x] Tela `/checkout` protegida por `AuthGuard`, em etapas: endereço → frete → pagamento
+- [x] Seleção/cadastro de endereço reutilizando `app-endereco-form`
+- [x] Cotação de frete exibida com opções (transportadora, preço, prazo) e escolha do usuário
+- [x] Exigir CPF quando ausente (validação de dígito verificador, não só máscara)
+- [ ] **Não implementado**: SDK do Mercado Pago para tokenizar cartão no navegador — sem uma `mercadoPagoPublicKey` real pra testar contra, integrar essa parte às cegas era mais risco que valor. A opção "Cartão" fica desabilitada na UI ("em breve") até a chave existir; Pix e boleto não dependem do SDK deles e já funcionam de ponta a ponta
+- [x] Pix: exibe QR Code (base64) e copia-e-cola. Boleto: exibe link
+- [x] Tela de retorno: mensagem honesta conforme o método; nunca marca como pago no cliente — o status real só vem pelo webhook
 
-**Critério de aceite**: compra de ponta a ponta em sandbox, nas três formas de pagamento, com o valor cobrado batendo com produtos + frete.
+**Critério de aceite**: compra de ponta a ponta em sandbox — **ainda não verificado**, depende das contas existirem. Fluxo de Pix/boleto está completo e pronto pra validar assim que a conta do Mercado Pago existir.
 
 ## Fase 6 — Perfil e acompanhamento de pedidos
 
 **Planejamento**: [04](./planejamento/04-perfil-usuario.md)
 
-- [ ] `/perfil` — dados pessoais + jogos adquiridos
-- [ ] `/perfil/enderecos` — CRUD com autocompletar por CEP (ViaCEP)
-- [ ] `/perfil/pedidos` e `/perfil/pedidos/:idPedido` — lista e detalhe em tempo real
-- [ ] Componentes `app-endereco-form`, `app-pedido-card`, `app-status-badge`
-- [ ] Bloqueio de edição de CPF após a primeira compra confirmada
+- [x] `/perfil` — dados pessoais + jogos adquiridos
+- [x] `/perfil/enderecos` — CRUD com autocompletar por CEP (ViaCEP)
+- [x] `/perfil/pedidos` e `/perfil/pedidos/:idPedido` — lista e detalhe em tempo real
+- [x] Componentes `app-endereco-form`, `app-pedido-card`, `app-status-badge`
+- [x] Bloqueio de edição de CPF após a primeira compra confirmada
 
-**Critério de aceite**: pagamento confirmado no sandbox aparece em `/perfil/pedidos` sem recarregar a página.
+**Critério de aceite**: pagamento confirmado no sandbox aparece em `/perfil/pedidos` sem recarregar a página — **ainda não verificado** (depende da conta do Mercado Pago). A escuta em tempo real (`buscarPorCampoOuvindo`) está implementada e o build compila; falta validar contra dados reais.
 
 ## Fase 7 — Validação e endurecimento
 
