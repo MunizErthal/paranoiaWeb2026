@@ -43,5 +43,12 @@ service cloud.firestore {
       allow read: if request.auth != null && request.auth.uid == resource.data.usuarioId;
       allow write: if false; // client nunca escreve pedido — evita fraude de "marcar como pago"
     }
+
+    // Configuração interna (ex: token OAuth do Melhor Envio). Já cai no
+    // deny-by-default do Firestore por não ter nenhum "match" que libere
+    // acesso — regra explícita aqui só para deixar a intenção clara.
+    match /sistema/{doc} {
+      allow read, write: if false;
+    }
   }
 }
