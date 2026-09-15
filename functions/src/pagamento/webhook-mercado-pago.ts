@@ -6,6 +6,7 @@ import { mercadoPagoAccessToken, mercadoPagoWebhookSecret } from '../secrets';
 import { obterServicoPagamento, mapearStatusMercadoPago } from './mercado-pago-client';
 import { CompraDTO } from '../types';
 import { dispararCompraEtiqueta } from '../envio/comprar-etiqueta';
+import { REGIAO } from '../regiao';
 
 /**
  * Recebe notificações de pagamento do Mercado Pago. Nunca confia no
@@ -13,7 +14,7 @@ import { dispararCompraEtiqueta } from '../envio/comprar-etiqueta';
  * a API deles antes de marcar qualquer coisa como paga.
  */
 export const webhookMercadoPago = onRequest(
-  { secrets: [mercadoPagoAccessToken, mercadoPagoWebhookSecret] },
+  { region: REGIAO, secrets: [mercadoPagoAccessToken, mercadoPagoWebhookSecret] },
   async (req, res) => {
     if (!validarAssinatura(req)) {
       logger.warn('Webhook do Mercado Pago com assinatura inválida.');

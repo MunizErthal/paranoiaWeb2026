@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from '../shared/guards/auth.guard';
 import { Contato } from './contato/contato';
 import { Home } from './home/home';
 import { Jogos } from './jogos/jogos';
@@ -17,5 +18,6 @@ export const routes: Routes = [
 	{ path: 'cadastro', loadComponent: () => import('./cadastro/cadastro').then(m => m.Cadastro) },
 	{ path: 'esqueci-senha', loadComponent: () => import('./esqueci-senha/esqueci-senha').then(m => m.EsqueciSenha) },
 	{ path: 'carrinho', loadComponent: () => import('./carrinho/carrinho').then(m => m.Carrinho) },
+	{ path: 'checkout', loadComponent: () => import('./checkout/checkout').then(m => m.Checkout), canActivate: [AuthGuard] },
 	{ path: '**', redirectTo: '' }
 ];

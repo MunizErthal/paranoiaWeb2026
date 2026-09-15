@@ -4,10 +4,11 @@ import { logger } from 'firebase-functions';
 import { melhorEnvioClientId, melhorEnvioClientSecret } from '../secrets';
 import { trocarCodigoPorToken, renovarToken } from './melhor-envio-client';
 import { defineString } from 'firebase-functions/params';
+import { REGIAO } from '../regiao';
 
 /**
- * URL desta própria função, exatamente como cadastrada no app OAuth do
- * painel de parceiros da Nuvemshop — Melhor Envio, no caso.
+ * URL desta própria função, exatamente como cadastrada no app OAuth
+ * criado no painel de parceiros do Melhor Envio.
  * Preencher depois de saber a URL definitiva do deploy.
  */
 const melhorEnvioRedirectUri = defineString('MELHORENVIO_REDIRECT_URI', { default: '' });
@@ -19,7 +20,7 @@ const melhorEnvioRedirectUri = defineString('MELHORENVIO_REDIRECT_URI', { defaul
  * o app — a partir daí o token é renovado sozinho.
  */
 export const melhorEnvioOAuthCallback = onRequest(
-  { secrets: [melhorEnvioClientId, melhorEnvioClientSecret] },
+  { region: REGIAO, secrets: [melhorEnvioClientId, melhorEnvioClientSecret] },
   async (req, res) => {
     const code = req.query['code'];
 
@@ -53,7 +54,7 @@ export const melhorEnvioOAuthCallback = onRequest(
  * de uma chamada de cliente acontecer perto da expiração.
  */
 export const renovarTokenMelhorEnvio = onSchedule(
-  { schedule: 'every monday 03:00', secrets: [melhorEnvioClientId, melhorEnvioClientSecret] },
+  { region: REGIAO, schedule: 'every monday 03:00', secrets: [melhorEnvioClientId, melhorEnvioClientSecret] },
   async () => {
     await renovarToken(melhorEnvioClientId.value(), melhorEnvioClientSecret.value());
   }

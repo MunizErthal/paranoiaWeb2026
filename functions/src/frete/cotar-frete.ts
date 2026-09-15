@@ -4,6 +4,7 @@ import { lojaCepOrigem } from '../params';
 import { obterTokenValido, chamarMelhorEnvio } from '../envio/melhor-envio-client';
 import { buscarItensComProduto } from '../produtos';
 import { ItemCarrinhoEntrada } from '../types';
+import { REGIAO } from '../regiao';
 
 interface ProdutoCalculo {
   id: string;
@@ -89,7 +90,7 @@ export async function calcularOpcoesFrete(
 }
 
 export const cotarFrete = onCall(
-  { secrets: [melhorEnvioClientId, melhorEnvioClientSecret] },
+  { region: REGIAO, secrets: [melhorEnvioClientId, melhorEnvioClientSecret] },
   async (request): Promise<OpcaoFrete[]> => {
     if (!request.auth) {
       throw new HttpsError('unauthenticated', 'É preciso estar logado para calcular o frete.');

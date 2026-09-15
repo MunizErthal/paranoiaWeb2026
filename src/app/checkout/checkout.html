@@ -1,0 +1,139 @@
+<main class="checkout-page">
+  <header class="checkout-page__header">
+    <p class="page-eyebrow">Checkout</p>
+    <h1>Finalizar compra</h1>
+  </header>
+
+  @if (carrinhoStore.itens().length === 0 && etapa() !== 'concluido') {
+    <p class="page-lead">Seu carrinho está vazio. <a class="link-action" routerLink="/loja">Ver jogos na loja</a></p>
+  } @else {
+    <ol class="checkout-steps" aria-label="Etapas da compra">
+      <li [class.is-ativa]="etapa() === 'endereco'">1. Endereço</li>
+      <li [class.is-ativa]="etapa() === 'frete'">2. Frete</li>
+      <li [class.is-ativa]="etapa() === 'pagamento'">3. Pagamento</li>
+    </ol>
+
+    <div class="checkout-layout">
+      <div class="checkout-content">
+
+        @if (etapa() === 'endereco') {
+          <section class="checkout-card u-evidence" aria-label="Endereço de entrega">
+            @if (!mostrarFormNovoEndereco()) {
+              @if (enderecos().length > 0) {
+                <ul class="endereco-lista">
+                  @for (endereco of enderecos(); track endereco.id) {
+                    <li>
+                      <button
+                        type="button"
+                        class="endereco-opcao"
+                        [class.is-selecionada]="enderecoSelecionadoId() === endereco.id"
+                        (click)="selecionarEndereco(endereco)">
+                        <strong>{{ endereco.apelido || endereco.logradouro }}</strong>
+                        <span>{{ endereco.logradouro }}, {{ endereco.numero }} — {{ endereco.bairro }}, {{ endereco.cidade }}/{{ endereco.estado }}</span>
+                      </button>
+                    </li>
+                  }
+                </ul>
+              }
+              <button class="btn-secondary" type="button" (click)="mostrarFormNovoEndereco.set(true)">
+                Adicionar novo endereço
+              </button>
+              <button class="btn-primary" type="button" (click)="avancarParaFrete()">Continuar</button>
+            } @else {
+              <app-endereco-form (salvar)="salvarNovoEndereco($event)" (cancelar)="mostrarFormNovoEndereco.set(false)" />
+            }
+          </section>
+        }
+
+        @if (etapa() === 'frete') {
+          <section class="checkout-card u-evidence" aria-label="Opções de frete">
+            @if (cotandoFrete()) {
+              <p class="field__hint">Calculando frete…</p>
+            } @else {
+              <ul class="frete-lista">
+                @for (opcao of opcoesFrete(); track opcao.servicoId) {
+                  <li>
+                    <button
+                      type="button"
+                      class="endereco-opcao"
+                      [class.is-selecionada]="servicoIdSelecionado() === opcao.servicoId"
+                      (click)="servicoIdSelecionado.set(opcao.servicoId)">
+                      <strong>{{ opcao.servico }}</strong>
+                      <span>{{ opcao.preco | currency:'BRL' }} · até {{ opcao.prazoDias }} dias úteis</span>
+                    </button>
+                  </li>
+                } @empty {
+                  <p class="field__hint">Nenhuma opção de frete disponível para este endereço.</p>
+                }
+              </ul>
+              <button class="btn-primary" type="button" (click)="avancarParaPagamento()">Continuar</button>
+            }
+          </section>
+        }
+
+        @if (etapa() === 'pagamento') {
+          <section class="checkout-card u-evidence" aria-label="Pagamento">
+            <div class="field">
+              <label for="checkout-cpf">CPF</label>
+              <input
+                id="checkout-cpf"
+                type="text"
+                inputmode="numeric"
+                placeholder="000.000.000-00"
+                [value]="cpf()"
+                (input)="cpf.set($any($event.target).value)"
+                [attr.aria-invalid]="erroCpf() ? 'true' : null" />
+              @if (erroCpf(); as erro) {
+                <p class="field__error" aria-live="polite">{{ erro }}</p>
+              }
+            </div>
+
+            <div class="metodo-pagamento" role="radiogroup" aria-label="Forma de pagamento">
+              <button type="button" class="endereco-opcao" [class.is-selecionada]="metodo() === 'pix'" (click)="metodo.set('pix')">Pix</button>
+              <button type="button" class="endereco-opcao" [class.is-selecionada]="metodo() === 'boleto'" (click)="metodo.set('boleto')">Boleto</button>
+              <button type="button" class="endereco-opcao" [disabled]="!aceitaCartao" [class.is-selecionada]="metodo() === 'cartao'" (click)="metodo.set('cartao')">
+                Cartão @if (!aceitaCartao) { <span class="field__hint">(em breve)</span> }
+              </button>
+            </div>
+
+            <button class="btn-primary" type="button" [disabled]="processando()" (click)="finalizarCompra()">
+              {{ processando() ? 'Processando…' : 'Confirmar pagamento' }}
+            </button>
+          </section>
+        }
+
+        @if (etapa() === 'concluido' && resultado(); as resultado) {
+          <section class="checkout-card u-evidence" aria-label="Pedido confirmado">
+            <h2>Pedido recebido</h2>
+            @if (resultado.status === 'pago') {
+              <p>Pagamento aprovado! Seu pedido já está sendo preparado.</p>
+            } @else {
+              <p>Recebemos seu pedido — a confirmação do pagamento pode levar alguns instantes.</p>
+            }
+
+            @if (resultado.qrCodeBase64) {
+              <img class="checkout-pix-qr" [src]="'data:image/png;base64,' + resultado.qrCodeBase64" alt="QR Code do Pix" />
+              <p class="field__hint">Ou copie o código: <code>{{ resultado.qrCode }}</code></p>
+            }
+            @if (resultado.linkBoleto) {
+              <a class="btn-primary" [href]="resultado.linkBoleto" target="_blank" rel="noopener noreferrer">Ver boleto</a>
+            }
+
+            <a class="link-action" routerLink="/loja">Continuar comprando</a>
+          </section>
+        }
+      </div>
+
+      @if (etapa() !== 'concluido') {
+        <aside class="cart-summary u-evidence">
+          <p class="cart-summary__eyebrow">Resumo</p>
+          <p class="cart-summary__total"><span>Produtos</span><strong>{{ valorProdutos() | currency:'BRL' }}</strong></p>
+          @if (freteSelecionado(); as frete) {
+            <p class="cart-summary__total"><span>Frete</span><strong>{{ frete.preco | currency:'BRL' }}</strong></p>
+          }
+          <p class="cart-summary__total"><span>Total</span><strong>{{ valorTotal() | currency:'BRL' }}</strong></p>
+        </aside>
+      }
+    </div>
+  }
+</main>

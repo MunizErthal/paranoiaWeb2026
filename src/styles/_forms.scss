@@ -60,6 +60,7 @@
   line-height: var(--lh-body);
 }
 
+.field-stack,
 .auth-card__form {
   display: grid;
   gap: var(--s-5);
@@ -109,6 +110,35 @@
   margin: 0;
   color: var(--chroma-magenta);
   font-size: var(--fs-sm);
+}
+
+.field__hint {
+  margin: 0;
+  color: var(--text-subtle);
+  font-size: var(--fs-sm);
+}
+
+.form-row {
+  display: grid;
+  gap: var(--s-4);
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+}
+
+.form-actions .btn-primary,
+.form-actions .btn-secondary {
+  width: auto;
+  flex: 1;
+}
+
+@media (min-width: 32rem) {
+  .form-row--dupla {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .field--checkbox {
@@ -242,6 +272,49 @@
   border: var(--border) solid var(--chroma-cyan);
   border-radius: var(--r-md);
   color: var(--chroma-cyan);
+}
+
+/* =========================================================================
+   Cartão de resumo (carrinho, checkout) — compartilhado entre páginas,
+   por isso vive no partial global em vez do SCSS de um componente só.
+   ========================================================================= */
+.cart-summary {
+  position: relative;
+  display: grid;
+  gap: var(--s-4);
+  padding: var(--s-6);
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface-1);
+  box-shadow: var(--shadow-1);
+}
+
+.cart-summary__eyebrow {
+  margin: 0;
+  color: var(--accent-text);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+.cart-summary__total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0;
+  color: var(--text);
+}
+
+.cart-summary__total span {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.cart-summary__total strong {
+  font-size: var(--fs-h3);
 }
 
 @media (prefers-reduced-motion: reduce) {

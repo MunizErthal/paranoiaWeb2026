@@ -6,6 +6,7 @@ import { calcularOpcoesFrete } from '../frete/cotar-frete';
 import { buscarItensComProduto } from '../produtos';
 import { cpfValido, limparCpf } from '../cpf.util';
 import { CompraDTO, EnderecoDTO, ItemCarrinhoEntrada, StatusCompra } from '../types';
+import { REGIAO } from '../regiao';
 
 type Metodo = 'pix' | 'cartao' | 'boleto';
 
@@ -30,7 +31,7 @@ interface ResultadoProcessarPagamento {
 }
 
 export const processarPagamento = onCall(
-  { secrets: [mercadoPagoAccessToken] },
+  { region: REGIAO, secrets: [mercadoPagoAccessToken] },
   async (request): Promise<ResultadoProcessarPagamento> => {
     if (!request.auth) {
       throw new HttpsError('unauthenticated', 'É preciso estar logado para finalizar a compra.');

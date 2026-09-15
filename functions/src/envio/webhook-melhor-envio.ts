@@ -3,6 +3,7 @@ import { logger } from 'firebase-functions';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { db } from '../admin';
 import { melhorEnvioWebhookSecret } from '../secrets';
+import { REGIAO } from '../regiao';
 
 /**
  * Recebe atualizações de etiqueta/rastreio do Melhor Envio.
@@ -13,7 +14,7 @@ import { melhorEnvioWebhookSecret } from '../secrets';
  * segue o documentado (header X-ME-Signature, HMAC-SHA256 do corpo).
  */
 export const webhookMelhorEnvio = onRequest(
-  { secrets: [melhorEnvioWebhookSecret] },
+  { region: REGIAO, secrets: [melhorEnvioWebhookSecret] },
   async (req, res) => {
     if (!validarAssinatura(req)) {
       logger.warn('Webhook do Melhor Envio com assinatura inválida.');

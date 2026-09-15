@@ -13,6 +13,8 @@ import { getFirestore } from 'firebase/firestore';
 import { provideFirebaseApp } from '@angular/fire/app';
 import { provideAuth } from '@angular/fire/auth';
 import { getAuth } from 'firebase/auth';
+import { provideFunctions } from '@angular/fire/functions';
+import { getFunctions } from 'firebase/functions';
 
 registerLocaleData(localePtBr, 'pt-BR');
 
@@ -24,6 +26,7 @@ export const appConfig: ApplicationConfig = {
     provideToastr(), // Toastr providers
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
+    provideFunctions(() => getFunctions(undefined, 'southamerica-east1')),
     provideRouter(routes),
     AuthService,
   ]

@@ -1,0 +1,87 @@
+<div class="field-stack">
+  <div class="field">
+    <label for="ef-apelido">Apelido (opcional)</label>
+    <input
+      id="ef-apelido"
+      type="text"
+      placeholder="Casa, trabalho..."
+      [value]="apelido()"
+      (input)="apelido.set($any($event.target).value)" />
+  </div>
+
+  <div class="field">
+    <label for="ef-cep">CEP</label>
+    <input
+      id="ef-cep"
+      type="text"
+      inputmode="numeric"
+      placeholder="00000-000"
+      [value]="cep()"
+      (input)="cep.set($any($event.target).value)"
+      (blur)="buscarCep()"
+      [attr.aria-invalid]="erroCep() ? 'true' : null"
+      [attr.aria-describedby]="erroCep() ? 'ef-cep-erro' : null" />
+    @if (buscandoCep()) {
+      <p class="field__hint">Buscando endereço…</p>
+    }
+    @if (erroCep(); as erro) {
+      <p class="field__error" id="ef-cep-erro" aria-live="polite">{{ erro }}</p>
+    }
+  </div>
+
+  <div class="field">
+    <label for="ef-logradouro">Logradouro</label>
+    <input
+      id="ef-logradouro"
+      type="text"
+      [value]="logradouro()"
+      (input)="logradouro.set($any($event.target).value)" />
+  </div>
+
+  <div class="form-row form-row--dupla">
+    <div class="field">
+      <label for="ef-numero">Número</label>
+      <input
+        id="ef-numero"
+        type="text"
+        [value]="numero()"
+        (input)="numero.set($any($event.target).value)"
+        [attr.aria-invalid]="erroNumero() ? 'true' : null"
+        [attr.aria-describedby]="erroNumero() ? 'ef-numero-erro' : null" />
+      @if (erroNumero(); as erro) {
+        <p class="field__error" id="ef-numero-erro" aria-live="polite">{{ erro }}</p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="ef-complemento">Complemento (opcional)</label>
+      <input
+        id="ef-complemento"
+        type="text"
+        [value]="complemento()"
+        (input)="complemento.set($any($event.target).value)" />
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="ef-bairro">Bairro</label>
+    <input id="ef-bairro" type="text" [value]="bairro()" (input)="bairro.set($any($event.target).value)" />
+  </div>
+
+  <div class="form-row form-row--dupla">
+    <div class="field">
+      <label for="ef-cidade">Cidade</label>
+      <input id="ef-cidade" type="text" [value]="cidade()" (input)="cidade.set($any($event.target).value)" />
+    </div>
+
+    <div class="field">
+      <label for="ef-estado">Estado</label>
+      <input id="ef-estado" type="text" maxlength="2" [value]="estado()" (input)="estado.set($any($event.target).value)" />
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button class="btn-secondary" type="button" (click)="cancelar.emit()">Cancelar</button>
+    <button class="btn-primary" type="button" (click)="confirmar()">Salvar endereço</button>
+  </div>
+</div>
