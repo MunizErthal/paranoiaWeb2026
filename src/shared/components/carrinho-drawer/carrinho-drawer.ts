@@ -1,10 +1,11 @@
-import { Component, DestroyRef, ElementRef, HostListener, effect, inject, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, ElementRef, HostListener, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CurrencyPipe } from '@angular/common';
 import { NavigationStart, Router, RouterLink } from '@angular/router';
 import { CarrinhoStore } from '../../stores/carrinho.store';
 import { CarrinhoDrawerStore } from '../../stores/carrinho-drawer.store';
 import { AuthStateStore } from '../../stores/auth-state.store';
+import { JogosAdquiridosStore } from '../../stores/jogos-adquiridos.store';
 
 @Component({
   selector: 'app-carrinho-drawer',
@@ -27,6 +28,16 @@ export class CarrinhoDrawer {
 
   readonly carrinhoStore = inject(CarrinhoStore);
   readonly drawer = inject(CarrinhoDrawerStore);
+  readonly jogosAdquiridosStore = inject(JogosAdquiridosStore);
+
+  /** Nomes dos itens do carrinho que o usuário já comprou antes — o aviso é
+   *  só informativo, recomprar continua permitido. */
+  readonly nomesJaAdquiridos = computed(() =>
+    this.carrinhoStore
+      .itens()
+      .filter((item) => this.jogosAdquiridosStore.possui(item.produtoId))
+      .map((item) => item.nome)
+  );
 
   constructor() {
     // Fecha a gaveta assim que uma navegação começa (ex.: "ver carrinho

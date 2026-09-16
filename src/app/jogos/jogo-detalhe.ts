@@ -7,6 +7,7 @@ import { ProdutoService } from '../../shared/services/firebase/produto.service';
 import { CarrinhoStore } from '../../shared/stores/carrinho.store';
 import { ProdutoDTO } from '../../shared/models/produto.dto';
 import { ToastService } from '../../shared/services/toast/toast.service';
+import { JogosAdquiridosStore } from '../../shared/stores/jogos-adquiridos.store';
 
 /** Abaixo desse tanto de rolagem a ficha ainda está sobreposta na capa;
  *  acima disso ela some da capa e reaparece embaixo. Baixo de propósito —
@@ -29,6 +30,8 @@ export class JogoDetalhe {
   private readonly produtoService = inject(ProdutoService);
   private readonly carrinhoStore = inject(CarrinhoStore);
   private readonly toast = inject(ToastService);
+
+  readonly jogosAdquiridosStore = inject(JogosAdquiridosStore);
 
   readonly produto = toSignal(
     this.route.paramMap.pipe(

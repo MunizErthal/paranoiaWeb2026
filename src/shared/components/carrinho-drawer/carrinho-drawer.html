@@ -32,10 +32,19 @@
         <a class="btn-primary" routerLink="/loja" (click)="fechar()">Ver jogos na loja</a>
       </div>
     } @else {
+      @if (nomesJaAdquiridos().length > 0) {
+        <p class="cart-drawer__aviso">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 1 1 14h14L8 1Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="square" stroke-linejoin="round" />
+            <path d="M8 6.5v3.2M8 11.8h.01" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+          </svg>
+          Você já adquiriu {{ nomesJaAdquiridos().length === 1 ? 'este jogo' : 'estes jogos' }} anteriormente.
+        </p>
+      }
       <ul class="cart-drawer__lista">
         @for (item of carrinhoStore.itens(); track item.produtoId) {
           <li class="cart-drawer__item">
-            <div class="cart-drawer__thumb">
+            <a class="cart-drawer__thumb" [routerLink]="['/jogos', item.produtoId]" (click)="fechar()" [attr.aria-label]="'Ver detalhes de ' + item.nome">
               @if (imagemFalhou(item.produtoId) || !item.imagemEmblema) {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path d="M4 5h16v14H4zM4 15l4.5-4.5 4 4L16 11l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="square" stroke-linejoin="miter" />
@@ -43,11 +52,13 @@
               } @else {
                 <img [src]="item.imagemEmblema" [alt]="item.nome" loading="lazy" decoding="async" (error)="aoFalharImagem(item.produtoId)" />
               }
-            </div>
+            </a>
 
             <div class="cart-drawer__corpo">
               <div class="cart-drawer__topo">
-                <p class="cart-drawer__nome" [title]="item.nome">{{ item.nome }}</p>
+                <p class="cart-drawer__nome">
+                  <a [routerLink]="['/jogos', item.produtoId]" (click)="fechar()" [title]="item.nome">{{ item.nome }}</a>
+                </p>
                 <p class="cart-drawer__subtotal">{{ item.precoUnit * item.quantidade | currency:'BRL' }}</p>
               </div>
 

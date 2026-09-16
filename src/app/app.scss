@@ -213,7 +213,7 @@
     color: var(--accent-text);
     background: var(--accent-soft);
     font-size: var(--fs-xs);
-    font-weight: var(--fw-bold);
+    font-weight: var(--fw-slim);
     letter-spacing: 0;
 }
 
@@ -232,7 +232,7 @@
     background: var(--accent-solid);
     box-shadow: 0 0 0 2px rgba(19, 10, 30, 0.9);
     font-size: 0.625rem;
-    font-weight: var(--fw-bold);
+    font-weight: var(--fw-slim);
     letter-spacing: 0;
     line-height: 1;
 }
@@ -669,7 +669,7 @@
         background: var(--accent-solid);
         box-shadow: 0 0 0 2px rgba(19, 10, 30, 0.92);
         font-size: 0.625rem;
-        font-weight: var(--fw-bold);
+        font-weight: var(--fw-slim);
         letter-spacing: 0;
         line-height: 1;
     }
@@ -780,7 +780,7 @@
     .mobile-menu__indice {
         color: var(--text-subtle);
         font-size: var(--fs-xs);
-        font-weight: var(--fw-bold);
+        font-weight: var(--fw-slim);
         font-variant-numeric: tabular-nums;
         letter-spacing: 0.08em;
         transition: color var(--dur) var(--ease-out);
@@ -838,7 +838,7 @@
         grid-column: 1;
         color: rgba(255, 255, 255, 0.74);
         font-size: var(--fs-xs);
-        font-weight: var(--fw-bold);
+        font-weight: var(--fw-slim);
         letter-spacing: var(--track-label);
         text-transform: uppercase;
     }
@@ -895,7 +895,7 @@
         color: var(--accent-text);
         background: var(--accent-soft);
         font-size: var(--fs-body);
-        font-weight: var(--fw-bold);
+        font-weight: var(--fw-slim);
     }
 
     .mobile-menu__perfil-texto {

@@ -5,6 +5,7 @@ import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CarrinhoStore } from '../../shared/stores/carrinho.store';
 import { AuthStateStore } from '../../shared/stores/auth-state.store';
+import { JogosAdquiridosStore } from '../../shared/stores/jogos-adquiridos.store';
 import { EnderecoService } from '../../shared/services/firebase/endereco.service';
 import { PerfilService } from '../../shared/services/firebase/perfil.service';
 import { FreteService } from '../../shared/services/frete/frete.service';
@@ -35,6 +36,7 @@ export class Checkout {
   private readonly authState = inject(AuthStateStore);
 
   readonly carrinhoStore = inject(CarrinhoStore);
+  readonly jogosAdquiridosStore = inject(JogosAdquiridosStore);
   readonly aceitaCartao = !!environment.mercadoPagoPublicKey;
 
   readonly etapa = signal<Etapa>('endereco');
@@ -64,6 +66,15 @@ export class Checkout {
   );
   readonly valorProdutos = computed(() => this.carrinhoStore.valorTotal());
   readonly valorTotal = computed(() => this.valorProdutos() + (this.freteSelecionado()?.preco ?? 0));
+
+  /** Nomes dos itens do carrinho que o usuário já comprou antes — o aviso é
+   *  só informativo, recomprar continua permitido. */
+  readonly nomesJaAdquiridos = computed(() =>
+    this.carrinhoStore
+      .itens()
+      .filter((item) => this.jogosAdquiridosStore.possui(item.produtoId))
+      .map((item) => item.nome)
+  );
 
   constructor() {
     this.perfilService.buscar(this.authState.usuario()!.id).subscribe(perfil => {

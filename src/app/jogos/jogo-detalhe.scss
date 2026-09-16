@@ -133,7 +133,7 @@ $fade: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--
     margin: 0;
     color: var(--text);
     font-size: var(--fs-sm);
-    font-weight: var(--fw-bold);
+    font-weight: var(--fw-slim);
   }
 }
 
@@ -238,6 +238,16 @@ $fade: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--
   padding: var(--s-6);
   background: var(--surface-1);
   box-shadow: var(--shadow-2);
+}
+
+.purchase-panel__ja-adquirido {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0 0 var(--s-3);
+  color: var(--accent-text);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
 }
 
 .purchase-panel__price {

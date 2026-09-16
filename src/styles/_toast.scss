@@ -1,0 +1,51 @@
+/* =========================================================================
+   Toasts (ngx-toastr) — a paleta padrão da lib é verde/vermelho/azul/laranja;
+   aqui ela vira o mesmo roxo com gradiente dos botões de destaque do site
+   (ex.: o botão da newsletter), pra não parecer um componente de terceiros
+   solto no meio da UI.
+   ========================================================================= */
+
+.toast-container .ngx-toastr {
+  border-radius: var(--r-sm);
+  padding: var(--s-4);
+  box-shadow: var(--shadow-2);
+  font-family: var(--font-sans);
+}
+
+.toast-success,
+.toast-error,
+.toast-info,
+.toast-warning {
+  background-color: var(--accent-solid);
+  background-image: linear-gradient(135deg, #7b27d3, #ad45f4);
+  background-position: initial;
+  background-size: initial;
+}
+
+.toast-container .ngx-toastr:hover {
+  background-image: linear-gradient(135deg, #9638ea, #c05cff);
+  box-shadow: var(--shadow-2);
+}
+
+.toast-title {
+  font-weight: var(--fw-bold);
+}
+
+.toast-message {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.toast-close-button {
+  color: #ffffff;
+  text-shadow: none;
+}
+
+.toast-close-button:hover,
+.toast-close-button:focus {
+  color: #ffffff;
+  opacity: 0.7;
+}
+
+.toast-progress {
+  background-color: rgba(255, 255, 255, 0.55);
+}

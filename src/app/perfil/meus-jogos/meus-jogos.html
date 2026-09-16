@@ -1,0 +1,45 @@
+<section class="checkout-card u-evidence dados-card" aria-label="Meus jogos">
+  <header class="dados-card__header">
+    <div>
+      <h2 class="secao-titulo">Meus jogos</h2>
+      <p class="dados-card__subtitulo">Tudo que você já adquiriu na Paranoia Jogos.</p>
+    </div>
+  </header>
+
+  @if (jogos().length === 0) {
+    <div class="dados-vazio">
+      <p>Você ainda não adquiriu nenhum jogo.</p>
+      <a class="btn-primary" routerLink="/loja">Ver jogos na loja</a>
+    </div>
+  } @else {
+    <ul class="meus-jogos-lista">
+      @for (jogo of jogos(); track jogo.compraId + jogo.produtoId) {
+        <li class="meus-jogos-item">
+          <a class="meus-jogos-item__thumb" [routerLink]="['/jogos', jogo.produtoId]" [attr.aria-label]="'Ver detalhes de ' + jogo.nome">
+            @if (jogo.produto?.imagemEmblema) {
+              <img [src]="jogo.produto!.imagemEmblema" [alt]="jogo.nome" loading="lazy" decoding="async" />
+            } @else {
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 5h16v14H4zM4 15l4.5-4.5 4 4L16 11l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="square" stroke-linejoin="miter" />
+              </svg>
+            }
+          </a>
+
+          <div class="meus-jogos-item__info">
+            <h3><a [routerLink]="['/jogos', jogo.produtoId]">{{ jogo.nome }}</a></h3>
+            <p class="meus-jogos-item__data">
+              Adquirido em {{ jogo.dataCompra | date:'dd/MM/yyyy' }}
+              @if (jogo.produto; as produto) {
+                · {{ produto.preco | currency:'BRL' }}
+              }
+            </p>
+          </div>
+
+          <a class="link-action" [routerLink]="['/perfil/pedidos', jogo.compraId]">
+            Ver pedido <span aria-hidden="true">&#8594;</span>
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</section>

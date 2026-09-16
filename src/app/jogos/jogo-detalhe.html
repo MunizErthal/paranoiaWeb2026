@@ -73,6 +73,14 @@
       </dl>
 
       <section class="purchase-panel u-evidence" [attr.aria-label]="'Comprar ' + produto.nome">
+        @if (jogosAdquiridosStore.possui(produto.id)) {
+          <p class="purchase-panel__ja-adquirido">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round" />
+            </svg>
+            Você já adquiriu este jogo
+          </p>
+        }
         <p class="purchase-panel__price">{{ produto.preco | currency:'BRL' }}</p>
         <p class="purchase-panel__installments">ou 6x de {{ produto.preco / 6 | currency:'BRL' }} sem juros</p>
 

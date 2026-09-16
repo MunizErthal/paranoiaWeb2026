@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { ProdutoService } from '../../shared/services/firebase/produto.service';
 import { CarrinhoStore } from '../../shared/stores/carrinho.store';
 import { ToastService } from '../../shared/services/toast/toast.service';
+import { JogosAdquiridosStore } from '../../shared/stores/jogos-adquiridos.store';
 import { ProdutoDTO } from '../../shared/models/produto.dto';
 
 /** Tempo que o botão de um item mostra "Adicionado" antes de voltar ao normal. */
@@ -21,6 +22,8 @@ export class Loja {
   private readonly produtoService = inject(ProdutoService);
   private readonly carrinhoStore = inject(CarrinhoStore);
   private readonly toast = inject(ToastService);
+
+  readonly jogosAdquiridosStore = inject(JogosAdquiridosStore);
 
   readonly produtos = toSignal(this.produtoService.listarAtivos(), { initialValue: [] });
 

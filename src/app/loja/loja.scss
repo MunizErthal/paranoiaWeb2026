@@ -22,7 +22,7 @@
   margin: 0 0 var(--s-3);
   color: var(--accent-text);
   font-size: var(--fs-xs);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-slim);
   letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
@@ -213,9 +213,14 @@
   color: var(--chroma-magenta);
   background: rgba(12, 7, 20, 0.82);
   font-size: var(--fs-xs);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-slim);
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.store-card__badge--adquirido {
+  border-color: var(--accent);
+  color: var(--accent-text);
 }
 
 .store-card.is-esgotado .store-card__media img {
@@ -300,7 +305,7 @@
   margin: 0;
   color: var(--text);
   font-size: var(--fs-sm);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-slim);
 }
 
 .store-card__footer {
@@ -398,7 +403,7 @@
 .store__categories span {
   color: var(--accent-text);
   font-size: var(--fs-sm);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-slim);
 }
 
 .store__categories h2 {

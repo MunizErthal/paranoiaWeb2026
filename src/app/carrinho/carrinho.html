@@ -15,11 +15,20 @@
       <a class="btn-primary" routerLink="/loja">Ver jogos na loja</a>
     </div>
   } @else {
+    @if (nomesJaAdquiridos().length > 0) {
+      <p class="cart-aviso">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 1 1 14h14L8 1Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="square" stroke-linejoin="round" />
+          <path d="M8 6.5v3.2M8 11.8h.01" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+        </svg>
+        Você já adquiriu {{ nomesJaAdquiridos().length === 1 ? 'este jogo' : 'estes jogos' }} anteriormente: {{ nomesJaAdquiridos().join(', ') }}.
+      </p>
+    }
     <div class="cart-layout">
       <ul class="cart-list">
         @for (item of carrinhoStore.itens(); track item.produtoId) {
           <li class="cart-item">
-            <div class="cart-item__thumb">
+            <a class="cart-item__thumb" [routerLink]="['/jogos', item.produtoId]" [attr.aria-label]="'Ver detalhes de ' + item.nome">
               @if (imagemFalhou(item.produtoId) || !item.imagemEmblema) {
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path d="M4 5h16v14H4zM4 15l4.5-4.5 4 4L16 11l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="square" stroke-linejoin="miter" />
@@ -27,10 +36,10 @@
               } @else {
                 <img [src]="item.imagemEmblema" [alt]="item.nome" loading="lazy" decoding="async" (error)="aoFalharImagem(item.produtoId)" />
               }
-            </div>
+            </a>
 
             <div class="cart-item__info">
-              <h3>{{ item.nome }}</h3>
+              <h3><a [routerLink]="['/jogos', item.produtoId]">{{ item.nome }}</a></h3>
               <p class="cart-item__preco">{{ item.precoUnit | currency:'BRL' }} / unidade</p>
             </div>
 

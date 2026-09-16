@@ -25,6 +25,7 @@ export const routes: Routes = [
 		canActivate: [AuthGuard],
 		children: [
 			{ path: '', loadComponent: () => import('./perfil/perfil-dados/perfil-dados').then(m => m.PerfilDados) },
+			{ path: 'meus-jogos', loadComponent: () => import('./perfil/meus-jogos/meus-jogos').then(m => m.MeusJogos) },
 			{ path: 'enderecos', loadComponent: () => import('./perfil/enderecos/enderecos').then(m => m.Enderecos) },
 			{ path: 'pedidos', loadComponent: () => import('./perfil/pedidos/pedidos').then(m => m.Pedidos) },
 			{ path: 'pedidos/:idPedido', loadComponent: () => import('./perfil/pedidos/pedido-detalhe/pedido-detalhe').then(m => m.PedidoDetalhe) }

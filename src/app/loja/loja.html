@@ -48,6 +48,8 @@
               <img [src]="produto.imagemCapa" [alt]="'Capa de ' + produto.nome" loading="lazy" decoding="async" />
               @if (produto.estoque <= 0) {
                 <span class="store-card__badge">Esgotado</span>
+              } @else if (jogosAdquiridosStore.possui(produto.id)) {
+                <span class="store-card__badge store-card__badge--adquirido">Já adquirido</span>
               }
             </a>
 

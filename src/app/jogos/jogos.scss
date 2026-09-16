@@ -20,6 +20,7 @@
   display: grid;
   gap: 1rem;
   margin: auto;
+  width: 50vw;
 }
 
 .game-card {
@@ -46,12 +47,20 @@
   box-shadow: var(--shadow-2);
 }
 
+/* `object-fit: contain` (em vez de cover) porque a arte do emblema é um
+   selo/crest com margem própria — cobrir a caixa cortaria a moldura de
+   forma imprevisível a cada jogo. O frame (fundo + borda + padding) dá
+   ao selo um encaixe visual consistente mesmo quando essa margem varia. */
 .game-card__cover {
+  box-sizing: border-box;
   width: 100%;
   max-width: 14rem;
   height: auto;
+  padding: 0.4rem;
+  border: 1px solid var(--line-strong);
   border-radius: 5px;
-  object-fit: cover;
+  background: radial-gradient(circle at 50% 42%, rgba(157, 67, 255, 0.2), rgba(10, 5, 19, 0.65));
+  object-fit: contain;
   object-position: center;
   margin: auto;
 }
@@ -104,9 +113,23 @@
   padding-top: 1rem;
 }
 
-.game-card__meta div {
+/* Ícone + par label/valor lado a lado — mesmo padrão da ficha técnica
+   em /jogos/:id (game-detail__meta). */
+.game-card__meta > div {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.game-card__meta > div > div {
   display: grid;
   gap: 0.25rem;
+}
+
+.game-card__meta img {
+  width: 1.15rem;
+  height: auto;
+  flex: none;
 }
 
 .game-card__meta dt {
@@ -120,7 +143,7 @@
   margin: 0;
   color: #ffffff;
   font-size: var(--fs-sm);
-  font-weight: 700;
+  font-weight: var(--fw-slim);
 }
 
 .game-card .link-action {
@@ -204,6 +227,7 @@
     max-width: none;
     flex: none;
     aspect-ratio: 1;
+    padding: 0.3rem;
     margin: 0;
   }
 
@@ -265,21 +289,26 @@
   .game-card__meta {
     flex-wrap: nowrap;
     overflow: hidden;
-    gap: 0.35rem;
+    gap: 0.4rem;
     border-top: 0;
     margin: 0.15rem 0 0;
     padding: 0;
   }
 
-  .game-card__meta div {
-    display: flex;
-    align-items: baseline;
-    gap: 0.35rem;
+  .game-card__meta > div {
+    align-items: center;
+    gap: 0.25rem;
   }
 
-  .game-card__meta div + div::before {
+  .game-card__meta > div + div::before {
+    margin-right: 0.15rem;
     color: var(--text-subtle);
     content: "·";
+  }
+
+  .game-card__meta img {
+    width: 0.8rem;
+    opacity: 0.8;
   }
 
   /* O rótulo continua no DOM — o leitor de tela lê "Jogadores 2–8" — e só

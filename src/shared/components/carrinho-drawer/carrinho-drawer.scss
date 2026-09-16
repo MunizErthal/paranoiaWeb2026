@@ -55,7 +55,7 @@
   margin: 0;
   color: var(--text);
   font-size: var(--fs-h3);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-slim);
   letter-spacing: -0.01em;
   line-height: var(--lh-tight);
 }
@@ -71,7 +71,7 @@
   color: #ffffff;
   background: var(--accent-solid);
   font-size: var(--fs-xs);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-slim);
   line-height: 1;
 }
 
@@ -122,6 +122,29 @@
   padding-inline: var(--s-6);
 }
 
+/* --- Aviso de recompra ---------------------------------------------------
+   Só informa — nunca bloqueia o botão de comprar de novo. */
+
+.cart-drawer__aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  margin: var(--s-3) var(--s-5) 0;
+  padding: var(--s-3);
+  border: var(--border) solid var(--line-strong);
+  border-radius: var(--r-xs);
+  background: var(--accent-soft);
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+}
+
+.cart-drawer__aviso svg {
+  flex: none;
+  margin-top: 0.05rem;
+  color: var(--accent-text);
+}
+
 /* --- Lista de itens ------------------------------------------------------
    `align-content: start` é o que impede as linhas de esticarem para
    preencher a gaveta inteira quando há poucos itens.
@@ -158,10 +181,14 @@
   height: 3.5rem;
   place-items: center;
   overflow: hidden;
-  //border: var(--border) solid var(--line);
-  //border-radius: var(--r-xs);
-  //background: var(--surface-sunken);
+  border-radius: var(--r-xs);
   color: var(--text-subtle);
+  transition: opacity var(--dur) var(--ease-out);
+}
+
+.cart-drawer__thumb:hover,
+.cart-drawer__thumb:focus-visible {
+  opacity: 0.85;
 }
 
 .cart-drawer__thumb img {
@@ -189,7 +216,6 @@
   min-width: 0;
   margin: 0;
   overflow: hidden;
-  color: var(--text);
   font-size: var(--fs-sm);
   font-weight: var(--fw-semibold);
   line-height: var(--lh-snug);
@@ -197,12 +223,22 @@
   white-space: nowrap;
 }
 
+.cart-drawer__nome a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.cart-drawer__nome a:hover,
+.cart-drawer__nome a:focus-visible {
+  color: var(--accent-text);
+}
+
 .cart-drawer__subtotal {
   flex: none;
   margin: 0;
   color: var(--text);
   font-size: var(--fs-sm);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-slim);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -323,7 +359,7 @@
 
 .cart-drawer__total strong {
   font-size: var(--fs-h3);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-slim);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
 }

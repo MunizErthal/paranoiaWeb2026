@@ -1,0 +1,79 @@
+:host {
+  display: block;
+}
+
+.meus-jogos-lista {
+  display: grid;
+  gap: var(--s-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.meus-jogos-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-4);
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-xs);
+  background: var(--surface-sunken);
+}
+
+.meus-jogos-item__thumb {
+  display: grid;
+  width: 3.5rem;
+  height: 3.5rem;
+  flex: none;
+  place-items: center;
+  overflow: hidden;
+  border-radius: var(--r-xs);
+  color: var(--text-subtle);
+  transition: opacity var(--dur) var(--ease-out);
+}
+
+.meus-jogos-item__thumb:hover,
+.meus-jogos-item__thumb:focus-visible {
+  opacity: 0.85;
+}
+
+.meus-jogos-item__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.meus-jogos-item__info {
+  flex: 1;
+  min-width: 10rem;
+}
+
+.meus-jogos-item__info h3 {
+  margin: 0 0 var(--s-1);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+}
+
+.meus-jogos-item__info h3 a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.meus-jogos-item__info h3 a:hover,
+.meus-jogos-item__info h3 a:focus-visible {
+  color: var(--accent-text);
+}
+
+.meus-jogos-item__data {
+  margin: 0;
+  color: var(--text-subtle);
+  font-size: var(--fs-sm);
+}
+
+@media (max-width: 30rem) {
+  .meus-jogos-item .link-action {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
