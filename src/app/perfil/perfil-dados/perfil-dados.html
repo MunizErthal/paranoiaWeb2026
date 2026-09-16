@@ -104,16 +104,3 @@
     </div>
   }
 </section>
-
-@if (usuario()?.jogosAdquiridos?.length) {
-  <section class="checkout-card u-evidence" aria-label="Jogos adquiridos">
-    <h2 class="secao-titulo">Jogos adquiridos</h2>
-    <ul class="lista-links">
-      @for (jogo of usuario()!.jogosAdquiridos; track jogo.compraId) {
-        <li>
-          <a [routerLink]="['/perfil/pedidos', jogo.compraId]">{{ jogo.nome }}</a>
-        </li>
-      }
-    </ul>
-  </section>
-}
