@@ -21,7 +21,7 @@
   margin: 0 0 var(--s-3);
   color: var(--accent-text);
   font-size: var(--fs-xs);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-slim);
   letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
@@ -155,7 +155,7 @@
 .about__value-grid span {
   color: var(--accent-text);
   font-size: var(--fs-sm);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-slim);
 }
 
 .about__value-grid h3 {

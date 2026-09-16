@@ -83,7 +83,7 @@
   border-radius: 3px;
   padding: 0.5rem 1rem;
   font-size: var(--fs-xs);
-  font-weight: 700;
+  font-weight: var(--fw-slim);
   text-decoration: none;
   text-transform: uppercase;
   transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
@@ -192,7 +192,7 @@
   color: transparent;
   background: transparent;
   isolation: isolate;
-  font-weight: 700;
+  font-weight: var(--fw-slim);
   text-decoration: none;
   text-transform: uppercase;
   transition: background-color 180ms ease, color 180ms ease;
@@ -265,7 +265,7 @@
   background: var(--surface-1);
   color: #ffffff;
   font-size: clamp(0.85rem, 0.7rem + 0.75vw, 1.1rem);
-  font-weight: 700;
+  font-weight: var(--fw-slim);
   line-height: 1.45;
   text-align: center;
   text-transform: uppercase;
@@ -287,7 +287,7 @@
   margin: 0 0 1rem;
   color: #e7b8ff;
   font-size: var(--fs-xs);
-  font-weight: 700;
+  font-weight: var(--fw-slim);
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
@@ -321,7 +321,7 @@ h1 {
   border: 1px solid #e7b8ff;
   color: #24122f;
   background: #e7b8ff;
-  font-weight: 700;
+  font-weight: var(--fw-slim);
   text-decoration: none;
   transition: transform 180ms ease, background-color 180ms ease;
 }
