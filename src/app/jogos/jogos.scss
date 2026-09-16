@@ -237,24 +237,21 @@
     padding: 0;
   }
 
-  /* As pastilhas de categoria comiam a largura de que o título precisa;
-     viram uma linha de texto separada por ponto médio. */
-  /* Em nomes de categoria longos a linha é cortada com um esmaecimento,
-     para o corte parecer intenção e não estouro. */
+  /* Título primeiro, pastilhas de categoria embaixo — mesmo padrão visual
+     do desktop, só que compacto. */
   .game-card__tags {
-    flex-wrap: nowrap;
-    overflow: hidden;
-    gap: 0;
-    margin: 0 calc(var(--s-4) * -1) 0 0;
-    mask-image: linear-gradient(90deg, #000 88%, transparent 100%);
-    -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent 100%);
+    order: 2;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0.3rem 0 0;
   }
 
   .game-card__tags span {
-    border: 0;
-    padding: 0;
-    color: var(--accent-text);
-    background: transparent;
+    border: 1px solid rgba(231, 184, 255, 0.25);
+    border-radius: 4px;
+    padding: 0.2rem 0.45rem;
+    color: rgba(247, 242, 255, 0.82);
+    background: rgba(44, 19, 65, 0.45);
     font-size: var(--fs-xs);
     font-weight: var(--fw-semibold);
     letter-spacing: 0.01em;
@@ -262,13 +259,8 @@
     white-space: nowrap;
   }
 
-  .game-card__tags span + span::before {
-    padding-inline: 0.34em;
-    color: var(--text-subtle);
-    content: "·";
-  }
-
   .game-card h2 {
+    order: 1;
     display: -webkit-box;
     overflow: hidden;
     margin: 0;
@@ -285,6 +277,7 @@
   }
 
   .game-card__meta {
+    order: 3;
     flex-wrap: nowrap;
     overflow: hidden;
     gap: 0.4rem;
