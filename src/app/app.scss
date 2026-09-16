@@ -692,6 +692,13 @@
         top: 0;
         bottom: 0;
         left: 0;
+        /* iOS Safari mede top:0/bottom:0 de um elemento fixed pelo viewport
+           "grande" (como se a barra de endereço estivesse recolhida), então
+           em páginas altas o rodapé do menu (a seção de conta, empurrada pra
+           baixo por margin-top:auto) fica cortado atrás da barra real. dvh
+           acompanha o viewport visível de verdade; bottom:0 acima é só o
+           fallback para navegadores sem suporte a dvh. */
+        height: 100dvh;
         z-index: 93;
         display: flex;
         width: min(21rem, 87vw);
