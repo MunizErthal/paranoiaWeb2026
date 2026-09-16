@@ -13,6 +13,7 @@
       <div
         class="game-detail__cover"
         role="img"
+        [style.--cover-image]="'url(' + produto.imagemCapa + ')'"
         [attr.aria-label]="'Capa do jogo ' + produto.nome">
         <div class="game-detail__intro">
           <h1 id="game-title">{{ produto.nome }}</h1>
