@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CurrencyPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -45,6 +45,23 @@ export class JogoDetalhe {
   adicionarAoCarrinho(produto: ProdutoDTO): void {
     this.carrinhoStore.adicionarItem(produto);
     this.toast.showSuccess(`${produto.nome} adicionado ao carrinho.`);
+  }
+
+  /* Controlado pelo componente em vez de <details> nativo: o <details> do
+     Chrome moderno tem animação interna própria que entra em conflito com
+     a transição via CSS, fazendo o efeito falhar depois do primeiro uso. */
+  private readonly openAccordions = signal<ReadonlySet<number>>(new Set());
+
+  isAccordionOpen(index: number): boolean {
+    return this.openAccordions().has(index);
+  }
+
+  toggleAccordion(index: number): void {
+    this.openAccordions.update(open => {
+      const next = new Set(open);
+      next.has(index) ? next.delete(index) : next.add(index);
+      return next;
+    });
   }
 
   @HostListener('window:scroll')

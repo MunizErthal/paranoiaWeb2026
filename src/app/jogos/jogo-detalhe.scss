@@ -303,27 +303,28 @@ $fade: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--
 .purchase-panel__accordion {
   margin-top: var(--s-6);
 
-  details {
+  .accordion-item {
     border-top: var(--border) solid var(--line);
     color: var(--text-muted);
     font-size: var(--fs-sm);
   }
 
-  summary {
+  .accordion-trigger {
     display: flex;
+    width: 100%;
     min-height: var(--tap);
     align-items: center;
     justify-content: space-between;
     gap: var(--s-4);
     padding: var(--s-4) 0;
+    border: 0;
+    margin: 0;
+    background: none;
     color: var(--text);
+    font: inherit;
     font-weight: var(--fw-semibold);
-    list-style: none;
+    text-align: left;
     cursor: pointer;
-
-    &::-webkit-details-marker {
-      display: none;
-    }
 
     &:hover {
       color: var(--accent-text);
@@ -342,11 +343,25 @@ $fade: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--
     }
   }
 
-  details[open] summary::after {
+  .accordion-item.is-open .accordion-trigger::after {
     transform: rotate(-135deg) translate(-.15rem, -.15rem);
   }
 
-  details p {
+  /* Altura animada via grid-template-rows — controlado pela classe
+     .is-open (não pelo <details> nativo, ver comentário no componente). */
+  .purchase-panel__accordion-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--dur) var(--ease-out);
+  }
+
+  .accordion-item.is-open .purchase-panel__accordion-content {
+    grid-template-rows: 1fr;
+  }
+
+  .purchase-panel__accordion-content > p {
+    overflow: hidden;
+    min-height: 0;
     margin: -.2rem 0 var(--s-5);
     line-height: var(--lh-body);
   }

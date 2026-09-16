@@ -96,18 +96,30 @@
         <p class="purchase-panel__reassurance">Envio para todo o Brasil. Compra 100% segura.</p>
 
         <div class="purchase-panel__accordion">
-          <details>
-            <summary>O que vem na caixa</summary>
-            <p>Um jogo completo com cartas, componentes e tudo para iniciar sua investigação.</p>
-          </details>
-          <details>
-            <summary>Como jogar</summary>
-            <p>Reúna sua equipe, analise as pistas e descubra o que realmente aconteceu.</p>
-          </details>
-          <details>
-            <summary>Avaliações (128)</summary>
-            <p>Uma experiência narrativa para quem gosta de discutir cada detalhe.</p>
-          </details>
+          <div class="accordion-item" [class.is-open]="isAccordionOpen(0)">
+            <button type="button" class="accordion-trigger" (click)="toggleAccordion(0)" [attr.aria-expanded]="isAccordionOpen(0)" aria-controls="accordion-caixa">
+              O que vem na caixa
+            </button>
+            <div class="purchase-panel__accordion-content" id="accordion-caixa">
+              <p>Um jogo completo com cartas, componentes e tudo para iniciar sua investigação.</p>
+            </div>
+          </div>
+          <div class="accordion-item" [class.is-open]="isAccordionOpen(1)">
+            <button type="button" class="accordion-trigger" (click)="toggleAccordion(1)" [attr.aria-expanded]="isAccordionOpen(1)" aria-controls="accordion-como-jogar">
+              Como jogar
+            </button>
+            <div class="purchase-panel__accordion-content" id="accordion-como-jogar">
+              <p>Reúna sua equipe, analise as pistas e descubra o que realmente aconteceu.</p>
+            </div>
+          </div>
+          <div class="accordion-item" [class.is-open]="isAccordionOpen(2)">
+            <button type="button" class="accordion-trigger" (click)="toggleAccordion(2)" [attr.aria-expanded]="isAccordionOpen(2)" aria-controls="accordion-avaliacoes">
+              Avaliações (128)
+            </button>
+            <div class="purchase-panel__accordion-content" id="accordion-avaliacoes">
+              <p>Uma experiência narrativa para quem gosta de discutir cada detalhe.</p>
+            </div>
+          </div>
         </div>
       </section>
 
