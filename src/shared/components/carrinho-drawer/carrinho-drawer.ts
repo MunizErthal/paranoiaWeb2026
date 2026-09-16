@@ -2,10 +2,14 @@ import { Component, DestroyRef, ElementRef, HostListener, computed, effect, inje
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CurrencyPipe } from '@angular/common';
 import { NavigationStart, Router, RouterLink } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { CarrinhoStore } from '../../stores/carrinho.store';
 import { CarrinhoDrawerStore } from '../../stores/carrinho-drawer.store';
 import { AuthStateStore } from '../../stores/auth-state.store';
 import { JogosAdquiridosStore } from '../../stores/jogos-adquiridos.store';
+import { CupomService } from '../../services/firebase/cupom.service';
+import { ToastService } from '../../services/toast/toast.service';
+import { validarCupom } from '../../utils/cupom.util';
 
 @Component({
   selector: 'app-carrinho-drawer',
@@ -18,6 +22,8 @@ export class CarrinhoDrawer {
   private readonly router = inject(Router);
   private readonly authState = inject(AuthStateStore);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly cupomService = inject(CupomService);
+  private readonly toast = inject(ToastService);
   private elementoAnterior: HTMLElement | null = null;
 
   /** Capas que falharam ao carregar — trocadas por um marcador neutro em
@@ -29,6 +35,9 @@ export class CarrinhoDrawer {
   readonly carrinhoStore = inject(CarrinhoStore);
   readonly drawer = inject(CarrinhoDrawerStore);
   readonly jogosAdquiridosStore = inject(JogosAdquiridosStore);
+
+  readonly codigoCupom = signal('');
+  readonly aplicandoCupom = signal(false);
 
   /** Nomes dos itens do carrinho que o usuário já comprou antes — o aviso é
    *  só informativo, recomprar continua permitido. */
@@ -112,5 +121,40 @@ export class CarrinhoDrawer {
     } else {
       this.router.navigate(['/login'], { queryParams: { returnUrl: '/checkout' } });
     }
+  }
+
+  async aplicarCupom(): Promise<void> {
+    const codigo = this.codigoCupom().trim();
+    if (!codigo) {
+      return;
+    }
+
+    this.aplicandoCupom.set(true);
+    try {
+      const cupom = await firstValueFrom(this.cupomService.buscarPorNome(codigo));
+      if (!cupom) {
+        this.toast.showError('Cupom não encontrado.');
+        return;
+      }
+
+      const validacao = validarCupom(cupom, {
+        valorProdutos: this.carrinhoStore.valorTotal(),
+        agora: new Date()
+      });
+      if (!validacao.valido) {
+        this.toast.showError(validacao.motivo ?? 'Cupom inválido.');
+        return;
+      }
+
+      this.carrinhoStore.aplicarCupom(cupom);
+      this.codigoCupom.set('');
+      this.toast.showSuccess('Cupom aplicado!');
+    } finally {
+      this.aplicandoCupom.set(false);
+    }
+  }
+
+  removerCupom(): void {
+    this.carrinhoStore.removerCupom();
   }
 }

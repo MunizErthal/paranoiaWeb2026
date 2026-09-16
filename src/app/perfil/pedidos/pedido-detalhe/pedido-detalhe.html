@@ -32,6 +32,12 @@
         <div><dt>{{ item.nome }} × {{ item.quantidade }}</dt><dd>{{ item.precoUnit * item.quantidade | currency:'BRL' }}</dd></div>
       }
       <div><dt>Frete ({{ pedido.envio.servico }})</dt><dd>{{ pedido.valorFrete | currency:'BRL' }}</dd></div>
+      @if (pedido.cupomAplicado; as cupom) {
+        <div>
+          <dt>Cupom {{ cupom.nome }}</dt>
+          <dd>-{{ (cupom.valorDescontoProdutos + cupom.valorDescontoFrete) | currency:'BRL' }}</dd>
+        </div>
+      }
       <div><dt>Total</dt><dd>{{ pedido.valorTotal | currency:'BRL' }}</dd></div>
     </dl>
   </section>

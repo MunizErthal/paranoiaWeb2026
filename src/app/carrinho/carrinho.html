@@ -92,7 +92,42 @@
           <span>{{ carrinhoStore.quantidadeTotal() }} {{ carrinhoStore.quantidadeTotal() === 1 ? 'item' : 'itens' }}</span>
           <span>{{ carrinhoStore.valorTotal() | currency:'BRL' }}</span>
         </p>
-        <p class="cart-summary__total"><span>Total</span><strong>{{ carrinhoStore.valorTotal() | currency:'BRL' }}</strong></p>
+        <div class="cart-cupom">
+          @if (carrinhoStore.cupom(); as cupom) {
+            <p class="cart-cupom__aplicado">
+              <span>Cupom <strong>{{ cupom.nome }}</strong> aplicado</span>
+              <button type="button" class="cart-cupom__remover" (click)="removerCupom()">Remover</button>
+            </p>
+          } @else {
+            <form class="cart-cupom__form" (submit)="$event.preventDefault(); aplicarCupom()">
+              <input
+                class="cart-cupom__input"
+                type="text"
+                placeholder="Cupom de desconto"
+                aria-label="Cupom de desconto"
+                [value]="codigoCupom()"
+                (input)="codigoCupom.set($any($event.target).value)" />
+              <button
+                class="btn-secondary cart-cupom__botao"
+                type="submit"
+                [disabled]="aplicandoCupom() || !codigoCupom().trim()">
+                {{ aplicandoCupom() ? 'Aplicando…' : 'Aplicar' }}
+              </button>
+            </form>
+          }
+        </div>
+
+        @if (carrinhoStore.valorDesconto() > 0) {
+          <p class="cart-summary__linha">
+            <span>Desconto</span>
+            <span>-{{ carrinhoStore.valorDesconto() | currency:'BRL' }}</span>
+          </p>
+        }
+
+        <p class="cart-summary__total">
+          <span>Total</span>
+          <strong>{{ (carrinhoStore.valorTotal() - carrinhoStore.valorDesconto()) | currency:'BRL' }}</strong>
+        </p>
         <button class="btn-primary" type="button" (click)="finalizarCompra()">Finalizar compra</button>
         <a class="link-back" routerLink="/loja">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" /></svg>

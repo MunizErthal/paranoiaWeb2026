@@ -1,54 +1,58 @@
 rules_version = '2';
 
 // Regras de segurança do Firestore para o projeto paranoiajogos.
-// Ver docs/planejamento/02-firestore-auth.md para a justificativa de cada regra.
 //
 // Aplicar manualmente no console do Firebase (Firestore Database > Regras)
-// até o firebase-tools/CI estar configurado neste ambiente.
+// até o firebase-tools/CI estar configurado neste ambiente. Este arquivo é
+// mantido em sincronia manual com o que está de fato publicado no console —
+// depois de aplicar uma mudança lá, replique aqui também.
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    function ehDono(uid) {
-      return request.auth != null && request.auth.uid == uid;
+    function isAdmin() {
+      return 'admin' in get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.get('permissoes', []);
     }
 
+    function usuarioAtivo() {
+      return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.ativo == true;
+    }
+
+    // Usuários - proteção total
     match /usuarios/{uid} {
-      allow read: if ehDono(uid);
-      allow create: if ehDono(uid);
-      // 'permissoes' e 'jogosAdquiridos' nunca são editáveis pelo client —
-      // só por Cloud Function (Admin SDK, que ignora estas regras).
-      allow update: if ehDono(uid)
-        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['permissoes', 'jogosAdquiridos']);
-
-      match /perfil/{doc} {
-        allow read, write: if ehDono(uid);
-      }
-
-      match /enderecos/{enderecoId} {
-        allow read, write: if ehDono(uid);
-      }
-
-      match /carrinho/{doc} {
-        allow read, write: if ehDono(uid);
-      }
+      allow read: if (request.auth.uid == uid || isAdmin()) && usuarioAtivo();
+      allow create: if request.auth.uid == uid
+        && request.resource.data.id == uid
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.ativo == true;
+      allow update: if request.auth.uid == uid
+        && usuarioAtivo()
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['id', 'email', 'permissoes', 'criadoEm']);
+      allow delete: if false;
     }
 
-    match /produtos/{produtoId} {
-      allow read: if true;   // catálogo é público
-      allow write: if false; // só Cloud Function (Admin SDK)
+    // TopSecrets - apenas usuários ativos e autenticados
+    match /topsecrets/{document=**} {
+      allow read, write: if request.auth != null && usuarioAtivo();
     }
 
-    match /compras/{compraId} {
-      allow read: if request.auth != null && request.auth.uid == resource.data.usuarioId;
-      allow write: if false; // client nunca escreve pedido — evita fraude de "marcar como pago"
+    // PRODUTOS
+    match /produtos/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null && usuarioAtivo();
     }
 
-    // Configuração interna (ex: token OAuth do Melhor Envio). Já cai no
-    // deny-by-default do Firestore por não ter nenhum "match" que libere
-    // acesso — regra explícita aqui só para deixar a intenção clara.
-    match /sistema/{doc} {
-      allow read, write: if false;
+    // CUPONS — leitura pública (preview/validação no carrinho), escrita só
+    // por Cloud Function (Admin SDK). processarPagamento é quem revalida o
+    // desconto e incrementa usosTotais — nunca o client.
+    match /cupons/{document=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Tudo mais - bem permissivo
+    match /{document=**} {
+      allow read, write: if request.auth != null;
     }
   }
 }

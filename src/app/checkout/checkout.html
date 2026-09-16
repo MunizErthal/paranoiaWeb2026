@@ -140,6 +140,12 @@
           @if (freteSelecionado(); as frete) {
             <p class="cart-summary__total"><span>Frete</span><strong>{{ frete.preco | currency:'BRL' }}</strong></p>
           }
+          @if (carrinhoStore.cupom(); as cupom) {
+            <p class="cart-summary__total">
+              <span>Cupom {{ cupom.nome }}</span>
+              <strong>-{{ (valorDescontoProdutos() + valorDescontoFrete()) | currency:'BRL' }}</strong>
+            </p>
+          }
           <p class="cart-summary__total"><span>Total</span><strong>{{ valorTotal() | currency:'BRL' }}</strong></p>
         </aside>
       }

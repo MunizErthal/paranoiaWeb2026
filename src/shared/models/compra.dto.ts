@@ -1,4 +1,5 @@
 import { EnderecoDTO } from './endereco.dto';
+import { TipoDeDesconto } from './cupom.dto';
 
 export type StatusCompra =
   | 'aguardando_pagamento'
@@ -27,6 +28,13 @@ export interface CompraDTO {
   valorProdutos: number;
   valorFrete: number;
   valorTotal: number;
+  cupomAplicado: {
+    id: string;
+    nome: string;
+    tipoDeDesconto: TipoDeDesconto;
+    valorDescontoProdutos: number;
+    valorDescontoFrete: number;
+  } | null;
   status: StatusCompra;
   pagamento: {
     mercadoPagoId: string;

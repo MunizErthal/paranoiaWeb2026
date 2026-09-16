@@ -1,12 +1,14 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
+import { FieldValue } from 'firebase-admin/firestore';
 import { db } from '../admin';
 import { mercadoPagoAccessToken } from '../secrets';
 import { obterServicoPagamento, mapearStatusMercadoPago } from './mercado-pago-client';
 import { processarCompraPaga } from './pagamento-aprovado';
 import { calcularOpcoesFrete } from '../frete/cotar-frete';
 import { buscarItensComProduto } from '../produtos';
+import { calcularDesconto, validarCupom } from '../cupons/cupom.util';
 import { cpfValido, limparCpf } from '../cpf.util';
-import { CompraDTO, EnderecoDTO, ItemCarrinhoEntrada, StatusCompra } from '../types';
+import { CompraDTO, CupomDTO, EnderecoDTO, ItemCarrinhoEntrada, StatusCompra } from '../types';
 import { REGIAO } from '../regiao';
 
 type Metodo = 'pix' | 'cartao' | 'boleto';
@@ -21,6 +23,7 @@ interface EntradaProcessarPagamento {
   paymentMethodId?: string; // obrigatório pra cartão/boleto (vem do SDK do MP no front)
   cardToken?: string; // obrigatório pra cartão
   parcelas?: number; // obrigatório pra cartão
+  cupomNome?: string;
 }
 
 interface ResultadoProcessarPagamento {
@@ -80,9 +83,47 @@ export const processarPagamento = onCall(
       );
     }
 
-    const valorTotal = valorProdutos + freteConfirmado.preco;
+    // 4. Se veio cupom, relê do Firestore e recalcula o desconto — nunca
+    // aceita valor de desconto vindo do cliente, só o nome do cupom.
+    let cupomRef: FirebaseFirestore.DocumentReference | null = null;
+    let cupomAplicado: CompraDTO['cupomAplicado'] = null;
+    let valorDescontoProdutos = 0;
+    let valorDescontoFrete = 0;
 
-    // 4. Cria o pagamento no Mercado Pago com o valor calculado no servidor.
+    if (entrada.cupomNome) {
+      const nomeCupom = entrada.cupomNome.trim().toUpperCase();
+      const cupomSnap = await db.collection('cupons').where('nome', '==', nomeCupom).limit(1).get();
+      if (cupomSnap.empty) {
+        throw new HttpsError('not-found', 'Cupom não encontrado.');
+      }
+
+      const cupomDoc = cupomSnap.docs[0];
+      const cupom = { id: cupomDoc.id, ...cupomDoc.data() } as CupomDTO;
+
+      const validacao = validarCupom(cupom, { valorProdutos, agora: new Date() });
+      if (!validacao.valido) {
+        throw new HttpsError('failed-precondition', validacao.motivo ?? 'Cupom inválido.');
+      }
+
+      const desconto = calcularDesconto(cupom, itensComProduto, freteConfirmado.preco);
+      valorDescontoProdutos = desconto.valorDescontoProdutos;
+      valorDescontoFrete = desconto.valorDescontoFrete;
+      cupomRef = cupomDoc.ref;
+      cupomAplicado = {
+        id: cupom.id,
+        nome: cupom.nome,
+        tipoDeDesconto: cupom.tipoDeDesconto,
+        valorDescontoProdutos,
+        valorDescontoFrete
+      };
+    }
+
+    const valorTotal = Math.max(
+      0,
+      valorProdutos + freteConfirmado.preco - valorDescontoProdutos - valorDescontoFrete
+    );
+
+    // 5. Cria o pagamento no Mercado Pago com o valor calculado no servidor.
     const pagamentoService = obterServicoPagamento(mercadoPagoAccessToken.value());
     const resultadoPagamento = await pagamentoService.create({
       body: {
@@ -100,7 +141,7 @@ export const processarPagamento = onCall(
 
     const status = mapearStatusMercadoPago(resultadoPagamento.status ?? 'pending');
 
-    // 5. Grava o pedido. Cliente nunca escreve aqui diretamente (regra do Firestore).
+    // 6. Grava o pedido. Cliente nunca escreve aqui diretamente (regra do Firestore).
     const compra: CompraDTO = {
       usuarioId: uid,
       itens: itensComProduto.map(({ produto, quantidade }) => ({
@@ -112,6 +153,7 @@ export const processarPagamento = onCall(
       valorProdutos,
       valorFrete: freteConfirmado.preco,
       valorTotal,
+      cupomAplicado,
       status,
       pagamento: {
         mercadoPagoId: String(resultadoPagamento.id),
@@ -129,6 +171,14 @@ export const processarPagamento = onCall(
     };
 
     const docCompra = await db.collection('compras').add(compra);
+
+    // Incrementa o uso do cupom só depois do pedido criado com sucesso. Não é
+    // atômico fim-a-fim com a criação do pagamento (sem reserva/estorno de
+    // uso) — numa race extrema no último uso disponível, dois pedidos
+    // simultâneos poderiam passar. Aceitável para o volume da loja hoje.
+    if (cupomRef) {
+      await cupomRef.update({ usosTotais: FieldValue.increment(1) });
+    }
 
     // Cartão pode aprovar na hora — nesse caso o webhook não vê mudança de
     // status (já chega "pago" pronto) e pula os efeitos colaterais por

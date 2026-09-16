@@ -97,7 +97,42 @@
       </ul>
 
       <footer class="cart-drawer__footer">
-        <p class="cart-drawer__total"><span>Total</span><strong>{{ carrinhoStore.valorTotal() | currency:'BRL' }}</strong></p>
+        <div class="cart-cupom">
+          @if (carrinhoStore.cupom(); as cupom) {
+            <p class="cart-cupom__aplicado">
+              <span>Cupom <strong>{{ cupom.nome }}</strong> aplicado</span>
+              <button type="button" class="cart-cupom__remover" (click)="removerCupom()">Remover</button>
+            </p>
+          } @else {
+            <form class="cart-cupom__form" (submit)="$event.preventDefault(); aplicarCupom()">
+              <input
+                class="cart-cupom__input"
+                type="text"
+                placeholder="Cupom de desconto"
+                aria-label="Cupom de desconto"
+                [value]="codigoCupom()"
+                (input)="codigoCupom.set($any($event.target).value)" />
+              <button
+                class="btn-secondary cart-cupom__botao"
+                type="submit"
+                [disabled]="aplicandoCupom() || !codigoCupom().trim()">
+                {{ aplicandoCupom() ? 'Aplicando…' : 'Aplicar' }}
+              </button>
+            </form>
+          }
+        </div>
+
+        @if (carrinhoStore.valorDesconto() > 0) {
+          <p class="cart-drawer__total">
+            <span>Desconto</span>
+            <strong>-{{ carrinhoStore.valorDesconto() | currency:'BRL' }}</strong>
+          </p>
+        }
+
+        <p class="cart-drawer__total">
+          <span>Total</span>
+          <strong>{{ (carrinhoStore.valorTotal() - carrinhoStore.valorDesconto()) | currency:'BRL' }}</strong>
+        </p>
         <button class="btn-primary" type="button" (click)="finalizarCompra()">Finalizar compra</button>
         <a class="cart-drawer__link" routerLink="/carrinho" (click)="fechar()">Ver carrinho completo</a>
       </footer>

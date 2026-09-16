@@ -35,6 +35,28 @@ export interface ItemCarrinhoEntrada {
   quantidade: number;
 }
 
+export type TipoDeDesconto = 'PORCENTAGEM' | 'FRETE' | 'VALOR_FIXO';
+
+export interface CriterioCupomDTO {
+  produto: string; // produtoId, ou "TODOS" para o carrinho inteiro
+}
+
+export interface CupomDTO {
+  id: string;
+  nome: string;
+  tipoDeDesconto: TipoDeDesconto;
+  descontoEmPercent?: number;
+  valorFixo?: number;
+  criterios: CriterioCupomDTO[];
+  ativo: boolean;
+  validoDe?: string;
+  validoAte?: string;
+  valorMinimoCarrinho?: number;
+  limiteDeUsos?: number;
+  usosTotais: number;
+  criadoEm: string;
+}
+
 export type StatusCompra =
   | 'aguardando_pagamento'
   | 'pago'
@@ -50,6 +72,13 @@ export interface CompraDTO {
   valorProdutos: number;
   valorFrete: number;
   valorTotal: number;
+  cupomAplicado: {
+    id: string;
+    nome: string;
+    tipoDeDesconto: TipoDeDesconto;
+    valorDescontoProdutos: number;
+    valorDescontoFrete: number;
+  } | null;
   status: StatusCompra;
   pagamento: {
     mercadoPagoId: string;

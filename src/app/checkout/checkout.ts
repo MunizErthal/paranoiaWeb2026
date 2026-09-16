@@ -65,7 +65,20 @@ export class Checkout {
     this.opcoesFrete().find(o => o.servicoId === this.servicoIdSelecionado()) ?? null
   );
   readonly valorProdutos = computed(() => this.carrinhoStore.valorTotal());
-  readonly valorTotal = computed(() => this.valorProdutos() + (this.freteSelecionado()?.preco ?? 0));
+  readonly valorDescontoProdutos = computed(() => this.carrinhoStore.valorDesconto());
+  readonly valorDescontoFrete = computed(() => {
+    const cupom = this.carrinhoStore.cupom();
+    return cupom?.tipoDeDesconto === 'FRETE' ? (this.freteSelecionado()?.preco ?? 0) : 0;
+  });
+  readonly valorTotal = computed(() =>
+    Math.max(
+      0,
+      this.valorProdutos() +
+        (this.freteSelecionado()?.preco ?? 0) -
+        this.valorDescontoProdutos() -
+        this.valorDescontoFrete()
+    )
+  );
 
   /** Nomes dos itens do carrinho que o usuário já comprou antes — o aviso é
    *  só informativo, recomprar continua permitido. */
@@ -160,7 +173,8 @@ export class Checkout {
         servicoIdEscolhido: frete.servicoId,
         metodo: this.metodo(),
         cpf: this.cpf(),
-        emailPagador: usuario.email
+        emailPagador: usuario.email,
+        cupomNome: this.carrinhoStore.cupom()?.nome
       });
 
       this.resultado.set(resultado);
