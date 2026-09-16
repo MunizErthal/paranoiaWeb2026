@@ -1,3 +1,43 @@
+<!-- ============================================================= MOBILE ==
+     Barra de comando — só existe abaixo de 48rem (display:none no CSS
+     acima disso). Substitui, no celular, a navegação horizontal e o HUD
+     suspenso: hambúrguer à esquerda, marca que aparece ao rolar, carrinho
+     à direita. O carrinho fica fora do menu de propósito: é o gatilho de
+     compra e precisa estar sempre a um toque, com o contador à vista.
+     ======================================================================= -->
+<div class="mobile-bar" [class.is-scrolled]="isScrolled">
+    <button
+        type="button"
+        class="mobile-bar__botao"
+        (click)="alternarMenu($event)"
+        aria-controls="menu-mobile"
+        [attr.aria-expanded]="menuAberto()"
+        aria-label="Abrir menu">
+        <span class="mobile-bar__hamburguer" aria-hidden="true"><i></i><i></i><i></i></span>
+    </button>
+
+    <a class="mobile-bar__marca" routerLink="/" aria-label="Paranoia Jogos — início">
+        <img src="/images/paranoia/logo.png" alt="" width="2355" height="449" />
+    </a>
+
+    <button
+        type="button"
+        class="mobile-bar__botao mobile-bar__botao--carrinho"
+        (click)="abrirCarrinho()"
+        aria-haspopup="dialog"
+        [attr.aria-expanded]="carrinhoDrawer.aberto()"
+        aria-label="Abrir carrinho">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter" />
+            <path d="M9.5 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM17.5 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" fill="currentColor" />
+        </svg>
+        @if (carrinhoStore.quantidadeTotal(); as quantidade) {
+            <span class="mobile-bar__badge" aria-hidden="true">{{ quantidade }}</span>
+            <span class="sr-only">{{ quantidade }} {{ quantidade === 1 ? 'item' : 'itens' }} no carrinho</span>
+        }
+    </button>
+</div>
+
 <div class="logo-container">
     <img class="background-img" src="/images/paranoia/backgroundEffect.png" alt="Background" />
     <div class="glitch-wrap" [class.animate]="animateOnLoad">
@@ -82,6 +122,89 @@
         <a class="account-hud__item account-hud__item--cta account-hud__item--opcional" routerLink="/cadastro">Criar conta</a>
     }
 </div>
+
+<!-- ============================================================= MOBILE ==
+     Gaveta de navegação. Consolida seções, conta e sessão num lugar só —
+     no desktop nada disto é alcançável, porque o botão que a abre está
+     display:none e o painel só entra no DOM quando aberto.
+     ======================================================================= -->
+@if (menuAberto()) {
+    <div class="mobile-menu__fundo" (click)="fecharMenu()" aria-hidden="true"></div>
+
+    <div
+        id="menu-mobile"
+        #menuPainel
+        class="mobile-menu"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu principal"
+        tabindex="-1">
+        <div class="mobile-menu__topo">
+            <img class="mobile-menu__logo" src="/images/paranoia/logo.png" alt="Paranoia Jogos" width="2355" height="449" />
+            <button type="button" class="mobile-menu__fechar" (click)="fecharMenu()" aria-label="Fechar menu">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" />
+                </svg>
+            </button>
+        </div>
+
+        <nav class="mobile-menu__nav" aria-label="Seções do site">
+            @for (item of navigationItems; track item.id; let i = $index) {
+                <a
+                    [routerLink]="item.route"
+                    (click)="fecharMenu()"
+                    [class.is-ativo]="selectedPage() === item.id"
+                    [attr.aria-current]="selectedPage() === item.id ? 'page' : null">
+                    <span class="mobile-menu__indice" aria-hidden="true">0{{ i + 1 }}</span>
+                    <span class="mobile-menu__rotulo">{{ item.label }}</span>
+                    <svg class="mobile-menu__seta" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
+                    </svg>
+                </a>
+            }
+        </nav>
+
+        <a class="mobile-menu__destaque" routerLink="/loja" (click)="fecharMenu()">
+            <span class="mobile-menu__destaque-eyebrow">Catálogo completo</span>
+            <strong>Comece um novo caso</strong>
+            <small>Envio para todo o Brasil</small>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" />
+            </svg>
+        </a>
+
+        <div class="mobile-menu__conta">
+            @if (estaAutenticado()) {
+                <a class="mobile-menu__perfil" routerLink="/perfil" (click)="fecharMenu()">
+                    <span class="mobile-menu__avatar" aria-hidden="true">{{ iniciais() }}</span>
+                    <span class="mobile-menu__perfil-texto">
+                        <strong>Minha conta</strong>
+                        <small>Pedidos, endereços e dados</small>
+                    </span>
+                    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
+                    </svg>
+                </a>
+                <button type="button" class="mobile-menu__sair" (click)="sairPeloMenu()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 8l-4 4 4 4M6 12h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter" />
+                    </svg>
+                    Sair da conta
+                </button>
+            } @else {
+                <a class="mobile-menu__cta" routerLink="/cadastro" (click)="fecharMenu()">Criar conta</a>
+                <a class="mobile-menu__entrar" routerLink="/login" (click)="fecharMenu()">Já tenho conta — entrar</a>
+            }
+        </div>
+
+        <div class="mobile-menu__rodape">
+            <a href="https://www.instagram.com/paranoiajogos/" target="_blank" rel="noopener noreferrer" aria-label="Instagram da Paranoia Jogos">
+                <img src="/images/social/instagram.png" alt="" width="24" height="24" />
+            </a>
+            <p>© 2026 Paranoia Jogos</p>
+        </div>
+    </div>
+}
 
 <app-carrinho-drawer />
 

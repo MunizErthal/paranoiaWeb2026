@@ -446,3 +446,162 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* =========================================================================
+   MOBILE (< 48rem) — vitrine de duas colunas.
+   Um produto por tela transforma a loja num folheto: o comprador rola
+   muito e compara nada. Duas colunas desde a menor largura colocam quatro
+   capas à vista e deixam a comparação acontecer no olhar — que é o que um
+   carrossel, escondendo o tamanho do catálogo, não faz.
+
+   O scroll lateral entra onde ele de fato resolve: os filtros, que são
+   uma fileira curta de um eixo só.
+   ========================================================================= */
+
+@media (max-width: 47.9375rem) {
+  .store {
+    padding: var(--s-8) var(--s-4) var(--s-16);
+  }
+
+  .store__catalog {
+    padding-top: 0;
+  }
+
+  .store__catalog-heading {
+    display: grid;
+    gap: var(--s-4);
+    margin-bottom: var(--s-5);
+    padding-bottom: var(--s-4);
+  }
+
+  .store__catalog-heading h2 {
+    font-size: 1.375rem;
+  }
+
+  .store__filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    /* sangra até a borda da tela: a fileira mostra que continua */
+    margin-inline: calc(var(--s-4) * -1);
+    padding-inline: var(--s-4);
+    padding-bottom: 2px;
+  }
+
+  .store__filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-chip {
+    flex: none;
+    min-height: 2.5rem;
+    scroll-snap-align: start;
+  }
+
+  .store-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-3);
+  }
+
+  .store-card__media {
+    aspect-ratio: 1 / 1;
+  }
+
+  .store-card__body {
+    gap: var(--s-2);
+    padding: var(--s-3);
+  }
+
+  /* Categorias e descrição vivem na ficha do jogo. Na vitrine o que
+     decide é capa, nome, ficha curta e preço. */
+  .store-card__tags,
+  .store-card__description,
+  .store-card__actions .link-action {
+    display: none;
+  }
+
+  .store-card h3 {
+    font-size: 0.9375rem;
+    line-height: var(--lh-snug);
+  }
+
+  .store-card__meta {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    gap: 0.35rem;
+  }
+
+  .store-card__meta div {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+  }
+
+  /* Três dados não cabem na largura de meia tela sem cortar o último.
+     Jogadores e duração são o que decide a compra na vitrine; a idade
+     está na ficha do jogo, a um toque. */
+  .store-card__meta div:nth-child(2) {
+    display: none;
+  }
+
+  .store-card__meta div + div::before {
+    padding-right: 0.35rem;
+    color: var(--text-subtle);
+    content: "·";
+  }
+
+  /* Rótulo fica para o leitor de tela; na tela, só os números. */
+  .store-card__meta dt {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .store-card__meta dd {
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    white-space: nowrap;
+  }
+
+  .store-card__footer {
+    gap: var(--s-3);
+    padding-top: var(--s-3);
+  }
+
+  .store-card__price {
+    font-size: 1.125rem;
+  }
+
+  /* Com "ver jogo" fora (a capa e o nome já levam à ficha), o botão de
+     compra assume a largura inteira do cartão. */
+  .store-card__actions {
+    flex-wrap: nowrap;
+  }
+
+  .btn-add-to-cart {
+    width: 100%;
+    justify-content: center;
+    padding: 0 var(--s-3);
+    letter-spacing: 0.02em;
+  }
+
+  .store__categories {
+    grid-template-columns: 1fr;
+    margin-top: var(--s-12);
+  }
+
+  .store__categories article {
+    min-height: 0;
+    padding: var(--s-4) var(--s-5);
+  }
+
+  .store__categories h2 {
+    margin-top: var(--s-2);
+    font-size: 1rem;
+  }
+}

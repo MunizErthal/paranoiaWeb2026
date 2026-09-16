@@ -385,3 +385,174 @@ $fade: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--
     position: static;
   }
 }
+
+/* =========================================================================
+   MOBILE (< 48rem) — o hero refeito.
+   O desenho de cima é de desktop: uma faixa de altura fixa com a cópia
+   ancorada no rodapé dela. Na largura do celular a cópia (título + tags +
+   ficha + resumo) é mais alta que a faixa, então ela transborda PARA CIMA
+   e o h1 sai do quadro — era isso que sumia com o título.
+
+   Aqui a capa vira uma moldura com proporção própria, a ficha duplicada
+   (aria-hidden) sai de cena, e capa + corpo leem como um painel só. O
+   preço sobe para logo abaixo da ficha, que é onde a decisão acontece.
+   ========================================================================= */
+
+@media (max-width: 47.9375rem) {
+  .game-detail-page {
+    padding: var(--s-6) var(--s-4) var(--s-16);
+  }
+
+  .game-detail__hero {
+    margin-top: var(--s-4);
+  }
+
+  .game-detail__cover {
+    display: grid;
+    height: auto;
+    min-height: 0;
+    align-items: end;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--r-md) var(--r-md) 0 0;
+    background-image: linear-gradient(0deg, rgba(3, 2, 8, 0.97) 0%, rgba(3, 2, 8, 0.89) 42%,
+        rgba(3, 2, 8, 0.12) 80%, rgba(3, 2, 8, 0.42) 100%),
+      url('/images/jogos/cidadesubmersa/cover6.png');
+    background-position: center 40%;
+  }
+
+  .game-detail__intro {
+    position: static;
+    padding: var(--s-10) var(--s-5) var(--s-5);
+  }
+
+  /* A cópia sobreposta existe só para a coreografia de rolagem do desktop
+     e é aria-hidden: no celular ela some, e a versão acessível abaixo do
+     hero passa a ser a única — sem duplicata, sem transbordo. */
+  .game-detail__meta-collapse {
+    display: none;
+  }
+
+  .game-detail__cover h1 {
+    margin: 0 0 var(--s-2);
+    font-size: clamp(1.75rem, 8.5vw, 2.75rem);
+  }
+
+  .game-detail__summary {
+    color: rgba(247, 242, 255, 0.86);
+    font-size: var(--fs-sm);
+  }
+
+  .game-detail__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+    margin-top: 0;
+    border: var(--border) solid var(--line);
+    border-top: 0;
+    border-radius: 0 0 var(--r-md) var(--r-md);
+    padding: var(--s-5);
+    background: var(--surface-1);
+  }
+
+  /* Ordem de venda: o que é (tags) → serve para mim? (ficha) → quanto
+     custa e como compro → o resto. */
+  .game-detail__tags--below { order: 1; }
+  .game-detail__meta--below { order: 2; }
+  .purchase-panel { order: 3; }
+  .game-detail__about { order: 4; }
+  .game-detail__gallery { order: 5; }
+
+  /* Sem cópia de cima para trocar, esta precisa nascer visível. */
+  .game-detail__tags--below,
+  .game-detail__meta--below {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .game-detail__tags--below {
+    margin: 0;
+  }
+
+  .game-detail__meta--below {
+    display: grid;
+    align-items: start;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-2);
+    margin: 0;
+    padding-block: var(--s-4);
+  }
+
+  /* Ícone acima do par valor/rótulo. A caixa do ícone tem altura fixa e o
+     valor não quebra: sem isso os três pares descem em degraus, cada um
+     alinhado por um ícone de altura diferente. */
+  .game-detail__meta--below > div {
+    display: grid;
+    justify-items: center;
+    gap: var(--s-2);
+    margin: 0;
+    text-align: center;
+  }
+
+  .game-detail__meta--below > div > div {
+    justify-items: center;
+    gap: 0.15rem;
+  }
+
+  .game-detail__meta--below img {
+    width: auto;
+    height: 1.5rem;
+  }
+
+  .game-detail__meta--below dd {
+    font-size: var(--fs-sm);
+    white-space: nowrap;
+  }
+
+  .purchase-panel {
+    margin: 0;
+    border: var(--border) solid var(--line);
+    padding: var(--s-5);
+    background: var(--surface-2);
+    box-shadow: none;
+  }
+
+  /* A 1rem o rótulo quebrava em duas linhas e o ícone ficava boiando ao
+     lado de um bloco de texto. */
+  .purchase-panel__button {
+    margin-top: var(--s-5);
+    font-size: var(--fs-sm);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  .game-detail__about {
+    margin: 0;
+  }
+
+  /* A galeria em três colunas fica com miniaturas ilegíveis aqui.
+     Vira um trilho que sangra até as bordas do painel: cada imagem ganha
+     tamanho e o corte da próxima mostra que há mais. */
+  .game-detail__gallery {
+    display: flex;
+    gap: var(--s-3);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    margin: 0 calc(var(--s-5) * -1);
+    padding: 0 var(--s-5) var(--s-1);
+  }
+
+  .game-detail__gallery::-webkit-scrollbar {
+    display: none;
+  }
+
+  .game-detail__gallery li {
+    flex: 0 0 72%;
+    scroll-snap-align: start;
+  }
+
+  .game-detail__gallery img {
+    height: auto;
+  }
+}

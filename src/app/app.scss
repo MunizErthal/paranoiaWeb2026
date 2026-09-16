@@ -265,31 +265,8 @@
     }
 }
 
-@media (max-width: 600px) {
-    .logo-container {
-        /* faixa extra no topo para o HUD suspenso não cobrir a logo */
-        height: calc(38vw + 3rem);
-        padding-top: 3rem;
-    }
-
-    .background-img {
-        left: 5vw;
-        width: 90%;
-        height: 30vw;
-    }
-
-    .logo-container > .glitch-wrap {
-        margin-top: 0;
-    }
-
-    .main-navigation {
-        gap: 4vw;
-    }
-
-    .main-navigation a {
-        font-size: 0.56rem;
-    }
-}
+/* O cabeçalho do celular é outro desenho por inteiro — barra fixa +
+   gaveta — e vive no bloco MOBILE no fim deste arquivo. */
 
 .logo-content {
     display: flex;
@@ -471,4 +448,568 @@
   bottom: 0;
   margin-bottom: 0;
   margin-top: var(--s-4);
+}
+
+/* =========================================================================
+   ===============================  MOBILE  ================================
+   Abaixo de 48rem o cabeçalho é outro desenho: uma barra de comando fixa
+   (hambúrguer · marca · carrinho) e uma gaveta que consolida seções, conta
+   e sessão. A navegação horizontal e o HUD suspenso somem.
+
+   Nada daqui alcança o desktop: a barra e a gaveta nascem `display: none`
+   e só acendem dentro do media query — o layout de ≥48rem fica intocado.
+   ========================================================================= */
+
+.mobile-bar,
+.mobile-menu,
+.mobile-menu__fundo {
+    display: none;
+}
+
+@keyframes mobile-menu-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes mobile-menu-slide {
+    from { transform: translateX(-100%); }
+    to { transform: none; }
+}
+
+@media (max-width: 47.9375rem) {
+    /* --- O que sai de cena ------------------------------------------------ */
+
+    .main-navigation,
+    .account-hud {
+        display: none;
+    }
+
+    /* --- Cabeçalho da marca ----------------------------------------------- */
+
+    .logo-container {
+        height: auto;
+        padding-top: calc(var(--bar-h) + var(--s-6));
+        padding-bottom: var(--s-8);
+        justify-content: center;
+    }
+
+    /* Em vez de uma faixa deslocada, a textura cobre o cabeçalho inteiro:
+       na largura do celular o recorte antigo deixava metade da arte fora. */
+    .background-img {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.85;
+    }
+
+    /* O invólucro passa a ter a altura NATURAL da logo (proporção do
+       arquivo) e corta, por baixo, a sobra da pilha de tiras. As laterais
+       ficam livres para o glitch se deslocar. */
+    .logo-container > .glitch-wrap {
+        width: 76vw;
+        /* `min-height: 0` e `flex: none` são o que fazem a proporção valer:
+           como item de flex, o mínimo automático seria a altura do conteúdo
+           (a pilha de tiras inteira) e a proporção seria ignorada. */
+        flex: none;
+        min-height: 0;
+        aspect-ratio: 2355 / 449;
+        margin: 0;
+        clip-path: inset(-30% -40% 0 -40%);
+    }
+
+    /* Mais específico de propósito: o `.bard { width: 30vw }` do
+       glitch.scss vem depois na ordem dos styleUrls e ganharia no empate. */
+    .logo-container .logo-img,
+    .logo-container .bard {
+        width: 100%;
+    }
+
+    /* --- Barra de comando -------------------------------------------------- */
+
+    .mobile-bar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 70;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--s-2);
+        height: var(--bar-h);
+        padding: env(safe-area-inset-top, 0px) var(--s-3) 0;
+        border-bottom: 1px solid transparent;
+        background: transparent;
+        transition: background-color var(--dur) var(--ease-out),
+            backdrop-filter var(--dur) var(--ease-out),
+            border-color var(--dur) var(--ease-out);
+    }
+
+    /* Ao rolar, a barra vira o vidro e os botões se dissolvem nela; no topo
+       da página é o contrário — a barra some e cada botão é uma pastilha
+       própria, legível sobre a arte do cabeçalho. */
+    .mobile-bar.is-scrolled {
+        border-bottom-color: var(--line);
+        background: rgba(14, 8, 23, 0.74);
+        backdrop-filter: blur(16px) saturate(140%);
+        -webkit-backdrop-filter: blur(16px) saturate(140%);
+    }
+
+    /* Assinatura cromática da marca, só quando a barra está materializada. */
+    .mobile-bar::after {
+        position: absolute;
+        right: 0;
+        bottom: -1px;
+        left: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--chroma-cyan), var(--chroma-magenta), transparent);
+        content: "";
+        opacity: 0;
+        transition: opacity var(--dur) var(--ease-out);
+        pointer-events: none;
+    }
+
+    .mobile-bar.is-scrolled::after {
+        opacity: 0.55;
+    }
+
+    .mobile-bar__botao {
+        position: relative;
+        display: inline-flex;
+        width: var(--tap);
+        height: var(--tap);
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        border: var(--border) solid rgba(231, 214, 255, 0.1);
+        border-radius: var(--r-sm);
+        padding: 0;
+        color: var(--text);
+        background: rgba(19, 10, 30, 0.48);
+        backdrop-filter: blur(12px) saturate(140%);
+        -webkit-backdrop-filter: blur(12px) saturate(140%);
+        cursor: pointer;
+        transition: color var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out),
+            background-color var(--dur) var(--ease-out);
+    }
+
+    .mobile-bar.is-scrolled .mobile-bar__botao {
+        border-color: transparent;
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .mobile-bar__botao:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .mobile-bar__hamburguer {
+        display: grid;
+        width: 1.125rem;
+        gap: 4px;
+    }
+
+    .mobile-bar__hamburguer i {
+        display: block;
+        width: 100%;
+        height: 1.5px;
+        border-radius: 1px;
+        background: currentColor;
+        transition: width var(--dur) var(--ease-out);
+    }
+
+    /* Traço curto no fim — a barra lê como três linhas de um dossiê, não
+       como o ícone genérico. Completa-se ao toque. */
+    .mobile-bar__hamburguer i:last-child {
+        width: 62%;
+    }
+
+    .mobile-bar__botao[aria-expanded="true"] .mobile-bar__hamburguer i:last-child,
+    .mobile-bar__botao:active .mobile-bar__hamburguer i:last-child {
+        width: 100%;
+    }
+
+    .mobile-bar__marca {
+        display: flex;
+        min-width: 0;
+        align-items: center;
+        opacity: 0;
+        transform: translateY(-0.35rem);
+        transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
+        pointer-events: none;
+    }
+
+    .mobile-bar.is-scrolled .mobile-bar__marca {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+    }
+
+    .mobile-bar__marca img {
+        display: block;
+        width: auto;
+        height: 0.8125rem;
+    }
+
+    .mobile-bar__badge {
+        position: absolute;
+        top: 0.3rem;
+        right: 0.3rem;
+        display: inline-flex;
+        min-width: 1rem;
+        height: 1rem;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        padding: 0 0.28em;
+        color: #ffffff;
+        background: var(--accent-solid);
+        box-shadow: 0 0 0 2px rgba(19, 10, 30, 0.92);
+        font-size: 0.625rem;
+        font-weight: var(--fw-bold);
+        letter-spacing: 0;
+        line-height: 1;
+    }
+
+    /* --- Gaveta de navegação ------------------------------------------------ */
+
+    .mobile-menu__fundo {
+        position: fixed;
+        inset: 0;
+        z-index: 92;
+        display: block;
+        background: rgba(6, 3, 12, 0.66);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        animation: mobile-menu-fade var(--dur-slow) var(--ease-out);
+    }
+
+    .mobile-menu {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 93;
+        display: flex;
+        width: min(21rem, 87vw);
+        flex-direction: column;
+        gap: var(--s-5);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        border-right: var(--border) solid var(--line);
+        padding: calc(var(--s-5) + env(safe-area-inset-top, 0px)) var(--s-5)
+            calc(var(--s-6) + env(safe-area-inset-bottom, 0px));
+        background: var(--surface-1);
+        box-shadow: var(--shadow-2);
+        animation: mobile-menu-slide var(--dur-slow) var(--ease-out);
+    }
+
+    .mobile-menu::before {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--chroma-cyan), var(--chroma-magenta));
+        content: "";
+    }
+
+    .mobile-menu:focus {
+        outline: none;
+    }
+
+    .mobile-menu__topo {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--s-4);
+    }
+
+    .mobile-menu__logo {
+        width: 8rem;
+        height: auto;
+    }
+
+    .mobile-menu__fechar {
+        display: inline-flex;
+        width: var(--tap);
+        height: var(--tap);
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        border-radius: var(--r-xs);
+        margin-right: calc(var(--s-2) * -1);
+        color: var(--text-subtle);
+        background: transparent;
+        cursor: pointer;
+        transition: color var(--dur) var(--ease-out), background-color var(--dur) var(--ease-out);
+    }
+
+    .mobile-menu__fechar:hover,
+    .mobile-menu__fechar:focus-visible {
+        color: var(--chroma-magenta);
+        background: var(--surface-2);
+    }
+
+    .mobile-menu__nav {
+        display: grid;
+    }
+
+    .mobile-menu__nav a {
+        display: grid;
+        min-height: 3.25rem;
+        align-items: center;
+        grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+        gap: var(--s-3);
+        border-bottom: var(--border) solid var(--line);
+        padding: 0 var(--s-2);
+        color: var(--text-muted);
+        text-decoration: none;
+        transition: color var(--dur) var(--ease-out), background-color var(--dur) var(--ease-out),
+            box-shadow var(--dur) var(--ease-out);
+    }
+
+    .mobile-menu__nav a:first-child {
+        border-top: var(--border) solid var(--line);
+    }
+
+    .mobile-menu__indice {
+        color: var(--text-subtle);
+        font-size: var(--fs-xs);
+        font-weight: var(--fw-bold);
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.08em;
+        transition: color var(--dur) var(--ease-out);
+    }
+
+    .mobile-menu__rotulo {
+        font-size: 1.0625rem;
+        font-weight: var(--fw-semibold);
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+
+    .mobile-menu__seta {
+        color: var(--text-subtle);
+        opacity: 0;
+        transform: translateX(-0.35rem);
+        transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
+    }
+
+    .mobile-menu__nav a.is-ativo {
+        color: var(--text);
+        background: var(--accent-soft);
+        box-shadow: inset 2px 0 0 var(--accent);
+    }
+
+    .mobile-menu__nav a.is-ativo .mobile-menu__indice {
+        color: var(--accent-text);
+    }
+
+    .mobile-menu__nav a.is-ativo .mobile-menu__seta,
+    .mobile-menu__nav a:active .mobile-menu__seta,
+    .mobile-menu__nav a:focus-visible .mobile-menu__seta {
+        opacity: 1;
+        transform: none;
+    }
+
+    /* Atalho comercial: o menu não serve só para navegar, ele também
+       empurra para o catálogo. */
+    .mobile-menu__destaque {
+        position: relative;
+        display: grid;
+        align-items: center;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.15rem var(--s-3);
+        overflow: hidden;
+        border-radius: var(--r-sm);
+        padding: var(--s-4);
+        color: #ffffff;
+        background: linear-gradient(115deg, #4a1391 0%, #7b2fd0 55%, #a144f0 100%);
+        box-shadow: var(--shadow-accent);
+        text-decoration: none;
+    }
+
+    .mobile-menu__destaque-eyebrow {
+        grid-column: 1;
+        color: rgba(255, 255, 255, 0.74);
+        font-size: var(--fs-xs);
+        font-weight: var(--fw-bold);
+        letter-spacing: var(--track-label);
+        text-transform: uppercase;
+    }
+
+    .mobile-menu__destaque strong {
+        grid-column: 1;
+        font-size: 1.0625rem;
+        line-height: var(--lh-snug);
+    }
+
+    .mobile-menu__destaque small {
+        grid-column: 1;
+        color: rgba(255, 255, 255, 0.78);
+        font-size: var(--fs-xs);
+        line-height: 1.4;
+    }
+
+    .mobile-menu__destaque svg {
+        grid-row: 1 / span 3;
+        grid-column: 2;
+        flex: none;
+    }
+
+    /* --- Conta e sessão ----------------------------------------------------- */
+
+    .mobile-menu__conta {
+        display: grid;
+        gap: var(--s-2);
+        margin-top: auto;
+        border-top: var(--border) solid var(--line);
+        padding-top: var(--s-5);
+    }
+
+    .mobile-menu__perfil {
+        display: grid;
+        align-items: center;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: var(--s-3);
+        border-radius: var(--r-xs);
+        padding: var(--s-3);
+        color: var(--text);
+        background: var(--surface-2);
+        text-decoration: none;
+    }
+
+    .mobile-menu__avatar {
+        display: inline-flex;
+        width: 2.5rem;
+        height: 2.5rem;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        color: var(--accent-text);
+        background: var(--accent-soft);
+        font-size: var(--fs-body);
+        font-weight: var(--fw-bold);
+    }
+
+    .mobile-menu__perfil-texto {
+        display: grid;
+        min-width: 0;
+        gap: 0.1rem;
+    }
+
+    .mobile-menu__perfil-texto strong {
+        font-size: var(--fs-sm);
+        font-weight: var(--fw-semibold);
+    }
+
+    .mobile-menu__perfil-texto small {
+        overflow: hidden;
+        color: var(--text-subtle);
+        font-size: var(--fs-xs);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .mobile-menu__perfil svg {
+        color: var(--text-subtle);
+    }
+
+    .mobile-menu__sair {
+        display: flex;
+        min-height: var(--tap);
+        align-items: center;
+        gap: var(--s-3);
+        border: 0;
+        border-radius: var(--r-xs);
+        padding: 0 var(--s-3);
+        color: var(--text-subtle);
+        background: none;
+        cursor: pointer;
+        font: inherit;
+        font-size: var(--fs-sm);
+        font-weight: var(--fw-semibold);
+        transition: color var(--dur) var(--ease-out);
+    }
+
+    .mobile-menu__sair:hover,
+    .mobile-menu__sair:focus-visible {
+        color: var(--chroma-magenta);
+    }
+
+    .mobile-menu__cta {
+        display: inline-flex;
+        min-height: var(--tap);
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--r-xs);
+        padding: 0 var(--s-4);
+        color: #ffffff;
+        background: var(--accent-solid);
+        font-size: var(--fs-sm);
+        font-weight: var(--fw-semibold);
+        letter-spacing: 0.04em;
+        text-decoration: none;
+        text-transform: uppercase;
+    }
+
+    .mobile-menu__entrar {
+        display: inline-flex;
+        min-height: var(--tap);
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        font-size: var(--fs-sm);
+        text-decoration: none;
+    }
+
+    .mobile-menu__rodape {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--s-3);
+        border-top: var(--border) solid var(--line);
+        padding-top: var(--s-4);
+    }
+
+    .mobile-menu__rodape a {
+        display: inline-flex;
+        width: var(--tap);
+        height: var(--tap);
+        align-items: center;
+        justify-content: center;
+        margin-left: calc(var(--s-3) * -1);
+    }
+
+    .mobile-menu__rodape img {
+        width: 1.25rem;
+        height: auto;
+    }
+
+    .mobile-menu__rodape p {
+        margin: 0;
+        color: var(--text-subtle);
+        font-size: var(--fs-xs);
+    }
+
+    /* --- Rodapé e newsletter ------------------------------------------------ */
+
+    .newsletter-form button {
+        width: 3.25rem;
+        height: 3rem;
+        flex-basis: 3.25rem;
+    }
+}
+
+@media (max-width: 47.9375rem) and (prefers-reduced-motion: reduce) {
+    .mobile-menu,
+    .mobile-menu__fundo {
+        animation: none;
+    }
 }

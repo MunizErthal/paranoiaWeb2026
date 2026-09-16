@@ -161,3 +161,159 @@
     margin-bottom: 4rem;
   }
 }
+
+/* =========================================================================
+   MOBILE (< 48rem) — o cartão vira linha de dossiê.
+   Empilhado, cada jogo comia uma tela inteira: capa grande, descrição,
+   ficha em três colunas e um link. Aqui a mesma informação essencial
+   entra numa linha varrível, e cabem 3–4 casos por tela. A descrição e o
+   "abrir o caso" não somem do site — estão na ficha do jogo, a um toque.
+   Acima de 48rem nada disto se aplica.
+   ========================================================================= */
+
+@media (max-width: 47.9375rem) {
+  .games-page {
+    padding-top: var(--s-8);
+    padding-bottom: var(--s-16);
+  }
+
+  .games-section {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .games-list {
+    width: 100%;
+    gap: var(--s-3);
+  }
+
+  .game-card {
+    position: relative;
+    max-width: none;
+    min-height: 0;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--s-3);
+    padding: var(--s-3);
+    /* calha para o chevron, que é a afordância de "a linha toda abre" */
+    padding-right: var(--s-5);
+  }
+
+  .game-card__cover {
+    width: clamp(4.75rem, 23vw, 8rem);
+    max-width: none;
+    flex: none;
+    aspect-ratio: 1;
+    margin: 0;
+  }
+
+  .game-card__details {
+    display: grid;
+    min-width: 0;
+    gap: 0.15rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* As pastilhas de categoria comiam a largura de que o título precisa;
+     viram uma linha de texto separada por ponto médio. */
+  /* Em nomes de categoria longos a linha é cortada com um esmaecimento,
+     para o corte parecer intenção e não estouro. */
+  .game-card__tags {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    gap: 0;
+    margin: 0 calc(var(--s-4) * -1) 0 0;
+    mask-image: linear-gradient(90deg, #000 88%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent 100%);
+  }
+
+  .game-card__tags span {
+    border: 0;
+    padding: 0;
+    color: var(--accent-text);
+    background: transparent;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .game-card__tags span + span::before {
+    padding-inline: 0.34em;
+    color: var(--text-subtle);
+    content: "·";
+  }
+
+  .game-card h2 {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: var(--lh-snug);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .game-card__description,
+  .game-card .link-action {
+    display: none;
+  }
+
+  .game-card__meta {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    gap: 0.35rem;
+    border-top: 0;
+    margin: 0.15rem 0 0;
+    padding: 0;
+  }
+
+  .game-card__meta div {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+  }
+
+  .game-card__meta div + div::before {
+    color: var(--text-subtle);
+    content: "·";
+  }
+
+  /* O rótulo continua no DOM — o leitor de tela lê "Jogadores 2–8" — e só
+     sai da tela: três pares rótulo/valor empilhados não cabem nesta faixa. */
+  .game-card__meta dt {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .game-card__meta dd {
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    white-space: nowrap;
+  }
+
+  .game-card::after {
+    position: absolute;
+    top: 50%;
+    right: var(--s-3);
+    width: 0.45rem;
+    height: 0.45rem;
+    border-top: 1.5px solid var(--text-subtle);
+    border-right: 1.5px solid var(--text-subtle);
+    content: "";
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  .game-card:hover::after,
+  .game-card:focus-visible::after {
+    border-color: var(--accent-text);
+  }
+}

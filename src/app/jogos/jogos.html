@@ -1,5 +1,5 @@
 <main class="content-page games-page">
-  <section class="games-section" aria-labelledby="games-title">
+  <section class="games-section" aria-label="Casos disponíveis">
     <div class="games-list" aria-label="Jogos disponíveis">
       @for (produto of produtos(); track produto.id) {
         <a class="game-card" [routerLink]="['/jogos', produto.id]">

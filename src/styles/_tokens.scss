@@ -116,4 +116,14 @@
 
   /* Alvo mínimo de toque */
   --tap: 2.75rem;
+
+  /* Altura da barra de comando do celular. Zero no desktop, onde ela não
+     existe — assim qualquer calc() que a use continua válido. */
+  --bar-h: 0rem;
+}
+
+@media (max-width: 47.9375rem) {
+  :root {
+    --bar-h: calc(3.5rem + env(safe-area-inset-top, 0px));
+  }
 }

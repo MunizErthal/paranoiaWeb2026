@@ -197,3 +197,144 @@
     top: calc(var(--s-4) + 5rem);
   }
 }
+
+/* =========================================================================
+   MOBILE (< 48rem) — identidade e abas na mesma coluna do conteúdo.
+   No desktop a barra lateral é um cartão ao lado do conteúdo e isso
+   funciona. Empilhada, ela vira um segundo banner competindo com o cartão
+   de baixo — e os botões dela apontam justamente para esse cartão.
+
+   Aqui a barra deixa de ser um cartão (`display: contents`): a identidade
+   vira um cabeçalho compacto, as abas viram um trilho de pílulas e o
+   "sair" desce para o fim da página. Um bloco só, com uma hierarquia só.
+   ========================================================================= */
+
+@media (max-width: 47.9375rem) {
+  .perfil-page {
+    padding: var(--s-8) var(--s-4) var(--s-16);
+  }
+
+  .perfil-page__header {
+    margin-bottom: var(--s-5);
+  }
+
+  /* "Sua conta" já é o que o bloco de identidade logo abaixo diz. */
+  .perfil-page__header .page-eyebrow {
+    display: none;
+  }
+
+  .perfil-page__header h1 {
+    font-size: var(--fs-h2);
+  }
+
+  /* `align-items: start` vem do layout de grade do desktop; herdado pelo
+     flex em coluna ele encolhe cada bloco à largura do próprio conteúdo e
+     as linhas divisórias param no meio da tela. */
+  .perfil-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--s-5);
+  }
+
+  .perfil-sidebar {
+    display: contents;
+  }
+
+  /* As marcas de canto pertencem ao cartão que deixou de existir. */
+  .perfil-sidebar::before,
+  .perfil-sidebar::after {
+    display: none;
+  }
+
+  .perfil-sidebar__conta {
+    order: 1;
+    display: grid;
+    align-items: center;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0 var(--s-4);
+    border-bottom: var(--border) solid var(--line);
+    padding-bottom: var(--s-5);
+  }
+
+  /* Avatar e nome entram direto na grade acima, para nome e e-mail
+     ficarem em duas linhas ao lado do avatar. */
+  .perfil-sidebar__identidade {
+    display: contents;
+  }
+
+  .perfil-sidebar__avatar {
+    grid-row: 1 / span 2;
+    width: 3rem;
+    height: 3rem;
+    font-size: var(--fs-lead);
+  }
+
+  .perfil-sidebar__nome {
+    grid-column: 2;
+    align-self: end;
+  }
+
+  .perfil-sidebar__email {
+    grid-column: 2;
+    align-self: start;
+    margin: 0;
+  }
+
+  .perfil-sidebar__membro {
+    grid-column: 1 / -1;
+    margin-top: var(--s-3);
+  }
+
+  .perfil-tabs {
+    order: 2;
+    display: flex;
+    gap: var(--s-2);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    border-top: 0;
+    margin-inline: calc(var(--s-4) * -1);
+    padding: 0 var(--s-4);
+  }
+
+  .perfil-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .perfil-tabs a {
+    flex: none;
+    min-height: var(--tap);
+    scroll-snap-align: start;
+    border: var(--border) solid var(--line);
+    border-radius: 999px;
+    padding: 0 var(--s-4);
+    white-space: nowrap;
+  }
+
+  .perfil-tabs a.is-ativa {
+    border-color: transparent;
+    color: #ffffff;
+    background: var(--accent-solid);
+  }
+
+  .perfil-tabs a.is-ativa svg {
+    color: #ffffff;
+  }
+
+  .perfil-page__conteudo {
+    order: 3;
+  }
+
+  /* Sair é a última coisa que alguém faz na página — e agora parece. */
+  .perfil-sidebar__sair {
+    order: 4;
+    justify-content: center;
+    margin-top: 0;
+    padding: var(--s-5) var(--s-3) 0;
+  }
+
+  .perfil-page__conteudo .checkout-card {
+    padding: var(--s-5);
+  }
+}
