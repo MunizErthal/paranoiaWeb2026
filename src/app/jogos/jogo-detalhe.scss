@@ -158,6 +158,7 @@ $fade: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--
 .game-detail__intro .game-detail__tags,
 .game-detail__intro .game-detail__meta {
   transition: $fade;
+  margin: 0 0 var(--s-4);
 }
 
 .game-detail.is-scrolled .game-detail__meta-collapse {

@@ -64,9 +64,18 @@
               <p class="store-card__description">{{ produto.descricao }}</p>
 
               <dl class="store-card__meta">
-                <div><dt>Jogadores</dt><dd>{{ produto.jogadores }}</dd></div>
-                <div><dt>Idade</dt><dd>{{ produto.idade }}</dd></div>
-                <div><dt>Duração</dt><dd>{{ produto.duracao }}</dd></div>
+                <div>
+                  <img src="/images/icons/players.png" alt="" aria-hidden="true" />
+                  <div><dt>Jogadores</dt><dd>{{ produto.jogadores }}</dd></div>
+                </div>
+                <div>
+                  <img src="/images/icons/age.png" alt="" aria-hidden="true" />
+                  <div><dt>Idade</dt><dd>{{ produto.idade }}</dd></div>
+                </div>
+                <div>
+                  <img src="/images/icons/time.png" alt="" aria-hidden="true" />
+                  <div><dt>Duração</dt><dd>{{ produto.duracao }}</dd></div>
+                </div>
               </dl>
 
               <div class="store-card__footer">

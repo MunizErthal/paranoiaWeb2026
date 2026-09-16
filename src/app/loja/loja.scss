@@ -287,11 +287,23 @@
   flex-wrap: wrap;
   gap: var(--s-5);
   margin: 0;
-}
 
-.store-card__meta div {
-  display: grid;
-  gap: 0.2rem;
+  > div {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+
+    > div {
+      display: grid;
+      gap: 0.2rem;
+    }
+  }
+
+  img {
+    width: 1.2rem;
+    height: auto;
+    flex-shrink: 0;
+  }
 }
 
 .store-card__meta dt {
