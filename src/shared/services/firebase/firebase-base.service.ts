@@ -148,7 +148,7 @@ export class FirebaseBaseService {
    */
   criar<T>(colecao: string, id: string, dados: T): Observable<string> {
     const docRef = doc(this.firestore, colecao, id);
-    return from(setDoc(docRef, dados as Record<string, any>)).pipe(
+    return from(setDoc(docRef, this.semUndefined(dados) as Record<string, any>)).pipe(
       map(() => id)
     );
   }
@@ -159,7 +159,7 @@ export class FirebaseBaseService {
    */
   salvarComMerge<T>(colecao: string, id: string, dados: Partial<T>): Observable<void> {
     const docRef = doc(this.firestore, colecao, id);
-    return from(setDoc(docRef, dados as Record<string, any>, { merge: true }));
+    return from(setDoc(docRef, this.semUndefined(dados) as Record<string, any>, { merge: true }));
   }
 
   /**
@@ -167,7 +167,7 @@ export class FirebaseBaseService {
    */
   criarSemId<T>(colecao: string, dados: T): Observable<string> {
     const colRef = collection(this.firestore, colecao);
-    return from(addDoc(colRef, dados as any)).pipe(
+    return from(addDoc(colRef, this.semUndefined(dados) as any)).pipe(
       map(docRef => docRef.id)
     );
   }
@@ -176,7 +176,23 @@ export class FirebaseBaseService {
    * Atualiza um documento existente (merge parcial)
    */
   atualizar<T>(colecao: string, id: string, dados: Partial<T>): Observable<void> {
-    return from(updateDoc(doc(this.firestore, colecao, id), dados));
+    return from(updateDoc(doc(this.firestore, colecao, id), this.semUndefined(dados)));
+  }
+
+  /**
+   * Remove campos com valor undefined antes de gravar — o SDK do Firestore
+   * rejeita a escrita inteira (addDoc/setDoc/updateDoc) se algum campo vier
+   * undefined, o que acontece toda vez que um campo opcional do formulário
+   * é deixado em branco (ex: "campo || undefined").
+   */
+  private semUndefined<T>(dados: T): T {
+    const resultado = { ...(dados as Record<string, any>) };
+    for (const chave of Object.keys(resultado)) {
+      if (resultado[chave] === undefined) {
+        delete resultado[chave];
+      }
+    }
+    return resultado as T;
   }
 
   /**

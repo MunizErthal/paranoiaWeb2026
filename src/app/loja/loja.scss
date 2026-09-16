@@ -527,14 +527,24 @@
     font-size: 1.375rem;
   }
 
+  /* Trilhos horizontais (filtros e vitrine) — técnica de contenção.
+     `contain: layout paint` é uma garantia do motor de layout: nada de
+     dentro da caixa afeta o layout de fora, incluindo a área rolável do
+     documento. Junto com `max-width: 100%` e sem nenhum `margin`
+     negativo, é impossível este trilho alargar a página (era o que jogava
+     o botão do carrinho, fixo à direita, para fora da tela).
+     `min-width: 0` deixa o item de grid encolher abaixo do conteúdo, que
+     aqui nunca quebra linha, e `overscroll-behavior-x: contain` impede
+     que o arrasto no fim do trilho encadeie no scroll do documento. */
   .store__filters {
+    min-width: 0;
+    max-width: 100%;
     flex-wrap: nowrap;
     overflow-x: auto;
+    overscroll-behavior-x: contain;
+    contain: layout paint;
     scroll-snap-type: x proximity;
     scrollbar-width: none;
-    /* sangra até a borda da tela: a fileira mostra que continua */
-    margin-inline: calc(var(--s-4) * -1);
-    padding-inline: var(--s-4);
     padding-bottom: 2px;
   }
 
@@ -550,13 +560,14 @@
 
   .store-grid {
     display: flex;
+    min-width: 0;
+    max-width: 100%;
     overflow-x: auto;
+    overscroll-behavior-x: contain;
+    contain: layout paint;
     gap: var(--s-4);
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    /* sangra até a borda da tela, como os filtros logo acima */
-    margin-inline: calc(var(--s-4) * -1);
-    padding-inline: var(--s-4);
     padding-bottom: var(--s-2);
   }
 
@@ -564,9 +575,12 @@
     display: none;
   }
 
+  /* `start`, não `center`: com snap obrigatório, centralizar o primeiro
+     card exige posição de scroll negativa e o navegador compensa rolando
+     o ancestral. */
   .store-card {
-    flex: 0 0 min(22rem, 86%);
-    scroll-snap-align: center;
+    flex: 0 0 86%;
+    scroll-snap-align: start;
   }
 
   .store-card__media {

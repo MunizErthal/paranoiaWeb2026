@@ -532,6 +532,13 @@
         top: 0;
         right: 0;
         left: 0;
+        /* `left: 0 / right: 0` dimensionam a barra pelo bloco continente
+           inicial, que acompanha a largura ROLÁVEL do documento — se
+           qualquer coisa alargar a página, a barra estica junto e o
+           carrinho (último item, alinhado à direita) sai da tela. `vw` é
+           medido pela viewport, nunca pelo scroll, então isto trava a
+           barra na largura visível independente do que a página faça. */
+        max-width: 100vw;
         z-index: 70;
         display: flex;
         align-items: center;
