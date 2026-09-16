@@ -5,7 +5,7 @@ import { db } from '../admin';
 import { mercadoPagoAccessToken, mercadoPagoWebhookSecret } from '../secrets';
 import { obterServicoPagamento, mapearStatusMercadoPago } from './mercado-pago-client';
 import { CompraDTO } from '../types';
-import { dispararCompraEtiqueta } from '../envio/comprar-etiqueta';
+import { processarCompraPaga } from './pagamento-aprovado';
 import { REGIAO } from '../regiao';
 
 /**
@@ -61,8 +61,7 @@ export const webhookMercadoPago = onRequest(
       });
 
       if (status === 'pago') {
-        await adicionarJogosAdquiridos(compraAtual.usuarioId, docCompra.id, compraAtual);
-        await dispararCompraEtiqueta(docCompra.id);
+        await processarCompraPaga(compraAtual.usuarioId, docCompra.id, compraAtual);
       }
 
       res.status(200).send('OK');
@@ -102,19 +101,4 @@ function validarAssinatura(req: import('express').Request): boolean {
   const bufferRecebido = Buffer.from(v1, 'utf8');
 
   return bufferEsperado.length === bufferRecebido.length && timingSafeEqual(bufferEsperado, bufferRecebido);
-}
-
-async function adicionarJogosAdquiridos(usuarioId: string, compraId: string, compra: CompraDTO): Promise<void> {
-  const jogosAdquiridos = compra.itens.map(item => ({
-    produtoId: item.produtoId,
-    nome: item.nome,
-    dataCompra: new Date().toISOString(),
-    compraId
-  }));
-
-  const { FieldValue } = await import('firebase-admin/firestore');
-  await db
-    .collection('usuarios')
-    .doc(usuarioId)
-    .update({ jogosAdquiridos: FieldValue.arrayUnion(...jogosAdquiridos) });
 }

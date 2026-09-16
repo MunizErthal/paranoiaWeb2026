@@ -2,6 +2,7 @@ import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { db } from '../admin';
 import { mercadoPagoAccessToken } from '../secrets';
 import { obterServicoPagamento, mapearStatusMercadoPago } from './mercado-pago-client';
+import { processarCompraPaga } from './pagamento-aprovado';
 import { calcularOpcoesFrete } from '../frete/cotar-frete';
 import { buscarItensComProduto } from '../produtos';
 import { cpfValido, limparCpf } from '../cpf.util';
@@ -128,6 +129,14 @@ export const processarPagamento = onCall(
     };
 
     const docCompra = await db.collection('compras').add(compra);
+
+    // Cartão pode aprovar na hora — nesse caso o webhook não vê mudança de
+    // status (já chega "pago" pronto) e pula os efeitos colaterais por
+    // idempotência, então dispara aqui mesmo. PIX/boleto ficam
+    // "aguardando_pagamento" e são tratados só pelo webhook.
+    if (status === 'pago') {
+      await processarCompraPaga(uid, docCompra.id, compra);
+    }
 
     return {
       compraId: docCompra.id,
