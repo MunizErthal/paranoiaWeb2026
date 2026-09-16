@@ -1,148 +1,226 @@
+/* =========================================================================
+   SOBRE — reconstruída sobre o mesmo sistema de tokens da loja: painéis
+   retos com a assinatura cromática no topo, marcas de canto .u-evidence e
+   cards de valores com a mesma linguagem de evidência dos cartões de
+   produto (borda que acende em hover, leve elevação).
+   ========================================================================= */
+
 :host {
   display: block;
 }
 
-.about-page,
-.store-page,
-.contact-page {
+.about {
   box-sizing: border-box;
-  width: min(100%, 72rem);
-  min-height: clamp(28rem, 20rem + 30vw, 45rem);
+  width: min(100%, var(--page-max));
   margin: 0 auto;
-  padding: clamp(2.5rem, 1.5rem + 3vw, 5rem) clamp(1.25rem, 0.5rem + 4vw, 5rem) clamp(5rem, 3rem + 6vw, 8rem);
-  color: #f7f2ff;
+  padding: var(--section-y) var(--gutter) var(--s-24);
+  color: var(--text);
 }
 
-.page-eyebrow {
-  margin: 0 0 1rem;
-  color: #e7b8ff;
+.about__eyebrow {
+  margin: 0 0 var(--s-3);
+  color: var(--accent-text);
   font-size: var(--fs-xs);
-  font-weight: 700;
-  letter-spacing: 0.18em;
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
 
-.page-lead,
-.about-page p {
-  color: rgba(247, 242, 255, 0.76);
-  line-height: 1.6;
-}
+/* --- Hero ----------------------------------------------------------------- */
 
-.about-page__hero {
-  position: relative;
-  display: block;
-  min-height: 0;
-  align-items: center;
-  gap: 2rem;
-  overflow: hidden;
-  padding: 3rem 0 0;
-  border-top: 1px solid rgba(231, 184, 255, 0.25);
-  border-bottom: 1px solid rgba(231, 184, 255, 0.25);
-}
-
-.about-page__hero h1 {
-  max-width: 45rem;
-  margin: 0 0 1.5rem;
-  color: #ffffff;
-  font-size: clamp(2.4rem, 1.6rem + 6vw, 6.5rem);
-  line-height: 0.92;
-  text-transform: uppercase;
-}
-
-.about-page__hero .page-lead {
-  max-width: 34rem;
-  margin: 0;
-  font-size: clamp(1rem, 0.85rem + 1vw, 1.25rem);
-}
-
-.about-page__signal {
+.about__hero {
   position: relative;
   display: grid;
-  min-height: 13rem;
-  place-items: center;
-  margin-top: 2.5rem;
-  background: linear-gradient(135deg, rgba(42, 17, 68, 0.45), rgba(13, 6, 24, 0.4)), url('/images/paranoia/backgroundEffect.png') center / cover;
+  gap: var(--s-8);
+  overflow: hidden;
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--s-10) var(--s-8);
+  background: var(--surface-1);
+  box-shadow: var(--shadow-2);
 }
 
-.about-page__signal img {
-  width: min(80%, 18rem);
-  opacity: 0.62;
+.about__hero::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--chroma-cyan), var(--chroma-magenta));
+  content: "";
+}
+
+.about__hero h1 {
+  max-width: 40rem;
+  margin: 0 0 var(--s-4);
+  color: var(--text);
+  font-size: var(--fs-display);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+}
+
+.about__lead {
+  max-width: var(--prose-max);
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+}
+
+.about__signal {
+  position: relative;
+  display: grid;
+  min-height: 14rem;
+  place-items: center;
+  overflow: hidden;
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-md);
+  background: linear-gradient(135deg, rgba(42, 17, 68, 0.55), rgba(13, 6, 24, 0.5)),
+    url('/images/paranoia/backgroundEffect.png') center / cover;
+}
+
+.about__signal img {
+  width: min(70%, 16rem);
+  opacity: 0.7;
   filter: drop-shadow(0 0 2rem rgba(157, 67, 255, 0.6));
 }
 
-.about-page__manifesto {
+/* --- Manifesto -------------------------------------------------------------- */
+
+.about__manifesto {
   max-width: 52rem;
-  padding: clamp(3rem, 1rem + 8vw, 8rem) 0;
+  margin: var(--s-16) auto 0;
+  padding: var(--s-12) 0;
+  border-top: var(--border) solid var(--line);
+  border-bottom: var(--border) solid var(--line);
 }
 
-.about-page h2 {
-  margin: 0 0 1rem;
-  color: #ffffff;
-  font-size: clamp(1.7rem, 1.3rem + 4vw, 3.2rem);
-  line-height: 1;
+.about__manifesto h2 {
+  max-width: 46rem;
+  margin: 0 0 var(--s-5);
+  color: var(--text);
+  font-size: var(--fs-h1);
+  line-height: var(--lh-tight);
+  text-wrap: balance;
 }
 
-.about-page__manifesto p:last-child {
-  max-width: 38rem;
-  margin: 1.5rem 0 0;
+.about__manifesto p {
+  max-width: var(--prose-max);
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
 }
 
-.section-heading {
-  margin-bottom: 2rem;
+/* --- Valores ------------------------------------------------------------ */
+
+.about__values {
+  padding-top: var(--s-16);
 }
 
-.about-page__value-grid {
+.about__section-heading {
+  margin-bottom: var(--s-8);
+}
+
+.about__section-heading h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-tight);
+  text-transform: uppercase;
+}
+
+.about__value-grid {
   display: grid;
   grid-template-columns: 1fr;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: var(--border) solid var(--line);
+  border-left: var(--border) solid var(--line);
 }
 
-.about-page__value-grid article {
-  min-height: 13rem;
-  padding: 1.5rem;
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(18, 8, 30, 0.42);
+.about__value-grid article {
+  min-height: 12rem;
+  padding: var(--s-6);
+  border-right: var(--border) solid var(--line);
+  border-bottom: var(--border) solid var(--line);
+  background: var(--surface-1);
+  transition: background-color var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
 }
 
-.about-page__value-grid span,
-.about-page__value-grid h3 {
-  color: #b66bff;
+.about__value-grid article:hover {
+  background: var(--surface-2);
+  transform: translateY(-2px);
 }
 
-.about-page__value-grid span {
+.about__value-grid span {
+  color: var(--accent-text);
   font-size: var(--fs-sm);
-  font-weight: 700;
+  font-weight: var(--fw-bold);
 }
 
-.about-page__value-grid h3 {
-  margin: 3rem 0 0.75rem;
+.about__value-grid h3 {
+  margin: var(--s-8) 0 var(--s-3);
+  color: var(--text);
   font-size: 1.25rem;
   text-transform: uppercase;
 }
 
-.about-page__value-grid p {
+.about__value-grid p {
   margin: 0;
+  color: var(--text-muted);
   font-size: var(--fs-sm);
+  line-height: var(--lh-body);
 }
 
-@media (min-width: 48rem) {
-  .about-page__hero {
-    display: grid;
-    min-height: clamp(23rem, 12rem + 20vw, 34rem);
-    grid-template-columns: minmax(0, 1.1fr) minmax(12rem, 0.9fr);
-    padding: 0;
-  }
+/* --- CTA final ------------------------------------------------------------ */
 
-  .about-page__signal {
-    min-height: 20rem;
-    margin-top: 0;
+.about__cta {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-6);
+  margin-top: var(--s-16);
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--s-8);
+  background: var(--surface-1);
+  box-shadow: var(--shadow-1);
+}
+
+.about__cta h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-tight);
+  text-transform: uppercase;
+}
+
+.about__cta .btn-primary {
+  flex: none;
+  width: auto;
+  padding-inline: var(--s-8);
+}
+
+/* --- Responsivo -------------------------------------------------------------- */
+
+@media (min-width: 48rem) {
+  .about__hero {
+    grid-template-columns: minmax(0, 1.15fr) minmax(14rem, 0.85fr);
+    align-items: center;
+    padding: var(--s-12) var(--s-10);
   }
 }
 
 @media (min-width: 64rem) {
-  .about-page__value-grid {
+  .about__value-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about__value-grid article {
+    transition-duration: 0.01ms !important;
   }
 }

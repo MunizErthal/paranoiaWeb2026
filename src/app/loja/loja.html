@@ -1,43 +1,125 @@
-<main class="store-page">
-  <header class="store-page__header">
-    <div>
-      <p class="page-eyebrow">Loja Paranoia</p>
-      <h1>Leve a próxima história para casa.</h1>
-    </div>
-    <p class="page-lead">Jogos, expansões e materiais para transformar sua próxima noite em uma investigação memorável.</p>
-  </header>
+<main class="store">
+  <section class="store__catalog" aria-labelledby="catalog-title">
+    <div class="store__catalog-heading">
+      <div>
+        <p class="store__eyebrow">Catálogo completo</p>
+        <h2 id="catalog-title">Escolha seu próximo caso.</h2>
+      </div>
 
-  <section class="store-page__catalog" aria-labelledby="catalog-title">
-    <div class="section-heading">
-      <p class="page-eyebrow">Em destaque</p>
-      <h2 id="catalog-title">Comece por aqui.</h2>
-    </div>
-    @for (produto of produtos(); track produto.id) {
-      <article class="store-product">
-        <img class="store-product__cover" [src]="produto.imagemCapa" [alt]="'Capa de ' + produto.nome" />
-        <div class="store-product__info">
-          <div class="tag-list">
-            @for (tag of produto.tags; track tag) {
-              <span>{{ tag }}</span>
-            }
-          </div>
-          <h3>{{ produto.nome }}</h3>
-          <p>{{ produto.descricao }}</p>
-          <dl><div><dt>Jogadores</dt><dd>{{ produto.jogadores }}</dd></div><div><dt>Idade</dt><dd>{{ produto.idade }}</dd></div><div><dt>Duração</dt><dd>{{ produto.duracao }}</dd></div></dl>
-          <div class="store-product__buy">
-            <strong>{{ produto.preco | currency:'BRL' }}</strong>
-            <a [routerLink]="['/jogos', produto.id]">Ver jogo <span aria-hidden="true">&#8594;</span></a>
-          </div>
+      @if (categorias().length) {
+        <div class="store__filters" role="group" aria-label="Filtrar por categoria">
+          <button
+            type="button"
+            class="filter-chip"
+            [class.is-active]="filtro() === null"
+            [attr.aria-pressed]="filtro() === null"
+            (click)="selecionarFiltro(null)">
+            Tudo
+          </button>
+          @for (categoria of categorias(); track categoria) {
+            <button
+              type="button"
+              class="filter-chip"
+              [class.is-active]="filtro() === categoria"
+              [attr.aria-pressed]="filtro() === categoria"
+              (click)="selecionarFiltro(categoria)">
+              {{ categoria }}
+            </button>
+          }
         </div>
-      </article>
-    } @empty {
-      <p class="page-lead">Novidades a caminho. Volte em breve para conferir o catálogo.</p>
+      }
+    </div>
+
+    @if (produtos().length === 0) {
+      <p class="store__empty">Novidades a caminho. Volte em breve para conferir o catálogo.</p>
+    } @else if (produtosFiltrados().length === 0) {
+      <p class="store__empty">
+        Nenhum item encontrado para este filtro.
+        <button type="button" class="link-action" (click)="selecionarFiltro(null)">Ver tudo</button>
+      </p>
+    } @else {
+      <div class="store-grid">
+        @for (produto of produtosFiltrados(); track produto.id) {
+          <article class="store-card" [class.is-esgotado]="produto.estoque <= 0">
+            <a
+              class="store-card__media u-evidence"
+              [routerLink]="['/jogos', produto.id]"
+              [attr.aria-label]="'Ver detalhes de ' + produto.nome">
+              <img [src]="produto.imagemCapa" [alt]="'Capa de ' + produto.nome" loading="lazy" decoding="async" />
+              @if (produto.estoque <= 0) {
+                <span class="store-card__badge">Esgotado</span>
+              }
+            </a>
+
+            <div class="store-card__body">
+              <ul class="store-card__tags" aria-label="Categorias">
+                @for (tag of produto.tags; track tag) {
+                  <li>{{ tag }}</li>
+                }
+              </ul>
+
+              <h3><a [routerLink]="['/jogos', produto.id]">{{ produto.nome }}</a></h3>
+              <p class="store-card__description">{{ produto.descricao }}</p>
+
+              <dl class="store-card__meta">
+                <div><dt>Jogadores</dt><dd>{{ produto.jogadores }}</dd></div>
+                <div><dt>Idade</dt><dd>{{ produto.idade }}</dd></div>
+                <div><dt>Duração</dt><dd>{{ produto.duracao }}</dd></div>
+              </dl>
+
+              <div class="store-card__footer">
+                <p class="store-card__price">{{ produto.preco | currency:'BRL' }}</p>
+
+                <div class="store-card__actions">
+                  <a class="link-action" [routerLink]="['/jogos', produto.id]">
+                    Ver jogo <span aria-hidden="true">&#8594;</span>
+                  </a>
+
+                  <button
+                    type="button"
+                    class="btn-add-to-cart"
+                    [class.is-added]="foiAdicionadoRecentemente(produto.id)"
+                    [disabled]="produto.estoque <= 0"
+                    [attr.aria-label]="'Adicionar ' + produto.nome + ' ao carrinho'"
+                    (click)="adicionarAoCarrinho(produto)">
+                    @if (foiAdicionadoRecentemente(produto.id)) {
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round" />
+                      </svg>
+                      Adicionado
+                    } @else {
+                      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                        <path d="M2 3h2.2l2 9.2h9.1l1.7-6.6H5.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" />
+                        <circle cx="8" cy="16" r="1.4" fill="currentColor" />
+                        <circle cx="14.6" cy="16" r="1.4" fill="currentColor" />
+                      </svg>
+                      {{ produto.estoque > 0 ? 'Adicionar' : 'Esgotado' }}
+                    }
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
     }
   </section>
 
-  <section class="store-page__categories" aria-label="Categorias da loja">
-    <article><span>01</span><h2>Jogos completos</h2><p>Caixas com tudo para começar uma nova história.</p></article>
-    <article><span>02</span><h2>Expansões</h2><p>Novos casos, personagens e reviravoltas.</p></article>
-    <article><span>03</span><h2>Materiais</h2><p>Itens especiais para deixar cada pista marcante.</p></article>
+  <section class="store__categories" aria-label="Categorias da loja">
+    <article>
+      <span>01</span>
+      <h2>Jogos completos</h2>
+      <p>Caixas com tudo para começar uma nova história.</p>
+    </article>
+    <article>
+      <span>02</span>
+      <h2>Expansões</h2>
+      <p>Novos casos, personagens e reviravoltas.</p>
+    </article>
+    <article>
+      <span>03</span>
+      <h2>Materiais</h2>
+      <p>Itens especiais para deixar cada pista marcante.</p>
+    </article>
   </section>
 </main>
