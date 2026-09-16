@@ -1,0 +1,72 @@
+<section class="medalhas-secao u-evidence" aria-label="Painel de medalhas">
+  <header class="medalhas-secao__header">
+    <p class="medalhas-secao__eyebrow">Conquistas</p>
+    <h2 class="secao-titulo">Painel de medalhas</h2>
+
+    @if (medalhas().length > 0) {
+      <dl class="medalhas-resumo">
+        <div>
+          <dt>Casos resolvidos</dt>
+          <dd>{{ medalhas().length }}</dd>
+        </div>
+        <div>
+          <dt>Tempo investigando</dt>
+          <dd>{{ formatarDuracao(tempoTotalHoras()) }}</dd>
+        </div>
+      </dl>
+    } @else {
+      <p class="medalhas-secao__subtitulo">Cada caso resolvido vira uma medalha.</p>
+    }
+  </header>
+
+  @if (medalhas().length === 0) {
+    <div class="dados-vazio medalhas-vazio">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 3.2 14.5 8l5.3.8-3.9 3.8.9 5.3L12 15.3l-4.8 2.6.9-5.3-3.9-3.8L9.5 8 12 3.2Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-dasharray="2.5 2.5" />
+      </svg>
+      <p>Você ainda não concluiu nenhuma partida.</p>
+      <a class="btn-primary" routerLink="/jogos">Ver casos disponíveis</a>
+    </div>
+  } @else {
+    <ul class="medalhas-grid">
+      @for (medalha of medalhas(); track medalha.jogoId + medalha.finalizadoEm.toMillis()) {
+        <li class="medalha-card u-evidence">
+          <span class="medalha-card__selo">Resolvido</span>
+
+          <div class="medalha-card__vitrine">
+            @if (medalha.produto?.imagemEmblema) {
+              <img [src]="medalha.produto!.imagemEmblema" [alt]="medalha.produto!.nome" loading="lazy" decoding="async" />
+            } @else {
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 3.2 14.5 8l5.3.8-3.9 3.8.9 5.3L12 15.3l-4.8 2.6.9-5.3-3.9-3.8L9.5 8 12 3.2Z" stroke="var(--accent-text)" stroke-width="1.1" stroke-linejoin="round" />
+              </svg>
+            }
+          </div>
+
+          <h3 class="medalha-card__nome">{{ medalha.produto?.nome || medalha.jogoId }}</h3>
+
+          <dl class="medalha-card__ficha">
+            <div>
+              <dt>Iniciado</dt>
+              <dd>{{ paraData(medalha.iniciadoEm) | date:'dd/MM/yy' }}</dd>
+            </div>
+            <div>
+              <dt>Concluído</dt>
+              <dd>{{ paraData(medalha.finalizadoEm) | date:'dd/MM/yy' }}</dd>
+            </div>
+            <div>
+              <dt>Duração</dt>
+              <dd>{{ formatarDuracao(medalha.tempoTotalDeJogo) }}</dd>
+            </div>
+          </dl>
+
+          @if (medalha.produto; as produto) {
+            <a class="link-action medalha-card__cta" [routerLink]="['/jogos', produto.id]">
+              Ver caso <span aria-hidden="true">&#8594;</span>
+            </a>
+          }
+        </li>
+      }
+    </ul>
+  }
+</section>

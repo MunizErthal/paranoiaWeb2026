@@ -1,0 +1,233 @@
+:host {
+  display: block;
+}
+
+/* Vitrine de conquistas: sai do molde .checkout-card genérico do resto do
+   /perfil de propósito — aqui é a peça mais "exposição" da conta, não um
+   formulário, e ganha o mesmo tratamento de canto de evidência da capa de
+   /jogos/:id (u-evidence), só que em --tick maior por cobrir a seção toda. */
+.medalhas-secao {
+  --tick: 18px;
+  display: grid;
+  gap: var(--s-6);
+  padding: var(--s-6);
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-sm);
+  background:
+    radial-gradient(circle at 12% -10%, var(--accent-soft) 0%, transparent 48%),
+    var(--surface-1);
+}
+
+.medalhas-secao__header {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.medalhas-secao__eyebrow {
+  margin: 0;
+  color: var(--accent-text);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-slim);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+.medalhas-secao__subtitulo {
+  margin: 0;
+  color: var(--text-subtle);
+  font-size: var(--fs-sm);
+}
+
+.medalhas-resumo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-6);
+  margin: var(--s-1) 0 0;
+  padding: 0;
+}
+
+.medalhas-resumo > div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+/* Valor em cima, rótulo embaixo — mesmo truque de order do
+   .game-detail__meta em /jogos/:id, pro número saltar aos olhos primeiro. */
+.medalhas-resumo dt {
+  order: 2;
+  color: var(--text-subtle);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.medalhas-resumo dd {
+  order: 1;
+  margin: 0;
+  color: var(--text);
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-black);
+}
+
+.medalhas-vazio svg {
+  color: var(--text-subtle);
+}
+
+.medalhas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr));
+  gap: var(--s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.medalha-card {
+  --tick: 10px;
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: var(--s-3);
+  padding: var(--s-5) var(--s-4) var(--s-4);
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  text-align: center;
+  transition: transform var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out);
+}
+
+.medalha-card::before,
+.medalha-card::after {
+  transition: border-color var(--dur) var(--ease-out);
+}
+
+.medalha-card:hover,
+.medalha-card:focus-within {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-accent);
+  transform: translateY(-3px);
+}
+
+.medalha-card:hover::before,
+.medalha-card:hover::after,
+.medalha-card:focus-within::before,
+.medalha-card:focus-within::after {
+  border-color: var(--accent);
+}
+
+.medalha-card__selo {
+  justify-self: end;
+  margin: calc(var(--s-2) * -1) calc(var(--s-1) * -1) calc(var(--s-3) * -1) 0;
+  border-radius: var(--r-xs);
+  padding: 0.25rem 0.5rem;
+  color: var(--accent-text);
+  background: var(--accent-soft);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* A imagem já É a medalha (emblema do jogo) — a vitrine só dá espaço e luz,
+   sem moldura nem aro por cima da própria peça. */
+.medalha-card__vitrine {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  padding: var(--s-2) 0;
+}
+
+.medalha-card__vitrine::before {
+  content: '';
+  position: absolute;
+  width: 7.5rem;
+  height: 7.5rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.medalha-card:hover .medalha-card__vitrine::before,
+.medalha-card:focus-within .medalha-card__vitrine::before {
+  transform: scale(1.18);
+}
+
+.medalha-card__vitrine img {
+  position: relative;
+  z-index: 1;
+  width: 8rem;
+  height: 8rem;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 20px rgba(8, 3, 16, 0.7));
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.medalha-card__vitrine svg {
+  position: relative;
+  z-index: 1;
+}
+
+.medalha-card:hover .medalha-card__vitrine img,
+.medalha-card:focus-within .medalha-card__vitrine img {
+  transform: translateY(-4px) scale(1.05);
+}
+
+.medalha-card__nome {
+  margin: 0;
+  color: var(--text);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+}
+
+.medalha-card__ficha {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s-1) var(--s-4);
+  width: 100%;
+  margin: 0;
+  padding-top: var(--s-3);
+  border-top: var(--border) solid var(--line);
+}
+
+.medalha-card__ficha > div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.medalha-card__ficha dt {
+  color: var(--text-subtle);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.medalha-card__ficha dd {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+}
+
+.medalha-card__cta {
+  margin-top: var(--s-1);
+}
+
+@media (max-width: 47.9375rem) {
+  .medalhas-secao {
+    padding: var(--s-5);
+  }
+
+  .medalhas-resumo {
+    gap: var(--s-5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .medalha-card,
+  .medalha-card__vitrine::before,
+  .medalha-card__vitrine img {
+    transition: none;
+  }
+}
