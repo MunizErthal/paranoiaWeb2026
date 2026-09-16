@@ -91,8 +91,8 @@
             Você já adquiriu este jogo
           </p>
         }
-        <p class="purchase-panel__price">{{ produto.preco | currency:'BRL' }}</p>
-        <p class="purchase-panel__installments">ou 6x de {{ produto.preco / 6 | currency:'BRL' }} sem juros</p>
+        <p class="purchase-panel__price">{{ produto.emBreve ? '' : produto.preco | currency:'BRL' }}</p>
+        <p class="purchase-panel__installments">{{ produto.emBreve ? '' : 'ou 6x de ' + produto.preco / 6 | currency:'BRL' + 'sem juros'}}</p>
 
         <button
           class="purchase-panel__button"

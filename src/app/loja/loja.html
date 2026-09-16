@@ -88,7 +88,7 @@
               </dl>
 
               <div class="store-card__footer">
-                <p class="store-card__price">{{ produto.preco | currency:'BRL' }}</p>
+                <p class="store-card__price">{{ produto.emBreve ? 'EM BREVE' : produto.preco | currency:'BRL' }}</p>
 
                 <div class="store-card__actions">
                   <a class="link-action" [routerLink]="['/jogos', produto.id]">
