@@ -69,6 +69,7 @@ $fade: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--
   margin: 0 0 var(--s-3);
   padding: 0;
   list-style: none;
+  margin: auto;
 }
 
 /* As tags desta página usam a cara original da master (borda/fundo mais
@@ -456,8 +457,8 @@ $fade: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--
 
   /* Ordem de venda: o que é (tags) → serve para mim? (ficha) → quanto
      custa e como compro → o resto. */
-  .game-detail__tags--below { order: 1; }
-  .game-detail__meta--below { order: 2; }
+  .game-detail__meta--below { order: 1; }
+  .game-detail__tags--below { order: 2; }
   .purchase-panel { order: 3; }
   .game-detail__about { order: 4; }
   .game-detail__gallery { order: 5; }
@@ -471,7 +472,7 @@ $fade: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--
   }
 
   .game-detail__tags--below {
-    margin: 0;
+    margin: auto;
   }
 
   .game-detail__meta--below {
