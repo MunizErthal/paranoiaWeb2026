@@ -17,6 +17,7 @@ export interface ProdutoDTO {
   estoque: number;
   ativo: boolean;
   emBreve: boolean; // true bloqueia compra e mostra selo "Em breve"
+  emPreVenda: boolean; // true mostra selo "Pré-venda" (mesma visualização do emBreve) mas permite comprar
   peso: number; // kg
   altura: number; // cm
   largura: number; // cm

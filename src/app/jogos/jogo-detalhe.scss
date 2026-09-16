@@ -514,9 +514,9 @@ $fade: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--
      custa e como compro → o resto. */
   .game-detail__meta--below { order: 1; }
   .game-detail__tags--below { order: 2; }
-  .purchase-panel { order: 3; }
-  .game-detail__about { order: 4; }
-  .game-detail__gallery { order: 5; }
+  .game-detail__about { order: 3; }
+  .game-detail__gallery { order: 4; }
+  .purchase-panel { order: 5; }
 
   /* Sem cópia de cima para trocar, esta precisa nascer visível. */
   .game-detail__tags--below,

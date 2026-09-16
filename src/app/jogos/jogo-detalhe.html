@@ -76,12 +76,19 @@
       <section class="purchase-panel u-evidence" [attr.aria-label]="'Comprar ' + produto.nome">
         @if (produto.emBreve) {
           <p class="purchase-panel__em-breve">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <circle cx="8" cy="8.5" r="5.5" stroke="currentColor" stroke-width="1.4" />
               <path d="M8 5.3v3.2l2.2 1.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
               <path d="M5.5 1.6l-2 1.3M10.5 1.6l2 1.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
             </svg>
             Este caso ainda não foi aberto — em breve disponível
+          </p>
+        } @else if (produto.emPreVenda) {
+          <p class="purchase-panel__em-breve">
+            <svg width="40" height="40" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M8 1.8c.9 1.8 2.8 3.1 2.8 5.6a2.8 2.8 0 1 1-5.6 0c0-.9.3-1.5.7-2.1.1.8.6 1.3 1.2 1.3.7 0 1-.6.8-1.3-.3-1-.6-2.1.1-3.5Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            Pré-venda — garanta o seu antes do lançamento
           </p>
         } @else if (jogosAdquiridosStore.possui(produto.id)) {
           <p class="purchase-panel__ja-adquirido">
