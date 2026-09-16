@@ -43,6 +43,10 @@ export class JogoDetalhe {
   constructor(private readonly cdr: ChangeDetectorRef) {}
 
   adicionarAoCarrinho(produto: ProdutoDTO): void {
+    if (produto.estoque <= 0 || produto.emBreve) {
+      return;
+    }
+
     this.carrinhoStore.adicionarItem(produto);
     this.toast.showSuccess(`${produto.nome} adicionado ao carrinho.`);
   }

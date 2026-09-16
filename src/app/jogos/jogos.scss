@@ -72,6 +72,41 @@
   width: auto;
 }
 
+/* Selo de destaque, não de alerta — mesmo gradiente do CTA de compra em
+   /jogos/:id, para ler como "isso vai virar comprável", não como aviso. */
+.game-card__badge {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.6rem;
+  border-radius: var(--r-xs);
+  padding: 0.3rem 0.55rem;
+  color: #fff;
+  background: linear-gradient(115deg, #6d1bc3 0%, #9d36f0 48%, #c15cff 100%);
+  box-shadow: 0 0.2rem 0.7rem rgba(125, 35, 214, 0.45);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.game-card__badge svg {
+  flex: none;
+  animation: em-breve-tick 2.4s ease-in-out infinite;
+}
+
+@keyframes em-breve-tick {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(20deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-card__badge svg {
+    animation: none;
+  }
+}
+
 .game-card__tags {
   display: flex;
   flex-wrap: wrap;
@@ -235,6 +270,14 @@
     gap: 0.15rem;
     margin: 0;
     padding: 0;
+  }
+
+  /* Empata com as tags (order: 2); como vem depois delas no DOM, o
+     desempate por ordem de origem o posiciona logo abaixo — título,
+     tags, depois o selo de disponibilidade. */
+  .game-card__badge {
+    order: 2;
+    margin: 0.3rem 0 0;
   }
 
   /* Título primeiro, pastilhas de categoria embaixo — mesmo padrão visual

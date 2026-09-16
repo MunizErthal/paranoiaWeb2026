@@ -223,6 +223,24 @@
   color: var(--accent-text);
 }
 
+/* Selo de destaque, não de alerta — usa o mesmo gradiente do CTA de
+   compra de propósito: é a promessa de que o botão "Adicionar" está a
+   caminho, não uma versão do "Esgotado". */
+.store-card__badge--em-breve {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border: 0;
+  color: #fff;
+  background: linear-gradient(115deg, #6d1bc3 0%, #9d36f0 48%, #c15cff 100%);
+  box-shadow: 0 0.2rem 0.7rem rgba(125, 35, 214, 0.45);
+}
+
+.store-card__badge--em-breve svg {
+  flex: none;
+  animation: em-breve-tick 2.4s ease-in-out infinite;
+}
+
 .store-card.is-esgotado .store-card__media img {
   filter: grayscale(0.6) brightness(0.6);
 }
@@ -388,6 +406,13 @@
   box-shadow: none;
 }
 
+/* Mesma base do :disabled, mas com o violeta da marca — "ainda não dá"
+   é diferente de "não tem mais". */
+.btn-add-to-cart.is-em-breve:disabled {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  color: var(--accent-text);
+}
+
 .btn-add-to-cart.is-added {
   border: var(--border) solid var(--chroma-cyan);
   background: var(--surface-2);
@@ -456,11 +481,20 @@
   }
 }
 
+@keyframes em-breve-tick {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(20deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .store-card,
   .store-card__media img,
   .btn-add-to-cart {
     transition-duration: 0.01ms !important;
+  }
+
+  .store-card__badge--em-breve svg {
+    animation: none;
   }
 }
 

@@ -29,6 +29,9 @@ export async function buscarItensComProduto(itens: ItemCarrinhoEntrada[]): Promi
     if (!produto.ativo) {
       throw new HttpsError('failed-precondition', `Produto ${produto.nome} não está mais disponível.`);
     }
+    if (produto.emBreve) {
+      throw new HttpsError('failed-precondition', `Produto ${produto.nome} ainda não está disponível para compra.`);
+    }
     if (produto.estoque < itens[indice].quantidade) {
       throw new HttpsError('failed-precondition', `Estoque insuficiente para ${produto.nome}.`);
     }

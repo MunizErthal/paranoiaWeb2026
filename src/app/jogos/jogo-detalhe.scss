@@ -251,6 +251,20 @@ $fade: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--
   font-weight: var(--fw-semibold);
 }
 
+.purchase-panel__em-breve {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0 0 var(--s-3);
+  color: var(--accent-text);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+
+.purchase-panel__em-breve svg {
+  flex: none;
+}
+
 .purchase-panel__price {
   margin: 0;
   color: var(--text);
@@ -291,6 +305,21 @@ $fade: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--
 .purchase-panel__button:focus-visible {
   background: linear-gradient(115deg, #8527d8 0%, #b44cff 48%, #d47aff 100%);
   box-shadow: 0 .5rem 1.5rem rgba(157, 67, 255, .45);
+}
+
+.purchase-panel__button:disabled {
+  border: var(--border) solid var(--line);
+  background: var(--surface-2);
+  color: var(--text-subtle);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Mesma base do :disabled, mas com o violeta da marca — "ainda não dá"
+   é diferente de "não tem mais". */
+.purchase-panel__button.is-em-breve:disabled {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  color: var(--accent-text);
 }
 
 .purchase-panel__reassurance {

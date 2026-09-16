@@ -16,6 +16,7 @@ export interface ProdutoDTO {
   duracao: string; // ex: "60-90 min"
   estoque: number;
   ativo: boolean;
+  emBreve: boolean; // true bloqueia compra e mostra selo "Em breve"
   peso: number; // kg
   altura: number; // cm
   largura: number; // cm

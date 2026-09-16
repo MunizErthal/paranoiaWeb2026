@@ -11,6 +11,7 @@ export interface ProdutoDTO {
   preco: number;
   estoque: number;
   ativo: boolean;
+  emBreve: boolean;
   peso: number;
   altura: number;
   largura: number;

@@ -58,7 +58,7 @@ export class Loja {
   }
 
   adicionarAoCarrinho(produto: ProdutoDTO): void {
-    if (produto.estoque <= 0) {
+    if (produto.estoque <= 0 || produto.emBreve) {
       return;
     }
 
