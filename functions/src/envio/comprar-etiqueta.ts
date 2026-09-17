@@ -4,6 +4,7 @@ import { melhorEnvioClientId, melhorEnvioClientSecret } from '../secrets';
 import {
   lojaCepOrigem,
   lojaNome,
+  lojaDocumento,
   lojaEndereco,
   lojaNumero,
   lojaComplemento,
@@ -51,12 +52,19 @@ export async function dispararCompraEtiqueta(compraId: string): Promise<void> {
     const usuarioSnap = await db.collection('usuarios').doc(compra.usuarioId).get();
     const nomeDestinatario = (usuarioSnap.data()?.['nome'] as string | undefined) || compra.enderecoEntrega.logradouro;
 
+    // CPF não fica salvo no pedido em si — vem do perfil (mesmo lugar que o
+    // checkout grava ao finalizar a compra). Cobre tanto pedidos novos
+    // quanto os antigos que já estavam presos antes desse campo existir.
+    const perfilSnap = await db.collection('usuarios').doc(compra.usuarioId).collection('perfil').doc('dados').get();
+    const cpfDestinatario = (perfilSnap.data()?.['cpf'] as string | undefined)?.replace(/\D/g, '') ?? '';
+
     const carrinho = await chamarMelhorEnvio<RespostaAdicionarCarrinho>('/api/v2/me/cart', token, {
       method: 'POST',
       body: {
         service: compra.envio.servicoId,
         from: {
           name: lojaNome.value(),
+          document: lojaDocumento.value(),
           postal_code: lojaCepOrigem.value(),
           address: lojaEndereco.value(),
           number: lojaNumero.value(),
@@ -67,6 +75,7 @@ export async function dispararCompraEtiqueta(compraId: string): Promise<void> {
         },
         to: {
           name: nomeDestinatario,
+          document: cpfDestinatario,
           postal_code: compra.enderecoEntrega.cep.replace(/\D/g, ''),
           address: compra.enderecoEntrega.logradouro,
           number: compra.enderecoEntrega.numero,

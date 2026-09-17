@@ -19,6 +19,8 @@ export const lojaCepOrigem = defineString('LOJA_CEP_ORIGEM', { default: '' });
 /** Endereço completo da loja (remetente) — o Melhor Envio exige nome +
  *  endereço completo pra gerar etiqueta, o CEP sozinho não basta. */
 export const lojaNome = defineString('LOJA_NOME', { default: 'Paranoia Jogos' });
+/** CPF (pessoa física) ou CNPJ do remetente — o Melhor Envio exige um dos dois. */
+export const lojaDocumento = defineString('LOJA_DOCUMENTO', { default: '' });
 export const lojaEndereco = defineString('LOJA_ENDERECO', { default: '' });
 export const lojaNumero = defineString('LOJA_NUMERO', { default: '' });
 export const lojaComplemento = defineString('LOJA_COMPLEMENTO', { default: '' });
