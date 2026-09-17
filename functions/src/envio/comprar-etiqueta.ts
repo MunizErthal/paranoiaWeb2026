@@ -19,8 +19,11 @@ interface RespostaAdicionarCarrinho {
   id: string; // id do "order" dentro do carrinho do Melhor Envio
 }
 
+// A resposta do /shipment/generate só confirma sucesso (status/message) —
+// não traz o código de rastreio. O rastreio chega depois, via webhook,
+// quando a transportadora efetivamente posta a encomenda (evento "order.posted").
 interface RespostaGerarEtiqueta {
-  [orderId: string]: { status?: string; tracking?: string };
+  [orderId: string]: { status?: boolean; message?: string };
 }
 
 interface RespostaImprimirEtiqueta {
@@ -71,7 +74,8 @@ export async function dispararCompraEtiqueta(compraId: string): Promise<void> {
           complement: lojaComplemento.value() || undefined,
           district: lojaBairro.value(),
           city: lojaCidade.value(),
-          state_abbr: lojaEstado.value()
+          state_abbr: lojaEstado.value(),
+          country_id: 'BR'
         },
         to: {
           name: nomeDestinatario,
@@ -82,7 +86,8 @@ export async function dispararCompraEtiqueta(compraId: string): Promise<void> {
           complement: compra.enderecoEntrega.complemento ?? '',
           district: compra.enderecoEntrega.bairro,
           city: compra.enderecoEntrega.cidade,
-          state_abbr: compra.enderecoEntrega.estado
+          state_abbr: compra.enderecoEntrega.estado,
+          country_id: 'BR'
         },
         products: compra.itens.map(item => ({
           name: item.nome,
@@ -97,7 +102,10 @@ export async function dispararCompraEtiqueta(compraId: string): Promise<void> {
             compra.itens.reduce((soma, item) => soma + item.precoUnit * item.quantidade, 0),
             1
           ),
-          non_commercial: true
+          non_commercial: true,
+          receipt: false,
+          own_hand: false,
+          reverse: false
         }
       }
     });
@@ -113,6 +121,9 @@ export async function dispararCompraEtiqueta(compraId: string): Promise<void> {
       method: 'POST',
       body: { orders: [orderId] }
     });
+    if (geracao[orderId]?.status === false) {
+      throw new Error(`Melhor Envio recusou gerar a etiqueta: ${geracao[orderId]?.message ?? 'motivo desconhecido'}`);
+    }
 
     const impressao = await chamarMelhorEnvio<RespostaImprimirEtiqueta>('/api/v2/me/shipment/print', token, {
       method: 'POST',
@@ -122,7 +133,8 @@ export async function dispararCompraEtiqueta(compraId: string): Promise<void> {
     await docCompra.update({
       status: 'etiqueta_gerada',
       'envio.melhorEnvioOrderId': orderId,
-      'envio.codigoRastreio': geracao[orderId]?.tracking ?? null,
+      // Rastreio chega depois via webhook (order.posted) — não vem nessa resposta.
+      'envio.codigoRastreio': null,
       'envio.urlEtiqueta': impressao.url,
       atualizadoEm: new Date().toISOString()
     });
