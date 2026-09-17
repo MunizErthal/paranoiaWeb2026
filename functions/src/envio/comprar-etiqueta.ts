@@ -1,7 +1,16 @@
 import { logger } from 'firebase-functions';
 import { db } from '../admin';
 import { melhorEnvioClientId, melhorEnvioClientSecret } from '../secrets';
-import { lojaCepOrigem } from '../params';
+import {
+  lojaCepOrigem,
+  lojaNome,
+  lojaEndereco,
+  lojaNumero,
+  lojaComplemento,
+  lojaBairro,
+  lojaCidade,
+  lojaEstado
+} from '../params';
 import { obterTokenValido, chamarMelhorEnvio } from './melhor-envio-client';
 import { CompraDTO } from '../types';
 
@@ -39,12 +48,25 @@ export async function dispararCompraEtiqueta(compraId: string): Promise<void> {
   try {
     const token = await obterTokenValido(melhorEnvioClientId.value(), melhorEnvioClientSecret.value());
 
+    const usuarioSnap = await db.collection('usuarios').doc(compra.usuarioId).get();
+    const nomeDestinatario = (usuarioSnap.data()?.['nome'] as string | undefined) || compra.enderecoEntrega.logradouro;
+
     const carrinho = await chamarMelhorEnvio<RespostaAdicionarCarrinho>('/api/v2/me/cart', token, {
       method: 'POST',
       body: {
         service: compra.envio.servicoId,
-        from: { postal_code: lojaCepOrigem.value() },
+        from: {
+          name: lojaNome.value(),
+          postal_code: lojaCepOrigem.value(),
+          address: lojaEndereco.value(),
+          number: lojaNumero.value(),
+          complement: lojaComplemento.value() || undefined,
+          district: lojaBairro.value(),
+          city: lojaCidade.value(),
+          state_abbr: lojaEstado.value()
+        },
         to: {
+          name: nomeDestinatario,
           postal_code: compra.enderecoEntrega.cep.replace(/\D/g, ''),
           address: compra.enderecoEntrega.logradouro,
           number: compra.enderecoEntrega.numero,

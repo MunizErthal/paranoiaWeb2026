@@ -106,7 +106,7 @@
       <p>Rastreio ({{ pedido.envio.transportadora ? pedido.envio.transportadora + ' · ' : '' }}{{ pedido.envio.servico }}): <code>{{ pedido.envio.codigoRastreio }}</code></p>
     } @else {
       <p class="field__hint">O código de rastreio aparece aqui assim que a etiqueta for gerada.</p>
-      @if (pedido.status === 'pago') {
+      @if (pedido.status === 'pago' && souAdmin()) {
         <button
           class="btn-secondary retentar-etiqueta"
           type="button"

@@ -9,7 +9,10 @@ import { REGIAO } from '../regiao';
  * Reprocessa a geração de etiqueta de uma compra já paga. A geração
  * automática (disparada pelo webhook do Mercado Pago) não tem retry — se
  * falhar (ex.: token do Melhor Envio sem escopo), o pedido fica "pago" pra
- * sempre sem etiqueta. Isso dá um botão manual pra tentar de novo.
+ * sempre sem etiqueta. Isso dá um jeito manual de tentar de novo.
+ *
+ * Só admin — é uma ação operacional/de "loja", não algo que o cliente final
+ * deva poder disparar sozinho.
  */
 export const retentarEtiqueta = onCall(
   { region: REGIAO, secrets: [melhorEnvioClientId, melhorEnvioClientSecret] },
@@ -17,6 +20,13 @@ export const retentarEtiqueta = onCall(
     if (!request.auth) {
       throw new HttpsError('unauthenticated', 'É preciso estar logado.');
     }
+
+    const usuarioSnap = await db.collection('usuarios').doc(request.auth.uid).get();
+    const permissoes = (usuarioSnap.data()?.['permissoes'] as string[] | undefined) ?? [];
+    if (!permissoes.includes('admin')) {
+      throw new HttpsError('permission-denied', 'Só administradores podem reprocessar etiquetas.');
+    }
+
     const { compraId } = request.data as { compraId?: string };
     if (!compraId) {
       throw new HttpsError('invalid-argument', 'Compra não informada.');
@@ -27,9 +37,6 @@ export const retentarEtiqueta = onCall(
       throw new HttpsError('not-found', 'Compra não encontrada.');
     }
     const compra = snap.data() as CompraDTO;
-    if (compra.usuarioId !== request.auth.uid) {
-      throw new HttpsError('permission-denied', 'Essa compra não pertence a você.');
-    }
     if (compra.status !== 'pago') {
       throw new HttpsError(
         'failed-precondition',

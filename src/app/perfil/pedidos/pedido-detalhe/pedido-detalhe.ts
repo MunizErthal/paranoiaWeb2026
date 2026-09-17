@@ -1,7 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
 import { ToastService } from '../../../../shared/services/toast/toast.service';
+import { AuthStateStore } from '../../../../shared/stores/auth-state.store';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PedidoService } from '../../../../shared/services/firebase/pedido.service';
@@ -30,9 +31,14 @@ export class PedidoDetalhe {
   private readonly route = inject(ActivatedRoute);
   private readonly pedidoService = inject(PedidoService);
   private readonly toast = inject(ToastService);
+  private readonly authState = inject(AuthStateStore);
 
   readonly etapas = ETAPAS;
   readonly etapasEnvio = ETAPAS_ENVIO;
+
+  /** O reprocessamento de etiqueta é uma ação operacional — só admin vê o
+   *  botão (o backend também recusa a chamada se não for admin). */
+  readonly souAdmin = computed(() => this.authState.usuario()?.permissoes?.includes('admin') ?? false);
 
   readonly reprocessandoEtiqueta = signal(false);
   readonly compraId = this.route.snapshot.paramMap.get('idPedido') ?? '';
