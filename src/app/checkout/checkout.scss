@@ -186,6 +186,79 @@
   text-align: center;
 }
 
+/* --- Cartão salvo --------------------------------------------------------- */
+
+.cartao-secao {
+  display: grid;
+  gap: var(--s-4);
+}
+
+.cartao-opcao {
+  display: flex;
+  align-items: stretch;
+  gap: var(--s-2);
+}
+
+.cartao-opcao__selecionar {
+  flex: 1;
+  display: grid;
+  gap: var(--s-1);
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-xs);
+  padding: var(--s-4);
+  color: var(--text);
+  background: var(--surface-sunken);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease-out);
+}
+
+.cartao-opcao__selecionar span {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.cartao-opcao__selecionar:hover,
+.cartao-opcao__selecionar:focus-visible {
+  border-color: var(--line-strong);
+}
+
+.cartao-opcao.is-selecionada .cartao-opcao__selecionar {
+  border-color: var(--accent);
+  outline: 1px solid var(--accent);
+}
+
+.cartao-opcao__remover {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  flex: none;
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-xs);
+  color: var(--text-subtle);
+  background: transparent;
+  cursor: pointer;
+  transition: color var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out);
+}
+
+.cartao-opcao__remover:hover,
+.cartao-opcao__remover:focus-visible {
+  color: var(--chroma-magenta);
+  border-color: var(--chroma-magenta);
+}
+
+.cartao-cvv {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--s-3);
+  margin-top: var(--s-2);
+}
+
+.cartao-cvv .field {
+  max-width: 8rem;
+}
+
 .checkout-pix-qr {
   width: 12rem;
   height: 12rem;

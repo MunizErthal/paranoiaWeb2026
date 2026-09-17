@@ -1,0 +1,73 @@
+<div class="field-stack">
+  <div class="field">
+    <label for="cf-numero">Número do cartão</label>
+    <input
+      id="cf-numero"
+      type="text"
+      inputmode="numeric"
+      placeholder="0000 0000 0000 0000"
+      autocomplete="cc-number"
+      [value]="numero()"
+      (input)="formatarNumero($any($event.target).value)" />
+  </div>
+
+  <div class="field">
+    <label for="cf-nome">Nome impresso no cartão</label>
+    <input
+      id="cf-nome"
+      type="text"
+      placeholder="Como está no cartão"
+      autocomplete="cc-name"
+      [value]="nomeTitular()"
+      (input)="nomeTitular.set($any($event.target).value)" />
+  </div>
+
+  <div class="form-row form-row--dupla">
+    <div class="field">
+      <label for="cf-validade">Validade (MM/AA)</label>
+      <input
+        id="cf-validade"
+        type="text"
+        inputmode="numeric"
+        placeholder="MM/AA"
+        autocomplete="cc-exp"
+        [value]="validade()"
+        (input)="formatarValidade($any($event.target).value)" />
+    </div>
+
+    <div class="field">
+      <label for="cf-cvv">CVV</label>
+      <input
+        id="cf-cvv"
+        type="text"
+        inputmode="numeric"
+        maxlength="4"
+        placeholder="000"
+        autocomplete="cc-csc"
+        [value]="cvv()"
+        (input)="formatarCvv($any($event.target).value)" />
+    </div>
+  </div>
+
+  @if (!ocultarCheckboxSalvar()) {
+    <div class="field field--checkbox">
+      <input
+        id="cf-salvar"
+        type="checkbox"
+        [checked]="salvarCartao()"
+        (change)="salvarCartao.set($any($event.target).checked)" />
+      <label for="cf-salvar">Salvar cartão para próximas compras</label>
+    </div>
+  }
+
+  @if (erro(); as mensagemErro) {
+    <p class="field__error" aria-live="polite">{{ mensagemErro }}</p>
+  }
+
+  <div class="form-actions">
+    <button class="btn-secondary" type="button" [disabled]="processando()" (click)="cancelar.emit()">Cancelar</button>
+    <button class="btn-primary" type="button" [disabled]="processando()" (click)="confirmar()">
+      {{ processando() ? 'Adicionando…' : 'Adicionar cartão' }}
+    </button>
+  </div>
+</div>

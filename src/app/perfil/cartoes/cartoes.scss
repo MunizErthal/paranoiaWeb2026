@@ -1,0 +1,47 @@
+:host {
+  display: block;
+}
+
+.cartao-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-4);
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-xs);
+  background: var(--surface-sunken);
+}
+
+.cartao-item__icone {
+  flex: none;
+  color: var(--accent-text);
+}
+
+.cartao-item__conteudo {
+  flex: 1;
+  min-width: 12rem;
+}
+
+.cartao-item strong {
+  color: var(--text);
+}
+
+.cartao-item p {
+  margin: var(--s-1) 0 0;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.cartao-item__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.cartao-item__acoes .btn-secondary {
+  width: auto;
+  min-height: 2.25rem;
+  padding: 0 var(--s-3);
+  font-size: var(--fs-sm);
+}

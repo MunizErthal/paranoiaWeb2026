@@ -30,6 +30,7 @@ interface EntradaProcessarPagamento {
   paymentMethodId?: string; // obrigatório pra cartão/boleto (vem do SDK do MP no front)
   cardToken?: string; // obrigatório pra cartão
   parcelas?: number; // obrigatório pra cartão
+  issuerId?: number; // obrigatório pra cartão (banco emissor, define juros do parcelamento)
   cupomNome?: string;
 }
 
@@ -54,7 +55,10 @@ export const processarPagamento = onCall(
     if (!cpfValido(cpfLimpo)) {
       throw new HttpsError('invalid-argument', 'CPF inválido.');
     }
-    if (entrada.metodo === 'cartao' && (!entrada.cardToken || !entrada.paymentMethodId || !entrada.parcelas)) {
+    if (
+      entrada.metodo === 'cartao' &&
+      (!entrada.cardToken || !entrada.paymentMethodId || !entrada.parcelas || !entrada.issuerId)
+    ) {
       throw new HttpsError('invalid-argument', 'Dados do cartão incompletos.');
     }
     if (entrada.metodo === 'boleto' && !entrada.paymentMethodId) {
@@ -133,7 +137,16 @@ export const processarPagamento = onCall(
       throw new HttpsError('failed-precondition', 'O valor total da compra precisa ser maior que zero.');
     }
 
-    // 5. Cria o pagamento no Mercado Pago com o valor calculado no servidor.
+    // 5. Cartão pago com um cartão salvo (ou recém-salvo) é cobrado em nome
+    // do customer do Mercado Pago — sem isso a cobrança não usa o cartão
+    // vinculado à carteira do cliente.
+    let mercadoPagoCustomerId: string | undefined;
+    if (entrada.metodo === 'cartao') {
+      const usuarioSnap = await db.collection('usuarios').doc(uid).get();
+      mercadoPagoCustomerId = usuarioSnap.data()?.['mercadoPagoCustomerId'] as string | undefined;
+    }
+
+    // 6. Cria o pagamento no Mercado Pago com o valor calculado no servidor.
     const pagamentoService = obterServicoPagamento(mercadoPagoAccessToken.value());
     const resultadoPagamento = await pagamentoService.create({
       body: {
@@ -142,7 +155,9 @@ export const processarPagamento = onCall(
         payment_method_id: entrada.metodo === 'pix' ? 'pix' : entrada.paymentMethodId,
         token: entrada.metodo === 'cartao' ? entrada.cardToken : undefined,
         installments: entrada.metodo === 'cartao' ? entrada.parcelas : 1,
+        issuer_id: entrada.metodo === 'cartao' ? entrada.issuerId : undefined,
         payer: {
+          ...(mercadoPagoCustomerId ? { type: 'customer', id: mercadoPagoCustomerId } : {}),
           email: entrada.emailPagador,
           identification: { type: 'CPF', number: cpfLimpo }
         },
@@ -155,7 +170,7 @@ export const processarPagamento = onCall(
 
     const status = mapearStatusMercadoPago(resultadoPagamento.status ?? 'pending');
 
-    // 6. Grava o pedido. Cliente nunca escreve aqui diretamente (regra do Firestore).
+    // 7. Grava o pedido. Cliente nunca escreve aqui diretamente (regra do Firestore).
     const compra: CompraDTO = {
       usuarioId: uid,
       itens: itensComProduto.map(({ produto, quantidade }) => ({

@@ -12,6 +12,7 @@ export interface EntradaProcessarPagamento {
   paymentMethodId?: string;
   cardToken?: string;
   parcelas?: number;
+  issuerId?: number;
   cupomNome?: string;
 }
 

@@ -159,6 +159,99 @@
               </button>
             </div>
 
+            @if (metodo() === 'cartao') {
+              <div class="cartao-secao">
+                @if (!mostrarFormNovoCartao()) {
+                  @if (carregandoCartoes()) {
+                    <p class="field__hint">Carregando cartões…</p>
+                  } @else {
+                    @if (cartoesSalvos().length > 0) {
+                      <ul class="endereco-lista">
+                        @for (cartao of cartoesSalvos(); track cartao.id) {
+                          <li>
+                            <div class="cartao-opcao" [class.is-selecionada]="cartaoSelecionadoId() === cartao.id">
+                              <button
+                                type="button"
+                                class="cartao-opcao__selecionar"
+                                (click)="selecionarCartaoSalvo(cartao)">
+                                <strong>{{ cartao.bandeira || 'Cartão' }} •••• {{ cartao.ultimosDigitos }}</strong>
+                                <span>Validade {{ cartao.mesValidade }}/{{ cartao.anoValidade }}</span>
+                              </button>
+                              <button
+                                type="button"
+                                class="cartao-opcao__remover"
+                                (click)="removerCartao(cartao.id)"
+                                [attr.aria-label]="'Remover cartão final ' + cartao.ultimosDigitos">
+                                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                  <path d="M3 4.5h10M6.5 4.5V3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1.5M6 7.5v4M10 7.5v4M4.5 4.5 5.2 14a1 1 0 0 0 1 .9h3.6a1 1 0 0 0 1-.9l.7-9.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="square" />
+                                </svg>
+                              </button>
+                            </div>
+
+                            @if (cartaoSelecionadoId() === cartao.id) {
+                              @if (tokenCartaoPronto()) {
+                                <p class="field__hint">✓ Cartão pronto para pagamento.</p>
+                              } @else {
+                                <div class="cartao-cvv">
+                                  <div class="field">
+                                    <label [for]="'cf-cvv-' + cartao.id">CVV</label>
+                                    <input
+                                      [id]="'cf-cvv-' + cartao.id"
+                                      type="text"
+                                      inputmode="numeric"
+                                      maxlength="4"
+                                      placeholder="000"
+                                      autocomplete="cc-csc"
+                                      [value]="cvvCartaoSalvo()"
+                                      (input)="cvvCartaoSalvo.set($any($event.target).value)" />
+                                  </div>
+                                  <button
+                                    class="btn-secondary"
+                                    type="button"
+                                    [disabled]="processandoCartao()"
+                                    (click)="confirmarCvvCartaoSalvo()">
+                                    {{ processandoCartao() ? 'Validando…' : 'Confirmar CVV' }}
+                                  </button>
+                                </div>
+                                @if (erroCartao(); as erro) {
+                                  <p class="field__error" aria-live="polite">{{ erro }}</p>
+                                }
+                              }
+                            }
+                          </li>
+                        }
+                      </ul>
+                    }
+                    <button class="btn-secondary" type="button" (click)="mostrarFormNovoCartao.set(true)">
+                      Adicionar novo cartão
+                    </button>
+                  }
+                } @else {
+                  <app-cartao-form
+                    [processando]="processandoCartao()"
+                    (adicionar)="adicionarNovoCartao($event)"
+                    (cancelar)="mostrarFormNovoCartao.set(false)" />
+                  @if (erroCartao(); as erro) {
+                    <p class="field__error" aria-live="polite">{{ erro }}</p>
+                  }
+                }
+
+                @if (tokenCartaoPronto() && opcoesParcelamento().length > 0) {
+                  <div class="field">
+                    <label for="checkout-parcelas">Parcelamento</label>
+                    <select
+                      id="checkout-parcelas"
+                      [value]="parcelaSelecionadaIndex()"
+                      (change)="parcelaSelecionadaIndex.set(+$any($event.target).value)">
+                      @for (opcao of opcoesParcelamento(); track opcao.parcelas; let i = $index) {
+                        <option [value]="i">{{ opcao.mensagem }}</option>
+                      }
+                    </select>
+                  </div>
+                }
+              </div>
+            }
+
             <div class="cart-cupom">
               @if (carrinhoStore.cupom(); as cupom) {
                 <p class="cart-cupom__aplicado">
@@ -186,7 +279,11 @@
 
             <div class="checkout-card__acoes">
               <button class="btn-secondary" type="button" (click)="voltarEtapa()">← Voltar</button>
-              <button class="btn-primary" type="button" [disabled]="processando()" (click)="finalizarCompra()">
+              <button
+                class="btn-primary"
+                type="button"
+                [disabled]="processando() || (metodo() === 'cartao' && !tokenCartaoPronto())"
+                (click)="finalizarCompra()">
                 {{ processando() ? 'Processando…' : 'Confirmar pagamento' }}
               </button>
             </div>

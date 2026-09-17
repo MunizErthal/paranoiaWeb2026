@@ -13,12 +13,16 @@ import { PagamentoService } from '../../shared/services/pagamento/pagamento.serv
 import { ToastService } from '../../shared/services/toast/toast.service';
 import { CupomService } from '../../shared/services/firebase/cupom.service';
 import { PedidoService } from '../../shared/services/firebase/pedido.service';
+import { CartaoService } from '../../shared/services/firebase/cartao.service';
+import { MercadoPagoSdkService } from '../../shared/services/pagamento/mercado-pago-sdk.service';
 import { EnderecoForm } from '../../shared/components/endereco-form/endereco-form';
+import { CartaoForm, CartaoFormulario } from '../../shared/components/cartao-form/cartao-form';
 import { EnderecoDTO } from '../../shared/models/endereco.dto';
 import { OpcaoFrete } from '../../shared/models/frete.dto';
+import { CartaoSalvoDTO, OpcaoParcelamento } from '../../shared/models/cartao.dto';
 import { MetodoPagamento, ResultadoProcessarPagamento } from '../../shared/models/pagamento.dto';
 import { environment } from '../../environment/environment';
-import { cpfValido } from '../../shared/utils/cpf.util';
+import { cpfValido, limparCpf } from '../../shared/utils/cpf.util';
 import { validarCupom } from '../../shared/utils/cupom.util';
 
 type Etapa = 'endereco' | 'frete' | 'pagamento' | 'concluido';
@@ -27,7 +31,7 @@ const ORDEM_ETAPAS: Etapa[] = ['endereco', 'frete', 'pagamento'];
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CurrencyPipe, RouterLink, EnderecoForm],
+  imports: [CurrencyPipe, RouterLink, EnderecoForm, CartaoForm],
   templateUrl: './checkout.html',
   styleUrl: './checkout.scss'
 })
@@ -40,6 +44,8 @@ export class Checkout {
   private readonly authState = inject(AuthStateStore);
   private readonly cupomService = inject(CupomService);
   private readonly pedidoService = inject(PedidoService);
+  private readonly cartaoService = inject(CartaoService);
+  private readonly mpSdk = inject(MercadoPagoSdkService);
 
   readonly carrinhoStore = inject(CarrinhoStore);
   readonly jogosAdquiridosStore = inject(JogosAdquiridosStore);
@@ -95,6 +101,28 @@ export class Checkout {
   readonly codigoCupom = signal('');
   readonly aplicandoCupom = signal(false);
 
+  /** Cartão de crédito segue a mesma ideia dos endereços: lista de cartões
+   *  salvos + botão de adicionar novo. Cartão salvo pede CVV de novo pra
+   *  gerar um token de cobrança fresco (o Mercado Pago não guarda CVV);
+   *  cartão recém-adicionado reaproveita o CVV que o usuário acabou de
+   *  digitar, sem perguntar de novo. */
+  readonly cartoesSalvos = signal<CartaoSalvoDTO[]>([]);
+  readonly carregandoCartoes = signal(true);
+  readonly mostrarFormNovoCartao = signal(false);
+  readonly cartaoSelecionadoId = signal<string | null>(null);
+  readonly cvvCartaoSalvo = signal('');
+  readonly tokenCartaoPronto = signal<string | null>(null);
+  readonly paymentMethodIdCartao = signal<string | null>(null);
+  readonly opcoesParcelamento = signal<OpcaoParcelamento[]>([]);
+  readonly parcelaSelecionadaIndex = signal(0);
+  readonly processandoCartao = signal(false);
+  readonly erroCartao = signal<string | null>(null);
+
+  readonly cartaoSelecionado = computed(() =>
+    this.cartoesSalvos().find(c => c.id === this.cartaoSelecionadoId()) ?? null
+  );
+  readonly parcelaSelecionada = computed(() => this.opcoesParcelamento()[this.parcelaSelecionadaIndex()] ?? null);
+
   readonly enderecoSelecionado = computed(() =>
     this.enderecos().find(e => e.id === this.enderecoSelecionadoId()) ?? null
   );
@@ -138,6 +166,10 @@ export class Checkout {
         this.cpf.set(perfil.cpf);
       }
     });
+
+    if (this.aceitaCartao) {
+      this.carregarCartoesSalvos();
+    }
   }
 
   selecionarEndereco(endereco: EnderecoDTO): void {
@@ -249,6 +281,114 @@ export class Checkout {
     this.carrinhoStore.removerCupom();
   }
 
+  private async carregarCartoesSalvos(): Promise<void> {
+    this.carregandoCartoes.set(true);
+    try {
+      this.cartoesSalvos.set(await this.cartaoService.listar());
+    } catch {
+      // Lista vazia não impede pagar com um cartão novo — só não mostra
+      // cartões salvos até a próxima tentativa.
+      this.cartoesSalvos.set([]);
+    } finally {
+      this.carregandoCartoes.set(false);
+    }
+  }
+
+  private async carregarParcelas(bin: string): Promise<void> {
+    try {
+      const opcoes = await this.mpSdk.buscarParcelas(bin, this.valorTotal());
+      this.opcoesParcelamento.set(opcoes);
+      this.parcelaSelecionadaIndex.set(0);
+    } catch {
+      this.opcoesParcelamento.set([]);
+    }
+  }
+
+  async selecionarCartaoSalvo(cartao: CartaoSalvoDTO): Promise<void> {
+    this.cartaoSelecionadoId.set(cartao.id);
+    this.tokenCartaoPronto.set(null);
+    this.cvvCartaoSalvo.set('');
+    this.erroCartao.set(null);
+    this.paymentMethodIdCartao.set(cartao.paymentMethodId);
+    await this.carregarParcelas(cartao.primeirosDigitos);
+  }
+
+  async confirmarCvvCartaoSalvo(): Promise<void> {
+    const cartao = this.cartaoSelecionado();
+    const cvv = this.cvvCartaoSalvo().trim();
+    if (!cartao) {
+      return;
+    }
+    if (cvv.length < 3) {
+      this.erroCartao.set('CVV inválido.');
+      return;
+    }
+
+    this.processandoCartao.set(true);
+    this.erroCartao.set(null);
+    try {
+      this.tokenCartaoPronto.set(await this.mpSdk.criarTokenCartaoSalvo(cartao.id, cvv));
+    } catch {
+      this.erroCartao.set('Não foi possível validar o cartão. Confira o CVV.');
+    } finally {
+      this.processandoCartao.set(false);
+    }
+  }
+
+  async adicionarNovoCartao(dados: CartaoFormulario): Promise<void> {
+    this.processandoCartao.set(true);
+    this.erroCartao.set(null);
+    try {
+      const tokenBruto = await this.mpSdk.criarTokenCartaoNovo({
+        cardNumber: dados.numero,
+        cardholderName: dados.nomeTitular,
+        cardExpirationMonth: dados.mesValidade,
+        cardExpirationYear: dados.anoValidade,
+        securityCode: dados.cvv,
+        identificationNumber: limparCpf(this.cpf())
+      });
+
+      const bin = dados.numero.slice(0, 6);
+      const metodo = await this.mpSdk.identificarPaymentMethod(bin);
+      this.paymentMethodIdCartao.set(metodo?.paymentMethodId ?? null);
+
+      if (dados.salvar) {
+        const cartaoSalvo = await this.cartaoService.salvar(tokenBruto);
+        this.cartoesSalvos.update(lista => [...lista, cartaoSalvo]);
+        this.cartaoSelecionadoId.set(cartaoSalvo.id);
+        // O token bruto já foi consumido salvando o cartão (token do
+        // Mercado Pago só serve pra uma chamada). Gera outro reaproveitando
+        // o CVV que o usuário acabou de digitar, sem pedir de novo.
+        this.tokenCartaoPronto.set(await this.mpSdk.criarTokenCartaoSalvo(cartaoSalvo.id, dados.cvv));
+      } else {
+        this.cartaoSelecionadoId.set(null);
+        this.tokenCartaoPronto.set(tokenBruto);
+      }
+
+      await this.carregarParcelas(bin);
+      this.mostrarFormNovoCartao.set(false);
+      this.toast.showSuccess(dados.salvar ? 'Cartão salvo!' : 'Cartão pronto pra pagamento.');
+    } catch (err) {
+      this.erroCartao.set(err instanceof Error ? err.message : 'Não foi possível validar o cartão.');
+    } finally {
+      this.processandoCartao.set(false);
+    }
+  }
+
+  async removerCartao(cartaoId: string): Promise<void> {
+    try {
+      await this.cartaoService.remover(cartaoId);
+      this.cartoesSalvos.update(lista => lista.filter(c => c.id !== cartaoId));
+      if (this.cartaoSelecionadoId() === cartaoId) {
+        this.cartaoSelecionadoId.set(null);
+        this.tokenCartaoPronto.set(null);
+      }
+      this.toast.showSuccess('Cartão removido.');
+    } catch {
+      this.toast.showError('Não foi possível remover o cartão.');
+    }
+  }
+
   async finalizarCompra(): Promise<void> {
     if (!cpfValido(this.cpf())) {
       this.erroCpf.set('Informe um CPF válido.');
@@ -260,6 +400,12 @@ export class Checkout {
     const frete = this.freteSelecionado();
     const usuario = this.authState.usuario();
     if (!endereco || !frete || !usuario) {
+      return;
+    }
+
+    const parcela = this.parcelaSelecionada();
+    if (this.metodo() === 'cartao' && (!this.tokenCartaoPronto() || !this.paymentMethodIdCartao() || !parcela)) {
+      this.toast.showError('Selecione um cartão e a forma de parcelamento.');
       return;
     }
 
@@ -277,7 +423,15 @@ export class Checkout {
         metodo: this.metodo(),
         cpf: this.cpf(),
         emailPagador: usuario.email,
-        cupomNome: this.carrinhoStore.cupom()?.nome
+        cupomNome: this.carrinhoStore.cupom()?.nome,
+        ...(this.metodo() === 'cartao' && parcela
+          ? {
+              cardToken: this.tokenCartaoPronto()!,
+              paymentMethodId: this.paymentMethodIdCartao()!,
+              parcelas: parcela.parcelas,
+              issuerId: parcela.issuerId
+            }
+          : {})
       });
 
       this.resultado.set(resultado);

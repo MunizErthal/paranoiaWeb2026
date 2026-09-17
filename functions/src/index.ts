@@ -3,3 +3,4 @@ export { melhorEnvioOAuthCallback, renovarTokenMelhorEnvio } from './envio/melho
 export { webhookMelhorEnvio } from './envio/webhook-melhor-envio';
 export { processarPagamento } from './pagamento/processar-pagamento';
 export { webhookMercadoPago } from './pagamento/webhook-mercado-pago';
+export { listarCartoesSalvos, salvarCartaoSalvo, removerCartaoSalvo } from './pagamento/cartoes';
