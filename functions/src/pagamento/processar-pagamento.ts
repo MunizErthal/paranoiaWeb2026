@@ -1,7 +1,7 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { FieldValue } from 'firebase-admin/firestore';
 import { db } from '../admin';
-import { mercadoPagoAccessToken } from '../secrets';
+import { mercadoPagoAccessToken, melhorEnvioClientId, melhorEnvioClientSecret } from '../secrets';
 import { obterServicoPagamento, mapearStatusMercadoPago } from './mercado-pago-client';
 import { processarCompraPaga } from './pagamento-aprovado';
 import { calcularOpcoesFrete } from '../frete/cotar-frete';
@@ -12,6 +12,13 @@ import { CompraDTO, CupomDTO, EnderecoDTO, ItemCarrinhoEntrada, StatusCompra } f
 import { REGIAO } from '../regiao';
 
 type Metodo = 'pix' | 'cartao' | 'boleto';
+
+/** Descontos percentuais e somas em ponto flutuante facilmente geram valores
+ *  com mais de 2 casas decimais (ex.: 15% de R$1,89) — o Mercado Pago rejeita
+ *  transaction_amount fora do padrão monetário com "Invalid transaction_amount". */
+function arredondarMoeda(valor: number): number {
+  return Math.round(valor * 100) / 100;
+}
 
 interface EntradaProcessarPagamento {
   itens: ItemCarrinhoEntrada[];
@@ -35,7 +42,7 @@ interface ResultadoProcessarPagamento {
 }
 
 export const processarPagamento = onCall(
-  { region: REGIAO, secrets: [mercadoPagoAccessToken] },
+  { region: REGIAO, secrets: [mercadoPagoAccessToken, melhorEnvioClientId, melhorEnvioClientSecret] },
   async (request): Promise<ResultadoProcessarPagamento> => {
     if (!request.auth) {
       throw new HttpsError('unauthenticated', 'É preciso estar logado para finalizar a compra.');
@@ -106,8 +113,8 @@ export const processarPagamento = onCall(
       }
 
       const desconto = calcularDesconto(cupom, itensComProduto, freteConfirmado.preco);
-      valorDescontoProdutos = desconto.valorDescontoProdutos;
-      valorDescontoFrete = desconto.valorDescontoFrete;
+      valorDescontoProdutos = arredondarMoeda(desconto.valorDescontoProdutos);
+      valorDescontoFrete = arredondarMoeda(desconto.valorDescontoFrete);
       cupomRef = cupomDoc.ref;
       cupomAplicado = {
         id: cupom.id,
@@ -118,10 +125,13 @@ export const processarPagamento = onCall(
       };
     }
 
-    const valorTotal = Math.max(
-      0,
-      valorProdutos + freteConfirmado.preco - valorDescontoProdutos - valorDescontoFrete
+    const valorTotal = arredondarMoeda(
+      Math.max(0, valorProdutos + freteConfirmado.preco - valorDescontoProdutos - valorDescontoFrete)
     );
+
+    if (valorTotal <= 0) {
+      throw new HttpsError('failed-precondition', 'O valor total da compra precisa ser maior que zero.');
+    }
 
     // 5. Cria o pagamento no Mercado Pago com o valor calculado no servidor.
     const pagamentoService = obterServicoPagamento(mercadoPagoAccessToken.value());
@@ -135,7 +145,11 @@ export const processarPagamento = onCall(
         payer: {
           email: entrada.emailPagador,
           identification: { type: 'CPF', number: cpfLimpo }
-        }
+        },
+        // Sem isso o Mercado Pago não sabe pra onde avisar quando o Pix/
+        // boleto for pago — o status só atualiza se o cliente atualizar a
+        // página manualmente depois, nunca sozinho.
+        notification_url: `https://${REGIAO}-paranoiajogos.cloudfunctions.net/webhookMercadoPago`
       }
     });
 
@@ -163,6 +177,7 @@ export const processarPagamento = onCall(
       envio: {
         servicoId: freteConfirmado.servicoId,
         servico: freteConfirmado.servico,
+        transportadora: freteConfirmado.transportadora,
         prazoDias: freteConfirmado.prazoDias
       },
       enderecoEntrega: endereco,

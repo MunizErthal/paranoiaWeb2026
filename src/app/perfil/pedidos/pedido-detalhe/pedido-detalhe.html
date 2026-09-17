@@ -31,7 +31,7 @@
       @for (item of pedido.itens; track item.produtoId) {
         <div><dt>{{ item.nome }} × {{ item.quantidade }}</dt><dd>{{ item.precoUnit * item.quantidade | currency:'BRL' }}</dd></div>
       }
-      <div><dt>Frete ({{ pedido.envio.servico }})</dt><dd>{{ pedido.valorFrete | currency:'BRL' }}</dd></div>
+      <div><dt>Frete ({{ pedido.envio.transportadora ? pedido.envio.transportadora + ' · ' : '' }}{{ pedido.envio.servico }})</dt><dd>{{ pedido.valorFrete | currency:'BRL' }}</dd></div>
       @if (pedido.cupomAplicado; as cupom) {
         <div>
           <dt>Cupom {{ cupom.nome }}</dt>
@@ -49,7 +49,7 @@
       {{ pedido.enderecoEntrega.bairro }}, {{ pedido.enderecoEntrega.cidade }}/{{ pedido.enderecoEntrega.estado }}
     </p>
     @if (pedido.envio.codigoRastreio) {
-      <p>Rastreio ({{ pedido.envio.servico }}): <code>{{ pedido.envio.codigoRastreio }}</code></p>
+      <p>Rastreio ({{ pedido.envio.transportadora ? pedido.envio.transportadora + ' · ' : '' }}{{ pedido.envio.servico }}): <code>{{ pedido.envio.codigoRastreio }}</code></p>
     } @else {
       <p class="field__hint">O código de rastreio aparece aqui assim que a etiqueta for gerada.</p>
     }

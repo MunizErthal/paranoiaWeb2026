@@ -25,7 +25,9 @@ export async function buscarItensComProduto(itens: ItemCarrinhoEntrada[]): Promi
       throw new HttpsError('not-found', `Produto ${itens[indice].produtoId} não encontrado.`);
     }
 
-    const produto = doc.data() as ProdutoDTO;
+    // doc.data() não inclui o id do documento — sem isso, produto.id fica
+    // undefined e quebra a escrita da compra no Firestore mais adiante.
+    const produto = { ...(doc.data() as ProdutoDTO), id: doc.id };
     if (!produto.ativo) {
       throw new HttpsError('failed-precondition', `Produto ${produto.nome} não está mais disponível.`);
     }

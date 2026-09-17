@@ -36,15 +36,37 @@
   margin: 0 0 var(--s-8);
   padding: 0;
   list-style: none;
-  color: var(--text-subtle);
   font-size: var(--fs-sm);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
-.checkout-steps li.is-ativa {
+.checkout-steps button {
+  border: 0;
+  padding: 0;
+  color: var(--text-subtle);
+  background: transparent;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  transition: color var(--dur) var(--ease-out);
+}
+
+.checkout-steps button:hover:not(:disabled),
+.checkout-steps button:focus-visible {
+  color: var(--text);
+}
+
+.checkout-steps button.is-ativa {
   color: var(--accent-text);
   font-weight: var(--fw-semibold);
+}
+
+.checkout-steps button:disabled {
+  color: var(--text-subtle);
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .checkout-layout {
@@ -117,6 +139,89 @@
   height: 12rem;
   margin: 0 auto;
   border-radius: var(--r-xs);
+}
+
+.checkout-card__acoes {
+  display: flex;
+  gap: var(--s-3);
+}
+
+.checkout-card__acoes .btn-primary {
+  flex: 1;
+}
+
+/* --- Cupom (mesmo padrão visual do carrinho) ----------------------------- */
+
+.cart-cupom {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.cart-cupom__form {
+  display: flex;
+  gap: var(--s-2);
+}
+
+.cart-cupom__input {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--tap);
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-xs);
+  padding: 0 var(--s-4);
+  color: var(--text);
+  background: var(--surface-sunken);
+  font: inherit;
+  transition: border-color var(--dur) var(--ease-out);
+}
+
+.cart-cupom__input::placeholder {
+  color: var(--text-subtle);
+}
+
+.cart-cupom__input:focus-visible {
+  border-color: var(--line-strong);
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.cart-cupom__botao {
+  flex: none;
+  width: auto;
+  padding-inline: var(--s-4);
+}
+
+.cart-cupom__aplicado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin: 0;
+  padding: var(--s-3) var(--s-4);
+  border: var(--border) solid var(--line);
+  border-radius: var(--r-xs);
+  background: var(--surface-sunken);
+  color: var(--text);
+  font-size: var(--fs-sm);
+}
+
+.cart-cupom__remover {
+  border: 0;
+  padding: 0;
+  color: var(--accent-text);
+  background: transparent;
+  cursor: pointer;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cart-cupom__remover:hover,
+.cart-cupom__remover:focus-visible {
+  color: var(--text);
 }
 
 @media (min-width: 56rem) {

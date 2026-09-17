@@ -21,12 +21,14 @@ interface OpcaoFreteResposta {
   name: string;
   price: string;
   delivery_time: number;
+  company?: { id: number; name: string; picture?: string };
   error?: string;
 }
 
 export interface OpcaoFrete {
   servicoId: number;
   servico: string;
+  transportadora: string;
   preco: number;
   prazoDias: number;
 }
@@ -70,7 +72,7 @@ export async function calcularOpcoesFrete(
 
   const token = await obterTokenValido(melhorEnvioClientId.value(), melhorEnvioClientSecret.value());
 
-  const resposta = await chamarMelhorEnvio<OpcaoFreteResposta[]>('/api/v2/me/shipment/calculate', token, {
+  const resposta = await chamarMelhorEnvio<OpcaoFreteResposta[] | OpcaoFreteResposta>('/api/v2/me/shipment/calculate', token, {
     method: 'POST',
     body: {
       from: { postal_code: lojaCepOrigem.value() },
@@ -79,11 +81,17 @@ export async function calcularOpcoesFrete(
     }
   });
 
-  return resposta
+  // Quando só existe uma transportadora elegível para a rota e ela dá erro
+  // (ex.: "Transportadora não atende este trecho"), a API devolve um único
+  // objeto em vez de um array — normaliza antes de filtrar/mapear.
+  const opcoes = Array.isArray(resposta) ? resposta : [resposta];
+
+  return opcoes
     .filter(opcao => !opcao.error)
     .map(opcao => ({
       servicoId: opcao.id,
       servico: opcao.name,
+      transportadora: opcao.company?.name ?? '',
       preco: Number(opcao.price),
       prazoDias: opcao.delivery_time
     }));

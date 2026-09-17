@@ -8,9 +8,29 @@
     <p class="page-lead">Seu carrinho está vazio. <a class="link-action" routerLink="/loja">Ver jogos na loja</a></p>
   } @else {
     <ol class="checkout-steps" aria-label="Etapas da compra">
-      <li [class.is-ativa]="etapa() === 'endereco'">1. Endereço</li>
-      <li [class.is-ativa]="etapa() === 'frete'">2. Frete</li>
-      <li [class.is-ativa]="etapa() === 'pagamento'">3. Pagamento</li>
+      <li>
+        <button type="button" [class.is-ativa]="etapa() === 'endereco'" (click)="irParaEtapa('endereco')">
+          1. Endereço
+        </button>
+      </li>
+      <li>
+        <button
+          type="button"
+          [class.is-ativa]="etapa() === 'frete'"
+          [disabled]="!etapaFreteAlcancavel()"
+          (click)="irParaEtapa('frete')">
+          2. Frete
+        </button>
+      </li>
+      <li>
+        <button
+          type="button"
+          [class.is-ativa]="etapa() === 'pagamento'"
+          [disabled]="!etapaPagamentoAlcancavel()"
+          (click)="irParaEtapa('pagamento')">
+          3. Pagamento
+        </button>
+      </li>
     </ol>
 
     <div class="checkout-layout">
@@ -58,7 +78,7 @@
                       class="endereco-opcao"
                       [class.is-selecionada]="servicoIdSelecionado() === opcao.servicoId"
                       (click)="servicoIdSelecionado.set(opcao.servicoId)">
-                      <strong>{{ opcao.servico }}</strong>
+                      <strong>{{ opcao.transportadora ? opcao.transportadora + ' — ' : '' }}{{ opcao.servico }}</strong>
                       <span>{{ opcao.preco | currency:'BRL' }} · até {{ opcao.prazoDias }} dias úteis</span>
                     </button>
                   </li>
@@ -66,7 +86,10 @@
                   <p class="field__hint">Nenhuma opção de frete disponível para este endereço.</p>
                 }
               </ul>
-              <button class="btn-primary" type="button" (click)="avancarParaPagamento()">Continuar</button>
+              <div class="checkout-card__acoes">
+                <button class="btn-secondary" type="button" (click)="voltarEtapa()">← Voltar</button>
+                <button class="btn-primary" type="button" (click)="avancarParaPagamento()">Continuar</button>
+              </div>
             }
           </section>
         }
@@ -105,22 +128,52 @@
               </button>
             </div>
 
-            <button class="btn-primary" type="button" [disabled]="processando()" (click)="finalizarCompra()">
-              {{ processando() ? 'Processando…' : 'Confirmar pagamento' }}
-            </button>
+            <div class="cart-cupom">
+              @if (carrinhoStore.cupom(); as cupom) {
+                <p class="cart-cupom__aplicado">
+                  <span>Cupom <strong>{{ cupom.nome }}</strong> aplicado</span>
+                  <button type="button" class="cart-cupom__remover" (click)="removerCupom()">Remover</button>
+                </p>
+              } @else {
+                <form class="cart-cupom__form" (submit)="$event.preventDefault(); aplicarCupom()">
+                  <input
+                    class="cart-cupom__input"
+                    type="text"
+                    placeholder="Cupom de desconto"
+                    aria-label="Cupom de desconto"
+                    [value]="codigoCupom()"
+                    (input)="codigoCupom.set($any($event.target).value)" />
+                  <button
+                    class="btn-secondary cart-cupom__botao"
+                    type="submit"
+                    [disabled]="aplicandoCupom() || !codigoCupom().trim()">
+                    {{ aplicandoCupom() ? 'Aplicando…' : 'Aplicar' }}
+                  </button>
+                </form>
+              }
+            </div>
+
+            <div class="checkout-card__acoes">
+              <button class="btn-secondary" type="button" (click)="voltarEtapa()">← Voltar</button>
+              <button class="btn-primary" type="button" [disabled]="processando()" (click)="finalizarCompra()">
+                {{ processando() ? 'Processando…' : 'Confirmar pagamento' }}
+              </button>
+            </div>
           </section>
         }
 
         @if (etapa() === 'concluido' && resultado(); as resultado) {
           <section class="checkout-card u-evidence" aria-label="Pedido confirmado">
             <h2>Pedido recebido</h2>
-            @if (resultado.status === 'pago') {
+            @if (pagamentoConfirmado()) {
               <p>Pagamento aprovado! Seu pedido já está sendo preparado.</p>
+            } @else if (pagamentoRecusado()) {
+              <p>O pagamento não foi aprovado. Tente novamente ou use outro método.</p>
             } @else {
-              <p>Recebemos seu pedido — a confirmação do pagamento pode levar alguns instantes.</p>
+              <p>Recebemos seu pedido — a confirmação do pagamento pode levar alguns instantes. Esta página atualiza sozinha assim que ele for aprovado.</p>
             }
 
-            @if (resultado.qrCodeBase64) {
+            @if (resultado.qrCodeBase64 && !pagamentoConfirmado()) {
               <img class="checkout-pix-qr" [src]="'data:image/png;base64,' + resultado.qrCodeBase64" alt="QR Code do Pix" />
               <p class="field__hint">Ou copie o código: <code>{{ resultado.qrCode }}</code></p>
             }

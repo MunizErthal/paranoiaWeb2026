@@ -44,6 +44,7 @@ export interface CompraDTO {
   envio: {
     servicoId: number;
     servico: string;
+    transportadora: string;
     prazoDias: number;
     melhorEnvioOrderId?: string;
     codigoRastreio?: string;

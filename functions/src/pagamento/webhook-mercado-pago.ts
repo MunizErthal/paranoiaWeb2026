@@ -2,7 +2,7 @@ import { onRequest } from 'firebase-functions/v2/https';
 import { logger } from 'firebase-functions';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { db } from '../admin';
-import { mercadoPagoAccessToken, mercadoPagoWebhookSecret } from '../secrets';
+import { mercadoPagoAccessToken, mercadoPagoWebhookSecret, melhorEnvioClientId, melhorEnvioClientSecret } from '../secrets';
 import { obterServicoPagamento, mapearStatusMercadoPago } from './mercado-pago-client';
 import { CompraDTO } from '../types';
 import { processarCompraPaga } from './pagamento-aprovado';
@@ -14,7 +14,10 @@ import { REGIAO } from '../regiao';
  * a API deles antes de marcar qualquer coisa como paga.
  */
 export const webhookMercadoPago = onRequest(
-  { region: REGIAO, secrets: [mercadoPagoAccessToken, mercadoPagoWebhookSecret] },
+  {
+    region: REGIAO,
+    secrets: [mercadoPagoAccessToken, mercadoPagoWebhookSecret, melhorEnvioClientId, melhorEnvioClientSecret]
+  },
   async (req, res) => {
     if (!validarAssinatura(req)) {
       logger.warn('Webhook do Mercado Pago com assinatura inválida.');

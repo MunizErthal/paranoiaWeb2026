@@ -13,6 +13,7 @@ import {
   QueryConstraint,
   DocumentReference,
   collectionData,
+  docData,
   orderBy,
   addDoc
 } from '@angular/fire/firestore';
@@ -39,6 +40,18 @@ export class FirebaseBaseService {
         }
         return null;
       })
+    );
+  }
+
+  /**
+   * Escuta em tempo real um único documento por ID — versão "ao vivo" de
+   * buscarPorId. Some sozinha quando o observable é desinscrito (ex.: o
+   * componente que a usa via toSignal/toObservable é destruído), então não
+   * precisa de limpeza manual.
+   */
+  buscarPorIdOuvindo<T>(colecao: string, id: string): Observable<T | null> {
+    return docData(doc(this.firestore, colecao, id), { idField: 'id' }).pipe(
+      map(dados => (dados ?? null) as T | null)
     );
   }
 

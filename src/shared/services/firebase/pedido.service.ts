@@ -20,4 +20,11 @@ export class PedidoService {
   buscarPorId(id: string): Observable<CompraDTO | null> {
     return this.baseService.buscarPorId<CompraDTO>(COLECAO, id);
   }
+
+  /** Acompanha o status de uma compra em tempo real — usado na tela de
+   *  checkout pra avisar assim que o pagamento (Pix/boleto) for confirmado,
+   *  sem precisar dar refresh. */
+  ouvirCompra(id: string): Observable<CompraDTO | null> {
+    return this.baseService.buscarPorIdOuvindo<CompraDTO>(COLECAO, id);
+  }
 }
