@@ -48,7 +48,7 @@ export class JogoDetalhe {
     }
 
     this.carrinhoStore.adicionarItem(produto);
-    this.toast.showSuccess(`${produto.nome} adicionado ao carrinho.`);
+    this.toast.showSuccess(`${produto.nome} foi adicionado ao carrinho.`);
   }
 
   /* Controlado pelo componente em vez de <details> nativo: o <details> do

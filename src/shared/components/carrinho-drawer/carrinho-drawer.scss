@@ -403,6 +403,7 @@
   background: var(--surface-sunken);
   font: inherit;
   transition: border-color var(--dur) var(--ease-out);
+  width: 95%;
 }
 
 .cart-cupom__input::placeholder {

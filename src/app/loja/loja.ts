@@ -63,7 +63,7 @@ export class Loja {
     }
 
     this.carrinhoStore.adicionarItem(produto);
-    this.toast.showSuccess(`${produto.nome} adicionado ao carrinho.`);
+    this.toast.showSuccess(`${produto.nome} foi adicionado ao carrinho.`);
 
     this._recemAdicionados.update(atual => new Set(atual).add(produto.id));
     setTimeout(() => {

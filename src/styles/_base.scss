@@ -17,6 +17,12 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+
+input:focus {
+    outline: 2px solid #c15cff !important;
+    outline-offset: 2px !important;
+}
+
 /* --- Superfícies do navegador: nada fica com o padrão de fábrica --------- */
 
 :focus-visible {

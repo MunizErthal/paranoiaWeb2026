@@ -17,7 +17,7 @@
 .toast-info,
 .toast-warning {
   background-color: var(--accent-solid);
-  background-image: linear-gradient(135deg, #7b27d3, #ad45f4);
+  background-image: none;
   background-position: initial;
   background-size: initial;
 }
@@ -47,5 +47,10 @@
 }
 
 .toast-progress {
-  background-color: rgba(255, 255, 255, 0.55);
+  height: 3px;
+  background: linear-gradient(90deg, var(--chroma-cyan), var(--chroma-magenta));
+  /* A lib aplica opacity: 0.4 por padrão; sem isso o branco translúcido
+     que tínhamos antes se misturava com o gradiente roxo do toast e
+     resultava numa faixa rosa "suja", sem intenção de design. */
+  opacity: 1;
 }
