@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
+import { ToastService } from '../../../../shared/services/toast/toast.service';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PedidoService } from '../../../../shared/services/firebase/pedido.service';
@@ -28,13 +29,19 @@ const ETAPAS_ENVIO: { status: StatusCompra; rotulo: string }[] = [
 export class PedidoDetalhe {
   private readonly route = inject(ActivatedRoute);
   private readonly pedidoService = inject(PedidoService);
+  private readonly toast = inject(ToastService);
 
   readonly etapas = ETAPAS;
   readonly etapasEnvio = ETAPAS_ENVIO;
 
+  readonly reprocessandoEtiqueta = signal(false);
+  readonly compraId = this.route.snapshot.paramMap.get('idPedido') ?? '';
+
+  // Ao vivo (não só leitura única) pra refletir na hora tanto atualizações
+  // do webhook do Melhor Envio quanto o retentarEtiqueta manual abaixo.
   readonly pedido = toSignal(
     this.route.paramMap.pipe(
-      switchMap(params => this.pedidoService.buscarPorId(params.get('idPedido') ?? ''))
+      switchMap(params => this.pedidoService.ouvirCompra(params.get('idPedido') ?? ''))
     ),
     { initialValue: null }
   );
@@ -65,6 +72,22 @@ export class PedidoDetalhe {
         return 'O pagamento deste pedido foi recusado.';
       default:
         return '';
+    }
+  }
+
+  async retentarEtiqueta(): Promise<void> {
+    this.reprocessandoEtiqueta.set(true);
+    try {
+      const sucesso = await this.pedidoService.retentarEtiqueta(this.compraId);
+      if (sucesso) {
+        this.toast.showSuccess('Etiqueta gerada com sucesso!');
+      } else {
+        this.toast.showError('Ainda não foi possível gerar a etiqueta. Veja os logs pra mais detalhes.');
+      }
+    } catch (err) {
+      this.toast.showError(err instanceof Error ? err.message : 'Não foi possível reprocessar a etiqueta.');
+    } finally {
+      this.reprocessandoEtiqueta.set(false);
     }
   }
 }
