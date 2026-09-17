@@ -87,7 +87,10 @@ export async function dispararCompraEtiqueta(compraId: string): Promise<void> {
         products: compra.itens.map(item => ({
           name: item.nome,
           quantity: item.quantidade,
-          unitary_value: item.precoUnit
+          unitary_value: item.precoUnit,
+          // O Melhor Envio exige um valor segurado próprio (mínimo R$ 1,00)
+          // por item — não reaproveita unitary_value pra isso.
+          insurance_value: Math.max(item.precoUnit, 1)
         })),
         volumes: [{ height: 1, width: 1, length: 1, weight: 1 }] // TODO: usar dimensões reais somadas do pedido
       }
