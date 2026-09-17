@@ -1,6 +1,6 @@
 <main class="checkout-page">
   @if (etapa() === 'concluido' && resultado(); as resultado) {
-    <section class="checkout-sucesso u-evidence" aria-label="Pedido confirmado">
+    <section class="checkout-sucesso" aria-label="Pedido confirmado">
       <div class="checkout-sucesso__icone" [class.is-recusado]="pagamentoRecusado()">
         @if (pagamentoRecusado()) {
           <svg width="28" height="28" viewBox="0 0 16 16" fill="none" aria-hidden="true">
