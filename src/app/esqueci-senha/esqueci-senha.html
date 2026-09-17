@@ -5,7 +5,7 @@
       <h1 class="auth-card__title">Esqueci minha senha</h1>
       <p class="auth-card__lead">Informe seu e-mail e enviaremos um link para você criar uma nova senha.</p>
 
-      <form class="auth-card__form" (ngSubmit)="enviarLink()" novalidate>
+      <form class="auth-card__form" (submit)="$event.preventDefault(); enviarLink()" novalidate>
         <div class="field">
           <label for="email">E-mail</label>
           <input

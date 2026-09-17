@@ -4,7 +4,7 @@
     <h1 class="auth-card__title">Entrar</h1>
     <p class="auth-card__lead">Acesse sua conta para acompanhar compras e continuar de onde parou.</p>
 
-    <form class="auth-card__form" (ngSubmit)="entrar()" novalidate>
+    <form class="auth-card__form" (submit)="$event.preventDefault(); entrar()" novalidate>
       <div class="field">
         <label for="email">E-mail</label>
         <input

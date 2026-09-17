@@ -1,4 +1,5 @@
 import { Component, input, output, signal } from '@angular/core';
+import { cpfValido, formatarCpf, limparCpf } from '../../utils/cpf.util';
 
 export interface CartaoFormulario {
   numero: string;
@@ -6,6 +7,7 @@ export interface CartaoFormulario {
   mesValidade: string;
   anoValidade: string;
   cvv: string;
+  cpfTitular: string;
   salvar: boolean;
 }
 
@@ -19,6 +21,9 @@ export class CartaoForm {
    *  cartão adicionado ali já é pra guardar, então some com o checkbox. */
   readonly ocultarCheckboxSalvar = input(false);
   readonly processando = input(false);
+  /** Pré-preenche com o CPF do pagador/perfil como sugestão — o titular do
+   *  cartão pode ser outra pessoa, por isso o campo fica editável. */
+  readonly cpfInicial = input('');
 
   readonly adicionar = output<CartaoFormulario>();
   readonly cancelar = output<void>();
@@ -27,7 +32,15 @@ export class CartaoForm {
   readonly nomeTitular = signal('');
   readonly validade = signal(''); // "MM/AA" — dividido em confirmar()
   readonly cvv = signal('');
+  readonly cpfTitular = signal('');
   readonly salvarCartao = signal(false);
+
+  constructor() {
+    const inicial = this.cpfInicial();
+    if (inicial) {
+      this.cpfTitular.set(formatarCpf(inicial));
+    }
+  }
 
   readonly erro = signal<string | null>(null);
 
@@ -43,6 +56,10 @@ export class CartaoForm {
 
   formatarCvv(valor: string): void {
     this.cvv.set(valor.replace(/\D/g, '').slice(0, 4));
+  }
+
+  formatarCpfTitular(valor: string): void {
+    this.cpfTitular.set(formatarCpf(valor.replace(/\D/g, '').slice(0, 11)));
   }
 
   confirmar(): void {
@@ -66,6 +83,11 @@ export class CartaoForm {
       this.erro.set('CVV inválido.');
       return;
     }
+    const cpfLimpo = limparCpf(this.cpfTitular());
+    if (!cpfValido(cpfLimpo)) {
+      this.erro.set('CPF do titular inválido.');
+      return;
+    }
 
     this.erro.set(null);
     this.adicionar.emit({
@@ -74,6 +96,7 @@ export class CartaoForm {
       mesValidade: mes,
       anoValidade: `20${ano}`,
       cvv: cvvLimpo,
+      cpfTitular: cpfLimpo,
       salvar: this.ocultarCheckboxSalvar() || this.salvarCartao()
     });
   }

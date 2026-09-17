@@ -49,6 +49,18 @@
     </div>
   </div>
 
+  <div class="field">
+    <label for="cf-cpf">CPF do titular do cartão</label>
+    <input
+      id="cf-cpf"
+      type="text"
+      inputmode="numeric"
+      placeholder="000.000.000-00"
+      autocomplete="off"
+      [value]="cpfTitular()"
+      (input)="formatarCpfTitular($any($event.target).value)" />
+  </div>
+
   @if (!ocultarCheckboxSalvar()) {
     <div class="field field--checkbox">
       <input

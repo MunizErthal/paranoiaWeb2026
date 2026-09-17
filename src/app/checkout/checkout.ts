@@ -22,7 +22,7 @@ import { OpcaoFrete } from '../../shared/models/frete.dto';
 import { CartaoSalvoDTO, OpcaoParcelamento } from '../../shared/models/cartao.dto';
 import { MetodoPagamento, ResultadoProcessarPagamento } from '../../shared/models/pagamento.dto';
 import { environment } from '../../environment/environment';
-import { cpfValido, limparCpf } from '../../shared/utils/cpf.util';
+import { cpfValido } from '../../shared/utils/cpf.util';
 import { validarCupom } from '../../shared/utils/cupom.util';
 
 type Etapa = 'endereco' | 'frete' | 'pagamento' | 'concluido';
@@ -345,7 +345,7 @@ export class Checkout {
         cardExpirationMonth: dados.mesValidade,
         cardExpirationYear: dados.anoValidade,
         securityCode: dados.cvv,
-        identificationNumber: limparCpf(this.cpf())
+        identificationNumber: dados.cpfTitular
       });
 
       const bin = dados.numero.slice(0, 6);

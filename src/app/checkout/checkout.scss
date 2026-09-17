@@ -125,11 +125,17 @@
   display: grid;
   gap: var(--s-8);
   align-items: start;
+  /* Sem isso, os itens do grid (checkout-content/cart-summary) se recusam a
+     encolher abaixo da largura mínima do conteúdo mais largo lá dentro —
+     em telas estreitas isso empurra a página inteira pra fora, criando
+     scroll horizontal (min-width:auto é o padrão em itens de grid/flex). */
+  min-width: 0;
 }
 
 .checkout-content {
   display: grid;
   gap: var(--s-6);
+  min-width: 0;
 }
 
 .frete-lista {

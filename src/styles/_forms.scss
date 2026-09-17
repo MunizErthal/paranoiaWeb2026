@@ -287,7 +287,17 @@
   border-radius: var(--r-sm);
   background: var(--surface-1);
   box-shadow: var(--shadow-1);
-  min-width: 23vw;
+  min-width: 0;
+}
+
+/* O min-width abaixo só faz sentido quando o resumo vira uma coluna lateral
+   (checkout/carrinho ficam 2 colunas a partir de 56rem) — em telas
+   estreitas, onde tudo é empilhado em 1 coluna, ele forçava a página
+   inteira a estourar a largura da tela. */
+@media (min-width: 56rem) {
+  .cart-summary {
+    min-width: 23vw;
+  }
 }
 
 .cart-summary__eyebrow {
@@ -348,6 +358,7 @@
   border: var(--border) solid var(--line);
   border-radius: var(--r-sm);
   background: var(--surface-1);
+  min-width: 0;
 }
 
 /* Variante com cabeçalho (título + ação) — usada nas seções do perfil. */

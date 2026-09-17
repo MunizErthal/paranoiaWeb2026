@@ -6,7 +6,6 @@ import { CartaoService } from '../../../shared/services/firebase/cartao.service'
 import { MercadoPagoSdkService } from '../../../shared/services/pagamento/mercado-pago-sdk.service';
 import { CartaoForm, CartaoFormulario } from '../../../shared/components/cartao-form/cartao-form';
 import { CartaoSalvoDTO } from '../../../shared/models/cartao.dto';
-import { limparCpf } from '../../../shared/utils/cpf.util';
 
 @Component({
   selector: 'app-cartoes',
@@ -27,12 +26,14 @@ export class Cartoes {
   readonly mostrarForm = signal(false);
   readonly salvando = signal(false);
 
-  private cpfTitular = '';
+  /** Só uma sugestão de preenchimento — o titular do cartão pode ser outra
+   *  pessoa, o campo de CPF no formulário é editável. */
+  readonly cpfSugerido = signal('');
 
   constructor() {
     this.carregarCartoes();
     this.perfilService.buscar(this.authState.usuario()!.id).subscribe(perfil => {
-      this.cpfTitular = perfil?.cpf ?? '';
+      this.cpfSugerido.set(perfil?.cpf ?? '');
     });
   }
 
@@ -48,11 +49,6 @@ export class Cartoes {
   }
 
   async adicionarCartao(dados: CartaoFormulario): Promise<void> {
-    if (!this.cpfTitular) {
-      this.toast.showError('Preencha seu CPF em "Dados pessoais" antes de salvar um cartão.');
-      return;
-    }
-
     this.salvando.set(true);
     try {
       const token = await this.mpSdk.criarTokenCartaoNovo({
@@ -61,7 +57,7 @@ export class Cartoes {
         cardExpirationMonth: dados.mesValidade,
         cardExpirationYear: dados.anoValidade,
         securityCode: dados.cvv,
-        identificationNumber: limparCpf(this.cpfTitular)
+        identificationNumber: dados.cpfTitular
       });
       const cartaoSalvo = await this.cartaoService.salvar(token);
       this.cartoes.update(lista => [...lista, cartaoSalvo]);

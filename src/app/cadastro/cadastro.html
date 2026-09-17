@@ -5,7 +5,7 @@
       <h1 class="auth-card__title">Criar conta</h1>
       <p class="auth-card__lead">Cadastre-se para acompanhar suas compras e continuar a investigação.</p>
 
-      <form class="auth-card__form" (ngSubmit)="cadastrar()" novalidate>
+      <form class="auth-card__form" (submit)="$event.preventDefault(); cadastrar()" novalidate>
         <div class="field">
           <label for="nome">Nome</label>
           <input

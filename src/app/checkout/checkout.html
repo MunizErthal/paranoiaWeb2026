@@ -229,6 +229,7 @@
                 } @else {
                   <app-cartao-form
                     [processando]="processandoCartao()"
+                    [cpfInicial]="cpf()"
                     (adicionar)="adicionarNovoCartao($event)"
                     (cancelar)="mostrarFormNovoCartao.set(false)" />
                   @if (erroCartao(); as erro) {

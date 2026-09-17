@@ -43,6 +43,7 @@
     <app-cartao-form
       [ocultarCheckboxSalvar]="true"
       [processando]="salvando()"
+      [cpfInicial]="cpfSugerido()"
       (adicionar)="adicionarCartao($event)"
       (cancelar)="mostrarForm.set(false)" />
   }
