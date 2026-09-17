@@ -44,6 +44,18 @@
   text-align: center;
 }
 
+/* Sem isso, o código Pix (uma string longa sem espaços) recusa a encolher
+ * dentro do card — vira item de grid com min-width: auto e estoura a
+ * largura, descentralizando visualmente o card inteiro. */
+.checkout-sucesso > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.checkout-sucesso .field__hint code {
+  overflow-wrap: anywhere;
+}
+
 .checkout-sucesso__icone {
   display: grid;
   place-items: center;
