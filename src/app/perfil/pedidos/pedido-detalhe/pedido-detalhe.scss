@@ -27,3 +27,80 @@
 .pedido-linha-do-tempo li.is-concluida {
   opacity: 1;
 }
+
+/* --- Rastreio da entrega -------------------------------------------------- */
+
+.envio-timeline {
+  display: flex;
+  margin: var(--s-5) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.envio-timeline__item {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-2);
+  min-width: 0;
+}
+
+.envio-timeline__item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 1.1rem;
+  left: 50%;
+  z-index: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--line);
+}
+
+.envio-timeline__item.is-concluido:not(.is-ultimo):not(:last-child)::after {
+  background: linear-gradient(90deg, var(--chroma-cyan), var(--chroma-magenta));
+}
+
+.envio-timeline__marcador {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: none;
+  border: var(--border) solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-1);
+  color: var(--text-subtle);
+  transition: border-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out), background var(--dur) var(--ease-out);
+}
+
+.envio-timeline__item.is-concluido .envio-timeline__marcador {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--chroma-cyan), var(--chroma-magenta));
+  color: #0c0616;
+}
+
+.envio-timeline__item.is-atual .envio-timeline__marcador {
+  border-color: var(--chroma-cyan);
+  color: var(--chroma-cyan);
+  background: var(--surface-1);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.envio-timeline__rotulo {
+  color: var(--text-subtle);
+  font-size: var(--fs-xs);
+  text-align: center;
+}
+
+.envio-timeline__item.is-concluido .envio-timeline__rotulo {
+  color: var(--text-muted);
+}
+
+.envio-timeline__item.is-atual .envio-timeline__rotulo {
+  color: var(--text);
+  font-weight: var(--fw-semibold);
+}

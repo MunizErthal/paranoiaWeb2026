@@ -6,6 +6,7 @@ const ROTULOS: Record<StatusCompra, string> = {
   pago: 'Pago',
   etiqueta_gerada: 'Etiqueta gerada',
   enviado: 'Enviado',
+  problema_na_entrega: 'Problema na entrega',
   entregue: 'Entregue',
   cancelado: 'Cancelado',
   recusado: 'Recusado'
@@ -16,6 +17,7 @@ const TONS: Record<StatusCompra, 'neutro' | 'positivo' | 'negativo'> = {
   pago: 'positivo',
   etiqueta_gerada: 'positivo',
   enviado: 'positivo',
+  problema_na_entrega: 'negativo',
   entregue: 'positivo',
   cancelado: 'negativo',
   recusado: 'negativo'

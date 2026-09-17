@@ -21,7 +21,7 @@
         }
       </ol>
     } @else {
-      <p class="page-lead">Este pedido foi {{ pedido.status === 'cancelado' ? 'cancelado' : 'recusado' }}.</p>
+      <p class="page-lead">{{ mensagemStatusFinal(pedido.status) }}</p>
     }
   </section>
 
@@ -48,6 +48,60 @@
       {{ pedido.enderecoEntrega.logradouro }}, {{ pedido.enderecoEntrega.numero }} —
       {{ pedido.enderecoEntrega.bairro }}, {{ pedido.enderecoEntrega.cidade }}/{{ pedido.enderecoEntrega.estado }}
     </p>
+
+    @if (pedido.status === 'problema_na_entrega') {
+      <p class="cart-aviso">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 1 1 14h14L8 1Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="square" stroke-linejoin="round" />
+          <path d="M8 6.5v3.2M8 11.8h.01" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+        </svg>
+        Houve um problema na entrega deste pedido. Nossa equipe foi notificada e vai entrar em contato.
+      </p>
+    }
+
+    @if (indiceDaEtapaEnvio(pedido.status) >= 0) {
+      <ol class="envio-timeline">
+        @for (etapa of etapasEnvio; track etapa.status; let i = $index; let last = $last) {
+          <li
+            class="envio-timeline__item"
+            [class.is-concluido]="i <= indiceDaEtapaEnvio(pedido.status)"
+            [class.is-atual]="i === indiceDaEtapaEnvio(pedido.status)"
+            [class.is-ultimo]="last">
+            <span class="envio-timeline__marcador">
+              @switch (i) {
+                @case (0) {
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M2 8.5l3.5 3.5 8.5-9" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round" />
+                  </svg>
+                }
+                @case (1) {
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M2 2h5.5l6.5 6.5-5.5 5.5L2 7.5V2Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+                    <path d="M5 5.01v.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                }
+                @case (2) {
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M1.5 4h7v7h-7z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+                    <path d="M8.5 6.5h3l2 2.2V11h-5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+                    <path d="M4 13.2a1.3 1.3 0 1 0 0-2.6 1.3 1.3 0 0 0 0 2.6ZM11 13.2a1.3 1.3 0 1 0 0-2.6 1.3 1.3 0 0 0 0 2.6Z" stroke="currentColor" stroke-width="1.3" />
+                  </svg>
+                }
+                @case (3) {
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M2 7.5 8 2l6 5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" stroke-linejoin="round" />
+                    <path d="M3.5 6.5V14h9V6.5" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+                    <path d="M6.2 9.5l1.5 1.5 2.3-2.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" stroke-linejoin="round" />
+                  </svg>
+                }
+              }
+            </span>
+            <span class="envio-timeline__rotulo">{{ etapa.rotulo }}</span>
+          </li>
+        }
+      </ol>
+    }
+
     @if (pedido.envio.codigoRastreio) {
       <p>Rastreio ({{ pedido.envio.transportadora ? pedido.envio.transportadora + ' · ' : '' }}{{ pedido.envio.servico }}): <code>{{ pedido.envio.codigoRastreio }}</code></p>
     } @else {

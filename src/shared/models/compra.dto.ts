@@ -6,6 +6,7 @@ export type StatusCompra =
   | 'pago'
   | 'etiqueta_gerada'
   | 'enviado'
+  | 'problema_na_entrega'
   | 'entregue'
   | 'cancelado'
   | 'recusado';
