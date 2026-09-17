@@ -361,6 +361,14 @@
   min-width: 0;
 }
 
+/* min-width:0 no .checkout-card não basta — cada FILHO dele também é um
+   item de grid e, sem isso, se recusa a encolher abaixo do próprio
+   conteúdo mínimo (CPF, métodos de pagamento, cupom etc.), estourando a
+   largura da tela em telas estreitas. Reproduzido no Firefox mobile. */
+.checkout-card > * {
+  min-width: 0;
+}
+
 /* Variante com cabeçalho (título + ação) — usada nas seções do perfil. */
 .dados-card {
   gap: var(--s-6);

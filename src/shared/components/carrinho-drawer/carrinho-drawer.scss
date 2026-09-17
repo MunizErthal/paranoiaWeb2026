@@ -387,6 +387,10 @@
   gap: var(--s-2);
 }
 
+.cart-cupom > * {
+  min-width: 0;
+}
+
 .cart-cupom__form {
   display: flex;
   gap: var(--s-2);
