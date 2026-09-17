@@ -7,10 +7,12 @@ import { defineSecret } from 'firebase-functions/params';
  *   firebase functions:secrets:set MERCADOPAGO_WEBHOOK_SECRET
  *   firebase functions:secrets:set MELHORENVIO_CLIENT_ID
  *   firebase functions:secrets:set MELHORENVIO_CLIENT_SECRET
- *   firebase functions:secrets:set MELHORENVIO_WEBHOOK_SECRET
+ *
+ * Não existe MELHORENVIO_WEBHOOK_SECRET: a assinatura do webhook do
+ * Melhor Envio usa o próprio MELHORENVIO_CLIENT_SECRET como chave HMAC
+ * (docs.melhorenvio.com.br/docs/webhooks).
  */
 export const mercadoPagoAccessToken = defineSecret('MERCADOPAGO_ACCESS_TOKEN');
 export const mercadoPagoWebhookSecret = defineSecret('MERCADOPAGO_WEBHOOK_SECRET');
 export const melhorEnvioClientId = defineSecret('MELHORENVIO_CLIENT_ID');
 export const melhorEnvioClientSecret = defineSecret('MELHORENVIO_CLIENT_SECRET');
-export const melhorEnvioWebhookSecret = defineSecret('MELHORENVIO_WEBHOOK_SECRET');

@@ -2,7 +2,7 @@ import { onRequest } from 'firebase-functions/v2/https';
 import { logger } from 'firebase-functions';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { db } from '../admin';
-import { melhorEnvioWebhookSecret } from '../secrets';
+import { melhorEnvioClientSecret } from '../secrets';
 import { REGIAO } from '../regiao';
 
 /**
@@ -10,11 +10,13 @@ import { REGIAO } from '../regiao';
  *
  * NOTA: o formato exato do payload (nomes de campo do evento e do id do
  * pedido) precisa ser confirmado no sandbox antes do go-live — ver
- * "Itens a validar em sandbox" no MD 03. A validação de assinatura já
- * segue o documentado (header X-ME-Signature, HMAC-SHA256 do corpo).
+ * "Itens a validar em sandbox" no MD 03. A assinatura (header
+ * X-ME-Signature) é HMAC-SHA256 em base64 usando o client_secret do
+ * próprio app como chave — não existe um secret de webhook separado
+ * (confirmado em docs.melhorenvio.com.br/docs/webhooks).
  */
 export const webhookMelhorEnvio = onRequest(
-  { region: REGIAO, secrets: [melhorEnvioWebhookSecret] },
+  { region: REGIAO, secrets: [melhorEnvioClientSecret] },
   async (req, res) => {
     if (!validarAssinatura(req)) {
       logger.warn('Webhook do Melhor Envio com assinatura inválida.');
@@ -66,12 +68,12 @@ function validarAssinatura(req: RequisicaoComRawBody): boolean {
     return false;
   }
 
-  const esperado = createHmac('sha256', melhorEnvioWebhookSecret.value())
+  const esperado = createHmac('sha256', melhorEnvioClientSecret.value())
     .update(req.rawBody)
-    .digest('hex');
+    .digest('base64');
 
-  const bufferEsperado = Buffer.from(esperado, 'utf8');
-  const bufferRecebido = Buffer.from(assinatura, 'utf8');
+  const bufferEsperado = Buffer.from(esperado, 'base64');
+  const bufferRecebido = Buffer.from(assinatura, 'base64');
 
   return bufferEsperado.length === bufferRecebido.length && timingSafeEqual(bufferEsperado, bufferRecebido);
 }
