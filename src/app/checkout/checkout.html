@@ -1,12 +1,43 @@
 <main class="checkout-page">
-  <header class="checkout-page__header">
-    <p class="page-eyebrow">Checkout</p>
-    <h1>Finalizar compra</h1>
-  </header>
+  @if (etapa() === 'concluido' && resultado(); as resultado) {
+    <section class="checkout-sucesso u-evidence" aria-label="Pedido confirmado">
+      <div class="checkout-sucesso__icone" [class.is-recusado]="pagamentoRecusado()">
+        @if (pagamentoRecusado()) {
+          <svg width="28" height="28" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
+          </svg>
+        } @else {
+          <svg width="28" height="28" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round" />
+          </svg>
+        }
+      </div>
 
-  @if (carrinhoStore.itens().length === 0 && etapa() !== 'concluido') {
-    <p class="page-lead">Seu carrinho está vazio. <a class="link-action" routerLink="/loja">Ver jogos na loja</a></p>
+      <h1>{{ tituloConclusao() }}</h1>
+      <p>{{ mensagemConclusao() }}</p>
+
+      @if (resultado.qrCodeBase64 && !pagamentoConfirmado() && !pagamentoRecusado()) {
+        <img class="checkout-pix-qr" [src]="'data:image/png;base64,' + resultado.qrCodeBase64" alt="QR Code do Pix" />
+        <p class="field__hint">Ou copie o código: <code>{{ resultado.qrCode }}</code></p>
+      }
+      @if (resultado.linkBoleto && !pagamentoConfirmado()) {
+        <a class="btn-secondary" [href]="resultado.linkBoleto" target="_blank" rel="noopener noreferrer">Ver boleto</a>
+      }
+
+      <div class="checkout-sucesso__acoes">
+        <a class="btn-primary" [routerLink]="['/perfil/pedidos', resultado.compraId]">Acompanhar pedido</a>
+        <a class="btn-secondary" routerLink="/loja">Continuar comprando</a>
+      </div>
+    </section>
   } @else {
+    <header class="checkout-page__header">
+      <p class="page-eyebrow">Checkout</p>
+      <h1>Finalizar compra</h1>
+    </header>
+
+    @if (carrinhoStore.itens().length === 0) {
+      <p class="page-lead">Seu carrinho está vazio. <a class="link-action" routerLink="/loja">Ver jogos na loja</a></p>
+    } @else {
     <ol class="checkout-steps" aria-label="Etapas da compra">
       <li>
         <button type="button" [class.is-ativa]="etapa() === 'endereco'" (click)="irParaEtapa('endereco')">
@@ -161,47 +192,23 @@
             </div>
           </section>
         }
-
-        @if (etapa() === 'concluido' && resultado(); as resultado) {
-          <section class="checkout-card u-evidence" aria-label="Pedido confirmado">
-            <h2>Pedido recebido</h2>
-            @if (pagamentoConfirmado()) {
-              <p>Pagamento aprovado! Seu pedido já está sendo preparado.</p>
-            } @else if (pagamentoRecusado()) {
-              <p>O pagamento não foi aprovado. Tente novamente ou use outro método.</p>
-            } @else {
-              <p>Recebemos seu pedido — a confirmação do pagamento pode levar alguns instantes. Esta página atualiza sozinha assim que ele for aprovado.</p>
-            }
-
-            @if (resultado.qrCodeBase64 && !pagamentoConfirmado()) {
-              <img class="checkout-pix-qr" [src]="'data:image/png;base64,' + resultado.qrCodeBase64" alt="QR Code do Pix" />
-              <p class="field__hint">Ou copie o código: <code>{{ resultado.qrCode }}</code></p>
-            }
-            @if (resultado.linkBoleto) {
-              <a class="btn-primary" [href]="resultado.linkBoleto" target="_blank" rel="noopener noreferrer">Ver boleto</a>
-            }
-
-            <a class="link-action" routerLink="/loja">Continuar comprando</a>
-          </section>
-        }
       </div>
 
-      @if (etapa() !== 'concluido') {
-        <aside class="cart-summary u-evidence">
-          <p class="cart-summary__eyebrow">Resumo</p>
-          <p class="cart-summary__total"><span>Produtos</span><strong>{{ valorProdutos() | currency:'BRL' }}</strong></p>
-          @if (freteSelecionado(); as frete) {
-            <p class="cart-summary__total"><span>Frete</span><strong>{{ frete.preco | currency:'BRL' }}</strong></p>
-          }
-          @if (carrinhoStore.cupom(); as cupom) {
-            <p class="cart-summary__total">
-              <span>Cupom {{ cupom.nome }}</span>
-              <strong>-{{ (valorDescontoProdutos() + valorDescontoFrete()) | currency:'BRL' }}</strong>
-            </p>
-          }
-          <p class="cart-summary__total"><span>Total</span><strong>{{ valorTotal() | currency:'BRL' }}</strong></p>
-        </aside>
-      }
+      <aside class="cart-summary u-evidence">
+        <p class="cart-summary__eyebrow">Resumo</p>
+        <p class="cart-summary__total"><span>Produtos</span><strong>{{ valorProdutos() | currency:'BRL' }}</strong></p>
+        @if (freteSelecionado(); as frete) {
+          <p class="cart-summary__total"><span>Frete</span><strong>{{ frete.preco | currency:'BRL' }}</strong></p>
+        }
+        @if (carrinhoStore.cupom(); as cupom) {
+          <p class="cart-summary__total">
+            <span>Cupom {{ cupom.nome }}</span>
+            <strong>-{{ (valorDescontoProdutos() + valorDescontoFrete()) | currency:'BRL' }}</strong>
+          </p>
+        }
+        <p class="cart-summary__total"><span>Total</span><strong>{{ valorTotal() | currency:'BRL' }}</strong></p>
+      </aside>
     </div>
+    }
   }
 </main>

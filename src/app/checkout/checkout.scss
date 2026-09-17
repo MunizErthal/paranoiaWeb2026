@@ -29,6 +29,58 @@
   line-height: var(--lh-tight);
 }
 
+/* --- Tela de conclusão --------------------------------------------------- */
+
+.checkout-sucesso {
+  display: grid;
+  gap: var(--s-4);
+  justify-items: center;
+  max-width: 30rem;
+  margin: 0 auto;
+  padding: var(--s-10) var(--s-8);
+  text-align: center;
+}
+
+.checkout-sucesso__icone {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border: var(--border) solid var(--chroma-cyan);
+  border-radius: 999px;
+  color: var(--chroma-cyan);
+}
+
+.checkout-sucesso__icone.is-recusado {
+  border-color: var(--chroma-magenta);
+  color: var(--chroma-magenta);
+}
+
+.checkout-sucesso h1 {
+  margin: 0;
+  font-size: var(--fs-h2);
+  line-height: var(--lh-tight);
+}
+
+.checkout-sucesso p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.checkout-sucesso__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s-3);
+  margin-top: var(--s-4);
+}
+
+.checkout-sucesso__acoes .btn-primary,
+.checkout-sucesso__acoes .btn-secondary {
+  width: auto;
+  padding-inline: var(--s-6);
+}
+
 .checkout-steps {
   display: flex;
   flex-wrap: wrap;

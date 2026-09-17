@@ -81,6 +81,17 @@ export class Checkout {
   );
   readonly pagamentoRecusado = computed(() => ['recusado', 'cancelado'].includes(this.statusAtual() ?? ''));
 
+  readonly tituloConclusao = computed(() => {
+    if (this.pagamentoConfirmado()) return 'Compra finalizada com sucesso!';
+    if (this.pagamentoRecusado()) return 'Pagamento não aprovado';
+    return 'Pedido recebido!';
+  });
+  readonly mensagemConclusao = computed(() => {
+    if (this.pagamentoConfirmado()) return 'Pagamento aprovado — seu pedido já está sendo preparado.';
+    if (this.pagamentoRecusado()) return 'O pagamento não foi aprovado. Tente novamente ou use outro método.';
+    return 'Recebemos seu pedido — a confirmação do pagamento pode levar alguns instantes. Esta página atualiza sozinha assim que ele for aprovado.';
+  });
+
   readonly codigoCupom = signal('');
   readonly aplicandoCupom = signal(false);
 
